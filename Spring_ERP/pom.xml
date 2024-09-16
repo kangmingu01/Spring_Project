@@ -114,8 +114,110 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
-			<scope>test</scope>
-		</dependency>        
+			<!--<scope>test</scope>-->
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
+		<!-- => 로그 구현체가 로깅정보를 제공받아 기록할 때 인식할 수 없는 문자가 존재할 경우 에러 발생 -->
+		<!-- => 로깅정보에 인식할 수 없는 문자가 존재할 경우 부호화 처리하는 기능을 제공하는 라이브러리 -->
+		<!-- => 해당 라이브러리는 XML 파싱이 필요한 다양한 Java 애플리케이션에서 사용 -->
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.12.2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<!-- => 클래스 작성시 생성자 또는 메소드를 자동으로 생성하는 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.34</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc11 -->
+		<!-- => Oracle DBMS Server에 접속할 수 있는 Driver 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc11</artifactId>
+			<version>23.5.0.24.07</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+		<!-- => Spring DAO 관련 기능을 제공하기 위한 라이브러리 - DataSource 관련 클래스 포함 -->
+		<!-- => 라이브러리 의존 관계에 의해 spring-tx 라이브러리(트렌젝션 처리)도 자동으로 빌드 처리 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.tiles/tiles-extras -->
+		<!-- => ViewResolver 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-extras</artifactId>
+			<version>3.0.8</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+		<!-- => Command 객체의 필드에 저장된 전달값에 대한 검증 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+		<!-- => Command 객체의 필드에 저장된 전달값에 대한 검증 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.2.5.Final</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+		<!-- => Mybatis 프레임워크를 사용하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.5.16</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+		<!-- => SpringMVC 기능으로 작성된 웹프로그램에서 Mybatis 프레임워크를 사용하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.bgee.log4jdbc-log4j2/log4jdbc-log4j2-jdbc4 -->
+		<!-- => 퍼시스턴스 프레임워크(Mybatis)에 의해 발생되는 로그 이벤트를 Spring 프레임워크의
+		로그 구현체로 기록되는 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>org.bgee.log4jdbc-log4j2</groupId>
+			<artifactId>log4jdbc-log4j2-jdbc4</artifactId>
+			<version>1.16</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<!-- => Java 객체를 JSON 형식의 문자열로 변환하는 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.17.2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<!-- => JSON 형식의 문자열을 Java 객체로 변환하는 기능을 제공하기 위한 라이브러리 -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
 	</dependencies>
     <build>
         <plugins>
@@ -138,8 +240,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.5.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>11</source>
+                    <target>11</target>
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>

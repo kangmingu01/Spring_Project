@@ -18,11 +18,10 @@
 	<annotation-driven />
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
-	<!--<resources mapping="/resources/**" location="/resources/" />-->
+	<resources mapping="/resources/**" location="/resources/" />
 	<resources mapping="/images/**" location="/resources/images/" />
 	<resources mapping="/css/**" location="/resources/css/" />
 	<resources mapping="/js/**" location="/resources/js/" />
-
 
 	<!-- BeanNameViewResolver 클래스를 Spring Bean으로 등록 -->
 	<!-- BeanNameViewResolver 객체 : 요청 처리 메소드의 반환값(ViewName)과 같은 이름을 식별자

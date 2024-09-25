@@ -6,7 +6,12 @@
 	JSP 문서를 제공하기 위한 엘리먼트 -->
 	<!-- name 속성 : definition 엘리먼트를 구분하기 위한 식별자를 속성값으로 설정 -->
 	<!-- => 요청 처리 메소드의 반환값과 같은 name 속성값의 definition 엘리먼트로 응답 처리 -->
-	<!-- template 속성 : definition 엘리먼트로 응답할 템플릿 기능의 JSP 문서의 경로를 속성값으로 설정 -->	
+	<!-- template 속성 : definition 엘리먼트로 응답할 템플릿 기능의 JSP 문서의 경로를 속성값으로 설정 -->
+
+	<!-- 로그인 페이지 첫 템플릿 -->
+	<!--<definition name="login" template="/WEB-INF/views/loginform.jsp">
+	</definition>-->
+
 	<definition name="main" template="/WEB-INF/views/layout/template.jsp">
 		<!-- put-attribute : 템플릿 페이지를 구성하는 JSP 문서를 제공하기 위한 엘리먼트 -->
 		<!-- name 속성 : put-attribute 엘리먼트를 구분하기 위한 식별자 -->

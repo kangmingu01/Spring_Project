@@ -9,8 +9,9 @@
 	<!-- template 속성 : definition 엘리먼트로 응답할 템플릿 기능의 JSP 문서의 경로를 속성값으로 설정 -->
 
 	<!-- 로그인 페이지 첫 템플릿 -->
-	<!--<definition name="login" template="/WEB-INF/views/loginform.jsp">
-	</definition>-->
+	<definition name="login" template="/WEB-INF/views/layout/template1.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/loginform.jsp"/>
+	</definition>
 
 	<definition name="main" template="/WEB-INF/views/layout/template.jsp">
 		<!-- put-attribute : 템플릿 페이지를 구성하는 JSP 문서를 제공하기 위한 엘리먼트 -->

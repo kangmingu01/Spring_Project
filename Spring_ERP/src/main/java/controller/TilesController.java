@@ -11,9 +11,9 @@ public class TilesController {
         return "main";
     }
 
-    @RequestMapping("/admin")
-    public String admin() {
-        return "admin";
+    @RequestMapping("/main")
+    public String main() {
+        return "main";
     }
 
     @RequestMapping("/login")

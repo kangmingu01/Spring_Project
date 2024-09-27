@@ -13,7 +13,7 @@
 <body>
 <!-- content 부분(content 부분만 바뀌면 됨) -->
 
-<div id="content" class="mt-6">
+<div id="content">
 	<tiles:insertAttribute name="content"/>
 </div>
 </body>

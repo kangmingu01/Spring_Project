@@ -32,7 +32,7 @@
             overflow: hidden;
         }
 
-        .container {
+        #container {
             position: relative;
             min-height: 100vh;
             overflow: hidden;
@@ -132,7 +132,7 @@
             transition-delay: 1.2s;
         }
 
-        .social-list>div {
+        .social-list > div {
             color: var(--white);
             margin: 0 .5rem;
             padding: .7rem;
@@ -143,28 +143,28 @@
             transition: .5s ease-in-out;
         }
 
-        .social-list>div:nth-child(1) {
+        .social-list > div:nth-child(1) {
             transition-delay: 1.4s;
         }
 
-        .social-list>div:nth-child(2) {
+        .social-list > div:nth-child(2) {
             transition-delay: 1.6s;
         }
 
-        .social-list>div:nth-child(3) {
+        .social-list > div:nth-child(3) {
             transition-delay: 1.8s;
         }
 
-        .social-list>div:nth-child(4) {
+        .social-list > div:nth-child(4) {
             transition-delay: 2s;
         }
 
-        .social-list>div>i {
+        .social-list > div > i {
             font-size: 1.5rem;
             transition: .4s ease-in-out;
         }
 
-        .social-list>div:hover i {
+        .social-list > div:hover i {
             transform: scale(1.5);
         }
 
@@ -188,12 +188,12 @@
             cursor: pointer;
         }
 
-        .container.sign-in .form.sign-in,
-        .container.sign-in .social-list.sign-in,
-        .container.sign-in .social-list.sign-in>div,
-        .container.sign-up .form.sign-up,
-        .container.sign-up .social-list.sign-up,
-        .container.sign-up .social-list.sign-up>div {
+        .con.sign-in .form.sign-in,
+        .con.sign-in .social-list.sign-in,
+        .con.sign-in .social-list.sign-in > div,
+        .con.sign-up .form.sign-up,
+        .con.sign-up .social-list.sign-up,
+        .con.sign-up .social-list.sign-up > div {
             transform: scale(1);
         }
 
@@ -242,18 +242,18 @@
             transform: translateX(250%);
         }
 
-        .container.sign-in .text.sign-in h2,
-        .container.sign-in .text.sign-in p,
-        .container.sign-in .img.sign-in img,
-        .container.sign-up .text.sign-up h2,
-        .container.sign-up .text.sign-up p,
-        .container.sign-up .img.sign-up img {
+        .con.sign-in .text.sign-in h2,
+        .con.sign-in .text.sign-in p,
+        .con.sign-in .img.sign-in img,
+        .con.sign-up .text.sign-up h2,
+        .con.sign-up .text.sign-up p,
+        .con.sign-up .img.sign-up img {
             transform: translateX(0);
         }
 
         /* BACKGROUND */
 
-        .container::before {
+        .con::before {
             content: "";
             position: absolute;
             top: 0;
@@ -269,12 +269,12 @@
             border-top-left-radius: max(50vw, 50vh);
         }
 
-        .container.sign-in::before {
+        .con.sign-in::before {
             transform: translate(0, 0);
             right: 50%;
         }
 
-        .container.sign-up::before {
+        .con.sign-up::before {
             transform: translate(100%, 0);
             right: 50%;
         }
@@ -283,9 +283,9 @@
 
         @media only screen and (max-width: 425px) {
 
-            .container::before,
-            .container.sign-in::before,
-            .container.sign-up::before {
+            .con::before,
+            .con.sign-in::before,
+            .con.sign-up::before {
                 height: 100vh;
                 border-bottom-right-radius: 0;
                 border-top-left-radius: 0;
@@ -294,12 +294,11 @@
                 right: 0;
             }
 
-            /* .container.sign-in .col.sign-up {
+            /* .con.sign-in .col.sign-up {
                 transform: translateY(100%);
             } */
-
-            .container.sign-in .col.sign-in,
-            .container.sign-up .col.sign-up {
+            .con.sign-in .col.sign-in,
+            .con.sign-up .col.sign-up {
                 transform: translateY(0);
             }
 
@@ -349,43 +348,18 @@
             }
         }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </head>
 <body>
-<div id="container" class="container">
+<div id="container" class="con">
     <!-- FORM SECTION -->
     <div class="row">
         <!-- SIGN UP -->
         <div class="col align-items-center flex-col sign-up">
             <div class="form-wrapper align-items-center">
-                <div class="form sign-up">
-                    <div class="input-group">
-                        <i class='bx bxs-user'></i>
-                        <input type="text" placeholder="Username">
-                    </div>
-                    <div class="input-group">
-                        <i class='bx bx-mail-send'></i>
-                        <input type="email" placeholder="Email">
-                    </div>
-                    <div class="input-group">
-                        <i class='bx bxs-lock-alt'></i>
-                        <input type="password" placeholder="Password">
-                    </div>
-                    <div class="input-group">
-                        <i class='bx bxs-lock-alt'></i>
-                        <input type="password" placeholder="Confirm password">
-                    </div>
-                    <button>
-                        Sign up
-                    </button>
-                    <p>
-              <span>
-                Already have an account?
-              </span>
-                        <b onclick="toggle()" class="pointer">
-                            Sign in here
-                        </b>
-                    </p>
-                </div>
+
             </div>
 
         </div>
@@ -396,28 +370,15 @@
                 <div class="form sign-in">
                     <div class="input-group">
                         <i class='bx bxs-user'></i>
-                        <input type="text" placeholder="Username">
+                        <input type="text" placeholder="아이디">
                     </div>
                     <div class="input-group">
                         <i class='bx bxs-lock-alt'></i>
-                        <input type="password" placeholder="Password">
+                        <input type="password" placeholder="비밀번호">
                     </div>
                     <button>
-                        Sign in
+                        로그인
                     </button>
-                    <p>
-                        <b>
-                            Forgot password?
-                        </b>
-                    </p>
-                    <p>
-              <span>
-                Don't have an account?
-              </span>
-                        <b onclick="toggle()" class="pointer">
-                            Sign up here
-                        </b>
-                    </p>
                 </div>
             </div>
             <div class="form-wrapper">
@@ -433,7 +394,7 @@
         <div class="col align-items-center flex-col">
             <div class="text sign-in">
                 <h2>
-                    Welcome
+                    안녕하세요
                 </h2>
 
             </div>
@@ -458,18 +419,23 @@
     </div>
     <!-- END CONTENT SECTION -->
 </div>
-    <script>
-        let container = document.getElementById('container')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
-        toggle = () => {
-            container.classList.toggle('sign-in')
-            container.classList.toggle('sign-up')
-        }
+<script>
+    let container = document.getElementById('container')
 
-        setTimeout(() => {
-            container.classList.add('sign-in')
-        }, 200)
-    </script>
+    toggle = () => {
+        container.classList.toggle('sign-in')
+        container.classList.toggle('sign-up')
+    }
+
+    setTimeout(() => {
+        container.classList.add('sign-in')
+    }, 200)
+</script>
+
 </body>
 
 </html>

@@ -1,3 +1,4 @@
+/*
 (() => {
   'use strict'
 
@@ -87,4 +88,44 @@
     showActiveTheme(themeParam)
   }
 
-})()
+})()*/
+
+/* 위에 코드는 Window 테마를 기반으로 자동 조정 없이 다크모드, 라이트 모드를 자동으로 설정 했는데 취소때림 */
+(() => {
+  'use strict';
+
+  const getStoredTheme = () => localStorage.getItem('theme');
+  const setStoredTheme = theme => localStorage.setItem('theme', theme);
+
+  const setTheme = theme => {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    showActiveTheme(theme);
+  };
+
+  const showActiveTheme = (theme) => {
+    const box = document.querySelector('.box');
+    if (theme === 'dark') {
+      box.classList.remove('light');
+      box.classList.add('dark');
+    } else {
+      box.classList.remove('dark');
+      box.classList.add('light');
+    }
+  };
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const storedTheme = getStoredTheme() || 'light'; // Default to light mode
+    setTheme(storedTheme);
+
+    const themeSwitcher = document.querySelector('#theme-switcher');
+    if (themeSwitcher) {
+      themeSwitcher.checked = storedTheme === 'dark';
+      themeSwitcher.addEventListener('change', function () {
+        const theme = this.checked ? 'dark' : 'light';
+        setStoredTheme(theme);
+        setTheme(theme);
+      });
+    }
+  });
+})();
+

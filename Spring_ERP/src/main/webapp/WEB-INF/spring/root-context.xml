@@ -8,8 +8,14 @@
 	<!-- Mybatis 프레임워크에서 발생되는 로그 이벤트를 전달받아 Spring 프레임워크의 로그 구현체로
 	기록되도록 driverClassName 필드값과 url 필드값을 log4jdbc-log4j2-jdbc4 라이브러리에서 제공
 	되는 값으로 변경 -->
-	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+	<!-- <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@www.itwill.xyz:1521:xe"/>
+		<property name="username" value="erp"/>
+		<property name="password" value="erp2"/>
+	</bean> -->
+	<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" id="dataSource">
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
 		<property name="url" value="jdbc:oracle:thin:@www.itwill.xyz:1521:xe"/>
 		<property name="username" value="erp"/>
 		<property name="password" value="erp2"/>

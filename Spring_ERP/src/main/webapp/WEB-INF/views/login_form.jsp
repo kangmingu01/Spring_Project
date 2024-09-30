@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -367,19 +369,27 @@
         <!-- SIGN IN -->
         <div class="col align-items-center flex-col sign-in">
             <div class="form-wrapper align-items-center">
-                <div class="form sign-in">
-                    <div class="input-group">
-                        <i class='bx bxs-user'></i>
-                        <input type="text" placeholder="아이디">
+                <form method="POST" action="<c:url value="/login"/>" id="loginform">
+                    <div class="form sign-in">
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="userid" id="userid" value="${userid}"  placeholder="아이디">
+                            <c:remove var="userid"/>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+
+                            <input type="password" name="passwd" id="passwd"  placeholder="비밀번호">
+                        </div>
+                        <button type="submit">
+                            로그인
+                        </button>
+                        <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
+                            <h3>${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</h3>
+                        </c:if>
                     </div>
-                    <div class="input-group">
-                        <i class='bx bxs-lock-alt'></i>
-                        <input type="password" placeholder="비밀번호">
-                    </div>
-                    <button>
-                        로그인
-                    </button>
-                </div>
+                    <sec:csrfInput/>
+                </form>
             </div>
             <div class="form-wrapper">
 
@@ -434,6 +444,9 @@
     setTimeout(() => {
         container.classList.add('sign-in')
     }, 200)
+</script>
+<script>
+
 </script>
 
 </body>

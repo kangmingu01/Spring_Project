@@ -83,22 +83,21 @@ public class CustomUserDetails implements UserDetails {
     // 인증된 사용자의 잠금 상태를 반환하는 메소드
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     // 인증된 사용자 비밀번호의 유효기간 상태를 반환하는 메소드
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     // 인증된 사용자의 활성화 상태를 반환하는 메소드
     @Override
     public boolean isEnabled() {
-        if(enabled == 0) {
-            return false;
-        } else {
-            return true;
-        }
+		
+		if(this.enabled == 0) { return false; } else { return true; }
+		 
+
     }
 }

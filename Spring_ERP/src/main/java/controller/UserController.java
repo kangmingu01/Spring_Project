@@ -16,4 +16,9 @@ public class UserController {
     public String user(Model model) {
         return "htmlTemplate";
     }
+
+    @RequestMapping("/boot")
+    public String boot(Model model) {
+        return "bootstrapTemplate";
+    }
 }

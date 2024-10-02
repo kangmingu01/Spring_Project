@@ -51,7 +51,7 @@ public class CustomUserDetails implements UserDetails {
 
         this.erpAuthList = new ArrayList<GrantedAuthority>();
 
-        for(ErpAuth auth : user.getErpAuthList()) {
+        for (ErpAuth auth : user.getErpAuthList()) {
             this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
         }
     }
@@ -95,9 +95,12 @@ public class CustomUserDetails implements UserDetails {
     // 인증된 사용자의 활성화 상태를 반환하는 메소드
     @Override
     public boolean isEnabled() {
-		
-		if(this.enabled == 0) { return false; } else { return true; }
-		 
+
+        if (this.enabled == 0) {
+            return false;
+        } else {
+            return true;
+        }
 
     }
 }

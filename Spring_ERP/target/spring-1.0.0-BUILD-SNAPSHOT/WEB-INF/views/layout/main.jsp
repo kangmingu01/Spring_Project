@@ -28,6 +28,29 @@
     <%-- <h3><sec:authentication property="principal.userid"/>님, 환영합니다.</h3> --%>
     <%-- <h3><sec:authentication property="principal.name"/>님, 환영합니다.</h3> --%>
     <h3>${loginUser.name}님, 환영합니다.</h3>
+    <ul>
+        <li>${loginUser.name}</li>
+        <li>${loginUser.passwd}</li>
+        <li>${loginUser.name}</li>
+        <li>${loginUser.phone}</li>
+        <li>${loginUser.address}</li>
+        <li>${loginUser.email}</li>
+        <li>${loginUser.gender}</li>
+        <li>${loginUser.birthday}</li>
+        <li>${loginUser.joindate}</li>
+        <li>${loginUser.enabled}</li>
+        <li>
+            <c:choose>
+                <c:when test="${loginUser.enabled == null}">
+                    ${loginUser.enabled}
+                </c:when>
+                <c:otherwise>
+                    부서/매장이 없습니다
+                </c:otherwise>
+            </c:choose>
+        </li>
+        <li>${loginUser.erpAuthList}</li>
+    </ul>
 
     <%-- 로그아웃 처리 기능을 제공하는 페이지는 반드시 form 태그를 사용해 요청 --%>
     <%-- => CSRF 토큰을 전달하기 위한 form 태그 사용 --%>

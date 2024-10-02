@@ -93,10 +93,11 @@
         <!-- delete-cookies 속성 : 로그아웃 처리 후 삭제될 쿠키의 이름을 속성값으로 설정 -->
         <!-- => 삭제할 쿠키가 여러개인 경우 , 기호를 사용해 나열 작성 가능 -->
 
-        <logout logout-url="/logout" logout-success-url="/main"
+        <!-- 프로젝트 마지막 => 로그아웃 성공한 경로를 로그인 경로로 설정하기 -->
+        <logout logout-url="/logout" logout-success-url="/"
                 invalidate-session="true"
                 delete-cookies="JSESSIONID"/>
-
+ㅡ
 
         <!-- csrf : CSRF 토큰 사용 여부를 설정하기 위한 엘리먼트 -->
         <!-- disabled 속성 : false 또는 true(기본값) 중 하나를 속성값으로 설정 -->

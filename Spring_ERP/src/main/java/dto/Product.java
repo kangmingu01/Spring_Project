@@ -21,6 +21,6 @@ public class Product {
 	private String productCategory;
 	private String productName;
 	private int productPrice;
-	private int DeliveryPrice;
+	private int deliveryPrice;
 	private String productImg;
 }

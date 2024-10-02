@@ -1,5 +1,7 @@
 package dto;
 
+import lombok.Data;
+
 /*
 CREATE TABLE inventory (
     inv_id NUMBER PRIMARY KEY, -- 재고 식별자(시퀀스)
@@ -15,10 +17,13 @@ CREATE TABLE inventory (
 
 CREATE SEQUENCE inventory_seq;
 */
+@Data
 public class inventory {
-	private int inventoryId;
-	private int inventoryProductId;
-	private int inventoryQty;
-	private int inventoryWarehouse;
-	private int inventoryDamagedQty;
+	private int inventoryId;	// 재고 식별자
+	private int inventoryProductId;	
+	private int inventoryQty;	// 현재 수량
+	private int inventoryWarehouseId;	// 창고아이디
+	private int inventoryDamagedQty;	// 파손된 수량
+	private String lastDate;
+	
 }

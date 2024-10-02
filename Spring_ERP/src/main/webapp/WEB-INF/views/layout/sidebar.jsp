@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- 폰트 어썸 --%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <!-- partial:partials/_sidebar.html -->
 <nav class="sidebar">
     <div class="sidebar-header">
@@ -14,12 +17,44 @@
         <ul class="nav" id="sidebarNav">
             <li class="nav-item nav-category">Main</li>
             <li class="nav-item">
-                <a href="dashboard.html" class="nav-link">
+                <a href="<c:url value="/main"/>" class="nav-link">
                     <i class="link-icon" data-feather="box"></i>
                     <span class="link-title">Dashboard</span>
                 </a>
             </li>
             <li class="nav-item nav-category">web apps</li>
+
+            <%-- 관리자 부분 --%>
+            <li class="nav-item">
+                <a
+                        class="nav-link"
+                        data-bs-toggle="collapse"
+                        href="#adminSidebar"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="adminSidebar"
+                >
+                    <%--<i class="link-icon" data-feather="mail"></i>--%>
+                    <i class="fa-solid fa-shield-halved link-icon" style="color: #000000;"></i>
+                    <span class="link-title">관리</span>
+                    <i class="link-arrow" data-feather="chevron-down"></i>
+                </a>
+                <div class="collapse" data-bs-parent="#sidebarNav" id="adminSidebar">
+                    <ul class="nav sub-menu">
+                        <li class="nav-item">
+                            <a href="pages/email/inbox.html" class="nav-link">유저 관리</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/email/read.html" class="nav-link">권한 관리</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/email/compose.html" class="nav-link"
+                            >부서 권한</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </li>
             <li class="nav-item">
                 <a
                         class="nav-link"

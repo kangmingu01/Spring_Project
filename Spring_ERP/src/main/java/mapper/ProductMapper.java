@@ -7,4 +7,6 @@ public interface ProductMapper {
 	int updateProduct();
 	int deleteProduct();
 	//selectProductAll()
+	
+	
 }

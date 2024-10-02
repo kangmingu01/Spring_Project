@@ -12,4 +12,12 @@
 		update product set productCategory=#{productCategory},productName=#{productName},productPrice=#{productPrice},deliveryPrice=#{deliveryPrice}
 	</update>
 	
+	<delete id="deleteProduct">
+		delete from product where productId=#{productId}
+	</delete>
+	
+	<select id="selectProductAll">
+		select * from product
+	</select>
+	
 </mapper>

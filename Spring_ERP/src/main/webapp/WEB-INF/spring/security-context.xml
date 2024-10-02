@@ -97,7 +97,6 @@
         <logout logout-url="/logout" logout-success-url="/"
                 invalidate-session="true"
                 delete-cookies="JSESSIONID"/>
-ㅡ
 
         <!-- csrf : CSRF 토큰 사용 여부를 설정하기 위한 엘리먼트 -->
         <!-- disabled 속성 : false 또는 true(기본값) 중 하나를 속성값으로 설정 -->

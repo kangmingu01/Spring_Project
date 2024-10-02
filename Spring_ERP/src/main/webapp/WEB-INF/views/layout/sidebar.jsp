@@ -1,12 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- 폰트 어썸 --%>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <!-- partial:partials/_sidebar.html -->
 <nav class="sidebar">
     <div class="sidebar-header">
-        <a href="#" class="sidebar-brand"> Noble<span>UI</span> </a>
+        <a href="<c:url value="/"/>" class="sidebar-brand"> Noble<span>UI</span> </a>
         <div class="sidebar-toggler">
             <span></span>
             <span></span>
@@ -42,7 +41,7 @@
                 <div class="collapse" data-bs-parent="#sidebarNav" id="adminSidebar">
                     <ul class="nav sub-menu">
                         <li class="nav-item">
-                            <a href="pages/email/inbox.html" class="nav-link">유저 관리</a>
+                            <a href="<c:url value="/admin/user"/>" class="nav-link">유저 관리</a>
                         </li>
                         <li class="nav-item">
                             <a href="pages/email/read.html" class="nav-link">권한 관리</a>

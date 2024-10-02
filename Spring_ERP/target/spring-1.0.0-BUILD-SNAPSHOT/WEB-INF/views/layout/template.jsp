@@ -4,35 +4,36 @@
 <!-- TilesView 기능을 제공하는 태그를 사용하기 위해 JSP 문서에 tags-tiles 태그 라이브러리 추가 -->
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- 폰트 어썸 --%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<%-- 부트스트랩 --%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 <!DOCTYPE html>
 <html>
 <link>
 <meta charset="UTF-8">
 <title>SPRING</title>
-<style type="text/css">
-    /*#header {
-        border: 2px solid red;
-        height: 150px;
-        margin: 10px;
-        padding: 10px;
-        text-align: center;
+<style>
+    #sidebar{
+        z-index: 9999;
     }
-
+    #header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+    }
     #content {
-
-        border: 2px solid green;
-        min-height: 550px;
-        margin: 10px;
-        padding: 10px;
+        margin-top: 60px;
+        overflow-y: auto;
+        overflow-x: auto;
     }
 
-    #footer {
-        border: 2px solid blue;
-        height: 150px;
-        margin: 10px;
-        padding: 10px;
-        text-align: center;
-    }*/
 </style>
 
 <!-- color-modes:js -->
@@ -70,31 +71,29 @@
 <link rel="shortcut icon" href="<c:url value="/images/favicon.png"/>"/>
 </head>
 <body>
-<div class="main-wrapper">
+<div class="main-wrapper d-flex flex-column min-vh-100">
     <%-- Side Bar(menu) --%>
-    <div id="sidebar" class="">
+    <div id="sidebar" class="position-fixed">
         <tiles:insertAttribute name="sidebar"/>
     </div>
+
     <!-- partial -->
-
-    <div class="page-wrapper">
-
+    <div class="page-wrapper flex-grow-1">
         <div id="header" class="">
             <tiles:insertAttribute name="header"/>
         </div>
 
         <!-- content 부분(content 부분만 바뀌면 됨) -->
-        <div id="content" class="mt-6">
+        <div id="content" class="flex-grow-1 overflow-auto">
             <tiles:insertAttribute name="content"/>
         </div>
-
-        <div id="footer" class="">
-            <tiles:insertAttribute name="footer"/>
-        </div>
-        <!-- partial -->
     </div>
 
+    <div id="footer" class="mt-auto">
+        <tiles:insertAttribute name="footer"/>
+    </div>
 </div>
+
 <!-- core:js -->
 <script src="<c:url value='/js/core.js'/>"></script>
 <!-- endinject -->
@@ -112,5 +111,8 @@
 <!-- Custom js for this page -->
 <script src="<c:url value="/js/dashboard.js"/>"></script>
 <!-- End custom js for this page -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
 package exception;
 
-public class 임시 {
+public class test {
 }

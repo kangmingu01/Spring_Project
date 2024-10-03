@@ -1,0 +1,15 @@
+package mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import dto.Supplier;
+
+public interface SupplierMapper {
+	int insertSupplier(Supplier supplier);
+	Supplier selectSupplierById(int supplierId);	
+	int updateSupplier(Supplier supplier);
+	int selectSupplierCount(Map<String, Object> map);
+	List<Supplier> selectSupplierList(Map<String, Object> map);
+	boolean existsByName(String supplierName);
+}

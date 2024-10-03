@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import dto.Supplier;
@@ -59,20 +60,24 @@ public class SupplierController {
         return ResponseEntity.ok(response);
     }
 
-    // 공급업체 정보 수정
+ // 공급업체 정보 수정
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public String modify(@ModelAttribute Supplier supplier, @RequestParam Map<String, Object> map) throws UnsupportedEncodingException {
+    public String modify(@ModelAttribute Supplier supplier, 
+                         @RequestParam Map<String, Object> map,
+                         RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
         supplierService.modifySupplier(supplier);
-        
-        String pageNum = (String) map.get("pageNum");
-        String pageSize = (String) map.get("pageSize");
-        String column = (String) map.get("column");
-        String keyword = URLEncoder.encode((String) map.get("keyword"), "utf-8");
 
-        return "redirect:/purchase/supplier/manage?pageNum=" + pageNum + "&pageSize=" + pageSize
-                + "&column=" + column + "&keyword=" + keyword;
+        // 페이징 및 검색 정보 유지
+        redirectAttributes.addAttribute("pageNum", map.get("pageNum"));
+        redirectAttributes.addAttribute("pageSize", map.get("pageSize"));
+        redirectAttributes.addAttribute("column", map.get("column"));
+        String keyword = map.get("keyword") != null ? URLEncoder.encode((String) map.get("keyword"), "utf-8") : "";
+        redirectAttributes.addAttribute("keyword", keyword);
+
+        return "redirect:/purchase/supplier/manage";
     }
+
 
     // 공급업체 검색 및 초기화 - 전체 목록을 기본으로 조회
     @RequestMapping(value = "/search", method = RequestMethod.GET)

@@ -187,18 +187,7 @@ document.querySelector('.content_body_search_plus').addEventListener('click', fu
 
 // 조회 버튼 클릭 시 폼 제출
 function submitForm(formId) {
-    const form = $("#" + formId);
-    
-    // 검색 폼이 비어 있을 경우 초기화
-    if (formId === 'searchForm') {
-        form.find("input").each(function() {
-            if ($(this).val().trim() === "") {
-                $(this).val('');
-            }
-        });
-    }
-    
-    form.submit(); // 검색 폼 제출
+    $("#" + formId).submit();
 }
 
 // 초기화 버튼 클릭 시 필드 초기화 및 전체 목록 조회
@@ -271,21 +260,25 @@ function validateFields() {
     registerButton.prop("disabled", !isValid);
 }
 
-// 수정 버튼 클릭 시 해당 행의 데이터를 입력 필드에 채우기
+//수정 버튼 클릭 시 필드 채우기 및 수정 모드로 전환
 function editSupplier(id, name, phone, email) {
+    // 필드에 데이터 채우기
     $("#supplierId").val(id).prop("readonly", true);
     $("#supplierName").val(name);
     $("#supplierPhone").val(phone);
     $("#supplierEmail").val(email);
 
-    // 버튼 상태 변경
-    $("#registerButton").text("완료");
-    $("#registerButton").attr("onclick", "completeUpdate('" + id + "')");
-    $("#registerButton").prop("disabled", false);
+    // 수정 모드로 변경
+    const editButton = $("#editButton-" + id);
+    editButton.text("완료");
+    editButton.removeClass("btn-warning").addClass("btn-success");
+    editButton.attr("id", "completeButton-" + id); // ID 변경하여 수정 완료 버튼으로 전환
+    editButton.attr("onclick", "completeUpdate('" + id + "')");
 }
 
-// 수정 완료 버튼 클릭 시
+//수정 완료 버튼 클릭 시
 function completeUpdate(id) {
+    // 기존의 폼 데이터를 사용하여 수정을 요청하고 페이지를 갱신하도록 변경
     $.ajax({
         url: "<c:url value='/purchase/supplier/modify' />",
         method: 'POST',
@@ -293,11 +286,15 @@ function completeUpdate(id) {
             supplierId: id,
             supplierName: $('#supplierName').val(),
             supplierPhone: $('#supplierPhone').val(),
-            supplierEmail: $('#supplierEmail').val()
+            supplierEmail: $('#supplierEmail').val(),
+            pageNum: $("#pageNum").val(), // 현재 페이지 번호를 보냄
+            pageSize: $("#pageSize").val(), // 페이지 사이즈를 보냄
+            column: $("#column").val(), // 검색 컬럼을 보냄
+            keyword: $("#keyword").val() // 검색 키워드를 보냄
         },
-        success: function() {
-            alert('수정이 완료되었습니다.');
-            resetForm(); // 수정 후 필드 초기화 및 테이블 갱신
+        success: function() {          
+            // 수정 완료 후 현재 페이지를 리로드하여 목록을 갱신
+            location.reload();
         },
         error: function(xhr) {
             alert('수정 중 오류가 발생했습니다: ' + xhr.responseText);
@@ -305,35 +302,39 @@ function completeUpdate(id) {
     });
 }
 
-// 공급업체 등록 
-function registerSupplier() {
+
+// 테이블 갱신을 위한 함수
+function fetchUpdatedSuppliers() {
     $.ajax({
-        url: "<c:url value='/purchase/supplier/register' />",
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-            supplierName: $("#newSupplierName").val(),
-            supplierPhone: $("#newSupplierPhone").val(),
-            supplierEmail: $("#newSupplierEmail").val()
-        }),
-        success: function() {
-            $("#errorMessage").hide();     
-            resetForm(); // 등록 후 필드 초기화 및 테이블 갱신
+        url: "<c:url value='/purchase/supplier/manage' />",
+        method: 'GET',
+        success: function(data) {
+            // 테이블을 갱신하는 로직 작성
+            // 서버에서 받은 새로운 데이터를 테이블에 렌더링합니다.
+            $("#supplierTable").html($(data).find("#supplierTable").html());
         },
-        error: function(xhr) {
-            $("#errorMessage").text(xhr.responseText).show();
+        error: function() {
+            alert("테이블 갱신 중 오류가 발생했습니다.");
         }
     });
 }
+
+// 초기화 버튼 클릭 시 필드 초기화 및 전체 목록 조회
+function resetForm() {
+    // 검색 필드 초기화
+    $(".search-field").each(function() {
+        $(this).val('');
+    });
+
+    // 전체 목록 조회 위해 검색 폼 제출
+    submitForm("searchForm");
+
+    // 수정 모드 초기화
+    $("#registerButton").text("완료");
+    $("#registerButton").prop("disabled", true);
+    $("#registerButton").off('click').attr("onclick", "registerSupplier()");
+}
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-</body>
-</html>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

@@ -19,6 +19,7 @@ CREATE SEQUENCE settlement_seq;
 
  */
 
+
 @Data
 public class Settlement {
 	private int settlementId;       

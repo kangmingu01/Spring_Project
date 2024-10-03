@@ -55,7 +55,7 @@
                 order by supplier_id desc) supplier) where rn between #{startRow} and #{endRow}
     </select>
     
-    <select id="existsByName" resultType="boolean" parameterType="String">
-    SELECT COUNT(*) > 0 FROM supplier WHERE supplier_name = #{supplierName}
+	<select id="existsByName" resultType="int" parameterType="String">
+	    select count(*) from supplier where supplier_name = #{supplierName}
 	</select>
 </mapper>

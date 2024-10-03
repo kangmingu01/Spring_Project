@@ -39,9 +39,9 @@ public class SupplierDAOImpl implements SupplierDAO {
 	public List<Supplier> selectSupplierList(Map<String, Object> map) {
 		return sqlSession.getMapper(SupplierMapper.class).selectSupplierList(map);
 	}
-
+	
 	@Override
-	public boolean existsByName(String supplierName) {
-		return sqlSession.getMapper(SupplierMapper.class).equals(supplierName);
+	public int existsByName(String supplierName) {
+	    return sqlSession.getMapper(SupplierMapper.class).existsByName(supplierName);
 	}
 }

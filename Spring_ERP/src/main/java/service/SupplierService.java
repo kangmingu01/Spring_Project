@@ -9,4 +9,5 @@ public interface SupplierService {
 	void modifySupplier(Supplier supplier);
 	Supplier getSupplierById(int supplierId);
 	Map<String, Object> getSupplierList(Map<String, Object> map);
+	int existsByName(String supplierName);
 }

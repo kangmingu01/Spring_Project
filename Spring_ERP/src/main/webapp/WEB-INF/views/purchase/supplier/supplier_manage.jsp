@@ -90,8 +90,7 @@
           <div>
             <div>
                 <label>이름</label>
-                <input type="text" id="newSupplierName" name="supplierName" required oninput="validateFields()" />
-                <div id="errorMessage" style="color: red; display:none; margin-top:10px;"></div> <!-- 오류 메시지 표시 -->
+                <input type="text" id="newSupplierName" name="supplierName" required oninput="validateFields()" />                
             </div>
             <div>
               <label>연락처</label>
@@ -102,6 +101,9 @@
               <input type="text" id="newSupplierEmail" name="supplierEmail" required oninput="validateFields()" />
             </div>
             <button type="button" id="registerButton" onclick="registerSupplier()" disabled>완료</button>
+          </div>
+          <div>
+          	<div id="errorMessage" style="color: red; display:none; margin-top:10px;"></div> <!-- 오류 메시지 표시 --></div>            
           </div>
          </form>
       </div>
@@ -172,114 +174,166 @@
 
 
 <script type="text/javascript">
-// 모든 AJAX 요청에 CSRF 토큰 자동 추가
 $(document).ajaxSend(function(event, xhr) {
-  xhr.setRequestHeader($('meta[name="_csrf_header"]').attr('content'), $('meta[name="_csrf"]').attr('content'));
+    xhr.setRequestHeader($('meta[name="_csrf_header"]').attr('content'), $('meta[name="_csrf"]').attr('content'));
 });
 
 // 추가정보 클릭 시 열고 닫기 기능 구현
 document.querySelector('.content_body_search_plus').addEventListener('click', function () {
-  const plusSection = document.querySelector('.content_plus');
-  this.classList.toggle('on'); // 추가정보의 화살표 아이콘을 반대로 돌리는 클래스 토글
-  plusSection.classList.toggle('on'); // 추가정보를 열고 닫는 클래스 토글
+    const plusSection = document.querySelector('.content_plus');
+    this.classList.toggle('on');
+    plusSection.classList.toggle('on');
 });
 
-//폼 제출 (검색)
+// 조회 버튼 클릭 시 폼 제출
 function submitForm(formId) {
-  $("#" + formId).submit(); // 검색 폼 제출
+    const form = $("#" + formId);
+    
+    // 검색 폼이 비어 있을 경우 초기화
+    if (formId === 'searchForm') {
+        form.find("input").each(function() {
+            if ($(this).val().trim() === "") {
+                $(this).val('');
+            }
+        });
+    }
+    
+    form.submit(); // 검색 폼 제출
 }
 
 // 초기화 버튼 클릭 시 필드 초기화 및 전체 목록 조회
 function resetForm() {
-  $(".search-field").each(function() {
-    $(this).val('');
-  });
-  submitForm("searchForm"); // 전체 목록 조회
+    // 검색 필드 초기화
+    $(".search-field").each(function() {
+        $(this).val('');
+    });
+
+    // 전체 목록 조회 위해 검색 폼 제출
+    submitForm("searchForm");
+}
+
+// 공급업체 이름 중복 확인 (등록 시)
+$("#newSupplierName").on("input", function() {
+    validateName();
+});
+
+// 공급업체 이름 중복 확인 함수
+function validateName() {
+    const supplierName = $("#newSupplierName").val().trim();
+    if (supplierName === "") {
+        $("#errorMessage").text("").hide();
+        $("#registerButton").prop("disabled", true);
+        return;
+    }
+
+    $.ajax({
+        url: "<c:url value='/purchase/supplier/checkName' />",
+        method: "GET",
+        data: { supplierName: supplierName },
+        success: function(response) {
+            if (response.exists) {
+                $("#errorMessage").text("이미 존재하는 공급업체 이름입니다.").show();
+                $("#registerButton").prop("disabled", true);
+            } else {
+                $("#errorMessage").hide();
+                validateFields();  // 다른 필드의 유효성을 검사하여 버튼 활성화 여부 결정
+            }
+        },
+        error: function() {
+            $("#errorMessage").text("이름 중복 확인 중 오류가 발생했습니다.").show();
+            $("#registerButton").prop("disabled", true);
+        }
+    });
+}
+
+// 등록 버튼 활성화 검사
+function validateFields() {
+    const name = $("#newSupplierName").val().trim();
+    const phone = $("#newSupplierPhone").val().trim();
+    const email = $("#newSupplierEmail").val().trim();
+    const registerButton = $("#registerButton");
+
+    let isValid = true;
+
+    // 연락처 검증
+    const phonePattern = /^[0-9-]{10,}$/;
+    if (!phonePattern.test(phone)) {
+        isValid = false;
+    }
+
+    // 이메일 검증
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        isValid = false;
+    }
+
+    // 모든 필드가 유효할 때만 버튼 활성화
+    registerButton.prop("disabled", !isValid);
+}
+
+// 수정 버튼 클릭 시 해당 행의 데이터를 입력 필드에 채우기
+function editSupplier(id, name, phone, email) {
+    $("#supplierId").val(id).prop("readonly", true);
+    $("#supplierName").val(name);
+    $("#supplierPhone").val(phone);
+    $("#supplierEmail").val(email);
+
+    // 버튼 상태 변경
+    $("#registerButton").text("완료");
+    $("#registerButton").attr("onclick", "completeUpdate('" + id + "')");
+    $("#registerButton").prop("disabled", false);
+}
+
+// 수정 완료 버튼 클릭 시
+function completeUpdate(id) {
+    $.ajax({
+        url: "<c:url value='/purchase/supplier/modify' />",
+        method: 'POST',
+        data: {
+            supplierId: id,
+            supplierName: $('#supplierName').val(),
+            supplierPhone: $('#supplierPhone').val(),
+            supplierEmail: $('#supplierEmail').val()
+        },
+        success: function() {
+            alert('수정이 완료되었습니다.');
+            resetForm(); // 수정 후 필드 초기화 및 테이블 갱신
+        },
+        error: function(xhr) {
+            alert('수정 중 오류가 발생했습니다: ' + xhr.responseText);
+        }
+    });
 }
 
 // 공급업체 등록 
 function registerSupplier() {
-  $.ajax({
-    url: "<c:url value='/purchase/supplier/register' />",
-    method: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify({
-      supplierName: $("#newSupplierName").val(),
-      supplierPhone: $("#newSupplierPhone").val(),
-      supplierEmail: $("#newSupplierEmail").val()
-    }),
-    success: function(response) {
-      // 오류 메시지 숨기기
-      $("#errorMessage").hide();     
-      resetForm(); // 등록 후 필드 초기화 및 테이블 갱신
-    },
-    error: function(xhr) {
-      // 오류 메시지 표시
-      $("#errorMessage").text(xhr.responseText).show();
-    }
-  });
-}
-
-
-// 수정 버튼 클릭 시 필드 채우기 및 수정 모드로 전환
-function editSupplier(id, name, phone, email) {
-  $("#supplierId").val(id).prop("readonly", true);
-  $("#supplierName").val(name);
-  $("#supplierPhone").val(phone);
-  $("#supplierEmail").val(email);
-
-  const editButton = $("#editButton-" + id);
-  editButton.text("완료");
-  editButton.removeClass("btn-warning").addClass("btn-success");
-  editButton.attr("onclick", "completeUpdate('" + id + "')");
-}
-
-//수정 완료 버튼 클릭 시
-function completeUpdate(id) {
-  $.ajax({
-    url: "<c:url value='/purchase/supplier/modify' />",
-    method: 'POST',
-    data: {
-      supplierId: id,
-      supplierName: $('#supplierName').val(),
-      supplierPhone: $('#supplierPhone').val(),
-      supplierEmail: $('#supplierEmail').val()
-    },
-    success: function() {
-      // 수정 후 테이블 갱신
-      fetchUpdatedSuppliers(); // 새로운 데이터로 테이블을 갱신하는 함수 호출
-    },
-    error: function(xhr) {
-      alert('수정 중 오류가 발생했습니다: ' + xhr.responseText);
-    }
-  });
-}
-
-// 필수 입력 필드 검사 후 버튼 활성화/비활성화
-function validateFields() {
-  const name = $("#newSupplierName").val().trim();
-  const phone = $("#newSupplierPhone").val().trim();
-  const email = $("#newSupplierEmail").val().trim();
-  const registerButton = $("#registerButton");
-
-  let isValid = true;
-  
-  // 연락처 검증 (숫자와 - 만 포함, 최소 10자리)
-  const phonePattern = /^[0-9-]{10,}$/;
-  if (!phonePattern.test(phone)) {
-    isValid = false;
-  }
-
-  // 이메일 검증 (이메일 형식)
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(email)) {
-    isValid = false;    
-  }
-
-  // 모든 필드가 유효할 때만 버튼 활성화
-  registerButton.prop("disabled", !isValid);
+    $.ajax({
+        url: "<c:url value='/purchase/supplier/register' />",
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            supplierName: $("#newSupplierName").val(),
+            supplierPhone: $("#newSupplierPhone").val(),
+            supplierEmail: $("#newSupplierEmail").val()
+        }),
+        success: function() {
+            $("#errorMessage").hide();     
+            resetForm(); // 등록 후 필드 초기화 및 테이블 갱신
+        },
+        error: function(xhr) {
+            $("#errorMessage").text(xhr.responseText).show();
+        }
+    });
 }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

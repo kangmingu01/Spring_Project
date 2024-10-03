@@ -20,7 +20,8 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional
     @Override
     public void addSupplier(Supplier supplier) {
-        if (supplierDAO.existsByName(supplier.getSupplierName())) {
+        int count = supplierDAO.existsByName(supplier.getSupplierName());
+        if (count > 0) {
             throw new IllegalArgumentException("이미 존재하는 공급업체 이름입니다.");
         }
         supplierDAO.insertSupplier(supplier);
@@ -81,5 +82,9 @@ public class SupplierServiceImpl implements SupplierService {
 
         return result;
     }
-    
+
+    @Override
+    public int existsByName(String supplierName) {
+        return supplierDAO.existsByName(supplierName);
+    }    
 }

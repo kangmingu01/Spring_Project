@@ -11,5 +11,5 @@ public interface SupplierDAO {
 	int updateSupplier(Supplier supplier);
 	int selectSupplierCount(Map<String, Object> map);
 	List<Supplier> selectSupplierList(Map<String, Object> map);
-	boolean existsByName(String supplierName);
+	int existsByName(String supplierName);
 }

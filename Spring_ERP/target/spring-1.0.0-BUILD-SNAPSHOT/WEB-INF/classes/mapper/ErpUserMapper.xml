@@ -54,10 +54,12 @@
         <collection property="erpAuthList" select="selectErpAuthByUserid" column="userid"/>
     </resultMap>
 
+    <!-- 사용자 권한을 가져오는 쿼리 -->
     <select id="selectErpAuthByUserid" resultType="ErpAuth">
         SELECT userid, auth FROM erp_auth WHERE userid = #{userid}
     </select>
 
+    <!-- 사용자 정보를 가져오는 쿼리 -->
     <select id="selectErpUserByUserid" resultMap="erpUserResultMap">
         SELECT userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id
         FROM erp_user WHERE userid = #{userid}
@@ -67,4 +69,34 @@
     <insert id="insertErpAuth">
         insert into erp_auth values(#{userid}, #{auth})
     </insert>
+
+    <!-- 유저 테이블의 리스트 전체 갯수를 가져오는 SQL -->
+    <!-- 조건을 걸어 검색필드에 값이 있다면 해당 조건과 키워드에 맞게 갯수를 반환 -->
+    <select id="selectUserCount" resultType="int">
+        select count(*) from erp_user
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%'+keyword+'%'"/>
+            where ${column} like #{word}
+        </if>
+    </select>
+
+
+    <!-- 페이징 처리된 게시판 리스트를 가져오는 SQL -->
+    <!-- 키워드가 있다면 검색된 키워드의 게시판 리스트를 반환 -->
+    <select id="selectUserList" resultType="ErpUser">
+        select * from (
+        select rownum rn, erp_user.*
+        from (
+        select userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id
+        from erp_user
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%' + keyword + '%'"/>
+            where ${column} like #{word}
+        </if>
+        order by joindate desc
+        ) erp_user
+        )
+        where rn between #{startRow} and #{endRow}
+    </select>
+
 </mapper>

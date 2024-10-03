@@ -23,7 +23,7 @@
 
         .toggle-password {
             position: absolute;
-            right: 85px;
+            right: 110px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
@@ -35,6 +35,31 @@
             visibility: hidden;
             height: 1.2em;
         }
+
+        .is-invalid {
+            border-color: red;
+        <%-- 오류 발생 시 테두리 색상 --%> animation: shake 0.5s;
+        <%-- 흔들림 애니메이션 --%>
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            50% {
+                transform: translateX(5px);
+            }
+            75% {
+                transform: translateX(-5px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -72,12 +97,13 @@
                     <div class="col-md-4">
                         <label for="userid" class="form-label">사용자 ID</label>
                         <div class="d-flex">
-                            <input type="text" class="form-control" id="userid" name="userid" required>
-                            <button type="button" class="btn btn-secondary btn-sm text-nowrap">중복검사</button>
+                            <input type="text" class="form-control" id="userid" name="userid">
+                            <button type="button" id="idCheck" class="btn btn-secondary btn-sm text-nowrap">중복검사
+                            </button>
                         </div>
 
                         <div id="idMsg" class="error">아이디를 입력해주세요</div>
-                        <div id="idReg" class="error">아이디는 영문자로 시작되는 영문자, 숫자의 범위 6~15범위의 문자로만 작성 가능합니다</div>
+                        <div id="idRegMsg" class="error">아이디는 영문자로 시작되는 영문자, 숫자의 범위 6~15범위의 문자로만 작성 가능합니다</div>
                         <div id="idCheckMsg" class="error">아이디 중복 검사를 반드시 실행해주세요</div>
 
                     </div>
@@ -86,7 +112,8 @@
                     <div class="col-md-4">
                         <label for="passwd" class="form-label">비밀번호</label>
                         <div class="d-flex form-control-position">
-                            <input type="password"  class="form-control" id="passwd" name="passwd" required disabled readonly>
+                            <input type="password" class="form-control" id="passwd" name="passwd" disabled
+                                   readonly>
                             <span class="toggle-password" onclick="togglePassword()">
                             <i class="fa fa-eye-slash" id="toggleIcon"></i>
                             </span>
@@ -94,18 +121,16 @@
                                     onclick="generateRandomPassword()">랜덤생성
                             </button>
                         </div>
-                        <div id="passwdMsg" class="error">비밀번호를 입력해 주세요.</div> <%-- 비밀번호 입력 오류 메시지 --%>
-                        <div id="passwdRegMsg" class="error">비밀번호는 영문자,숫자,특수문자가 반드시 하나이상 포함된 6~20 범위의 문자로만 작성 가능합니다.</div> <%-- 비밀번호 형식 오류 메시지 --%>
+                        <div id="passwdMsg" class="error">랜덤생성 버튼을 눌러주세요</div>
+
+
                     </div>
-                    <%--                    <!-- Random Password Button -->
-                                        <div class="col-md-3 d-flex align-items-end">
-                                            <button type="button" class="btn btn-secondary" onclick="generateRandomPassword()">랜덤</button>
-                                        </div>--%>
                     <!-- 이름 -->
                     <div class="col-md-4">
                         <label for="name" class="form-label">이름</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                        <div id="nameMsg" class="error">이름을 입력해 주세요.</div> <%-- 이름 입력 오류 메시지 --%>
+                        <input type="text" class="form-control" id="name" name="name">
+                        <div id="nameMsg" class="error">이름을 입력해 주세요.</div>
+                        <%-- 이름 입력 오류 메시지 --%>
                     </div>
                 </div>
 
@@ -114,21 +139,26 @@
                     <!-- 전화번호 -->
                     <div class="col-md-4">
                         <label for="phone" class="form-label">전화번호</label>
-                        <input type="text" class="form-control" id="phone" name="phone" required>
-                        <div id="mobileMsg" class="error">전화번호를 입력해 주세요.</div> <%-- 전화번호 입력 오류 메시지 --%>
-                        <div id="mobileRegMsg" class="error">전화번호는 3~4 자리의 숫자로만 입력해 주세요.</div> <%-- 전화번호 형식 오류 메시지 --%>
+                        <input type="text" class="form-control" id="phone" name="phone">
+                        <div id="mobileMsg" class="error">전화번호를 입력해 주세요.</div>
+                        <%-- 전화번호 입력 오류 메시지 --%>
+                        <div id="mobileRegMsg" class="error">전화번호는 3~4 자리의 숫자로만 입력해 주세요.</div>
+                        <%-- 전화번호 형식 오류 메시지 --%>
                     </div>
                     <div class="col-md-4">
                         <label for="address" class="form-label">주소</label>
-                        <input type="text" class="form-control" id="address" name="address" required>
-                        <div id="addressMsg" class="error">주소를 입력해 주세요.</div> <%-- 주소 입력 오류 메시지 --%>
+                        <input type="text" class="form-control" id="address" name="address">
+                        <div id="addressMsg" class="error">주소를 입력해 주세요.</div>
+                        <%-- 주소 입력 오류 메시지 --%>
                     </div>
                     <!-- 이메일 -->
                     <div class="col-md-4">
                         <label for="email" class="form-label">이메일</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                        <div id="emailMsg" class="error">이메일을 입력해 주세요.</div> <%-- 이메일 입력 오류 메시지 --%>
-                        <div id="emailRegMsg" class="error">입력한 이메일이 형식에 맞지 않습니다.</div> <%-- 이메일 형식 오류 메시지 --%>
+                        <input type="email" class="form-control" id="email" name="email">
+                        <div id="emailMsg" class="error">이메일을 입력해 주세요.</div>
+                        <%-- 이메일 입력 오류 메시지 --%>
+                        <div id="emailRegMsg" class="error">입력한 이메일이 형식에 맞지 않습니다.</div>
+                        <%-- 이메일 형식 오류 메시지 --%>
                     </div>
 
                 </div>
@@ -145,13 +175,13 @@
                     <!-- 생일 -->
                     <div class="col-md-4">
                         <label for="birthday" class="form-label">생일</label>
-                        <input type="date" class="form-control" id="birthday" name="birthday" required>
+                        <input type="date" class="form-control" id="birthday" name="birthday">
                         <div id="birthdayMsg" class="error">생년월일을 선택해주세요</div>
                     </div>
                     <!-- 입사일 -->
                     <div class="col-md-4">
                         <label for="joindate" class="form-label">입사일</label>
-                        <input type="date" class="form-control" id="joindate" name="joindate" required>
+                        <input type="date" class="form-control" id="joindate" name="joindate">
                         <div id="joindateMsg" class="error">입사일을 선택해주세요</div>
                     </div>
                 </div>
@@ -169,6 +199,7 @@
                         <label for="orgId" class="form-label">부서 ID</label>
                         <input type="text" class="form-control" id="orgId" name="orgId">
                         <%-- 여기가 문제임 부서명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 --%>
+                        <div id="orgIdMsg" class="error">부서 ID를 입력해주세요. 입력값이 없다면 null로 입력해주세요</div>
                     </div>
                 </div>
 
@@ -177,6 +208,54 @@
                 </div>
             </form>
         </div>
+    </div>
+
+    <div>
+        <%-- 값 넘어오는지 테스트 --%>
+        <%--<c:out value="${resultMap.erpUserList}"/>--%>
+        <%-- 유저 정보를 볼 수 있는 테이블 --%>
+        <h2>테이블</h2>
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col">유저 ID</th>
+                <th scope="col">비밀번호</th>
+                <th scope="col">이름</th>
+                <th scope="col">전화번호</th>
+                <th scope="col">주소</th>
+                <th scope="col">이메일</th>
+                <th scope="col">성별</th>
+                <th scope="col">생일</th>
+                <th scope="col">가입일</th>
+                <th scope="col">유저상태</th>
+                <th scope="col">부서 ID</th>
+            </tr>
+            </thead>
+            <c:choose>
+                <c:when test="${empty resultMap.erpUserList}">
+                    <tr>
+                        <td colspan="11" class="text-center">검색된 게시글이 없습니다</td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="erpUser" items="${resultMap.erpUserList}">
+                        <tr>
+                            <td>${erpUser.userid}</td>
+                            <td>${erpUser.passwd}</td>
+                            <td>${erpUser.name}</td>
+                            <td>${erpUser.phone}</td>
+                            <td>${erpUser.address}</td>
+                            <td>${erpUser.email}</td>
+                            <td>${erpUser.gender}</td>
+                            <td>${erpUser.birthday}</td>
+                            <td>${erpUser.joindate}</td>
+                            <td>${erpUser.enabled}</td>
+                            <td>${erpUser.orgId}</td>
+                        </tr>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+        </table>
     </div>
 </main>
 
@@ -211,13 +290,201 @@
             password += characters.charAt(Math.floor(Math.random() * characters.length));
         }
         document.getElementById("passwd").value = password;
+        $("#passwd").removeClass("is-invalid");
+        $("#passwdMsg").css("display", "none").css("visibility", "hidden");
     }
 
     // 페이지 첫 로드시 입력 포커스 잡히게
     $("#userid").focus();
 
+    /* 검증 정규표현식 */
+    var idReg = /^[a-zA-Z]\w{5,19}$/;
+    var passwdReg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&*_-]).{6,20}$/g;
+    var emailReg = /^([a-zA-Z0-9._]+@[a-zA-Z0-9.-]+(\.[-a-zA-Z0-9]+)+)*$/g;
+
     // 사용자 추가 버튼 누르면 검증
     // => 입력 필드에 있는 값 다 검증하고 문제 있으면 다 잡아다가 에러메세지 띄워줘야됨
+    $("#userForm").submit(function () {
+        /* 제출 여부 확인 */
+        var submitResult = true;
+
+        /* 모든 에러 메세지 숨김 */
+        $(".error").css("display", "none").css("visibility", "hidden").removeClass("is-invalid");
+
+
+        if ($("#userid").val() == "") {
+            $("#idMsg").css("display", "block").css("visibility", "visible");
+            $("#userid").addClass("is-invalid");
+            submitResult = false;
+        } else if (!idReg.test($("#userid").val())) {
+            $("#idRegMsg").css("display", "block").css("visibility", "visible");
+            $("#userid").addClass("is-invalid");
+            submitResult = false;
+        } else if ($("#idCheckResult").val() == "0") {
+            $("#idCheckMsg").css("display", "block").css("visibility", "visible");
+            $("#userid").addClass("is-invalid");
+            submitResult = false;
+        }
+
+        if ($("#passwd").val() == "") {
+            $("#passwdMsg").css("display", "block").css("visibility", "visible");
+            $("#passwd").addClass("is-invalid");
+            submitResult = false;
+        }/* else if (!passwdReg.test($("passwd").val())) {
+            $("#passwdMsg").css("display", "block").css("visibility", "visible");
+            $("#passwd").addClass("is-invalid");
+            submitResult = false;
+        }*/
+
+        if ($("#name").val() == "") {
+            $("#nameMsg").css("display", "block").css("visibility", "visible");
+            $("#name").addClass("is-invalid");
+            submitResult = false;
+        }
+
+        if ($("#email").val() == "") {
+            $("#emailMsg").css("display", "block").css("visibility", "visible");
+            $("#email").addClass("is-invalid");
+            submitResult = false;
+        } else if (!emailReg.test($("#email").val())) {
+            $("#emailRegMsg").css("display", "block").css("visibility", "visible");
+            $("#email").addClass("is-invalid");
+            submitResult = false;
+        }
+
+        if ($("#phone").val() == "") {
+            $("#phoneMsg").css("display", "block").css("visibility", "visible");
+            $("#phone").addClass("is-invalid");
+            submitResult = false;
+        }
+        if ($("#address").val() == "") {
+            $("#addressMsg").css("display", "block").css("visibility", "visible");
+            $("#address").addClass("is-invalid");
+            submitResult = false;
+        }
+        if ($("#birthday").val() == "") {
+            $("#birthdayMsg").css("display", "block").css("visibility", "visible");
+            $("#birthday").addClass("is-invalid");
+            submitResult = false;
+        }
+        if ($("#joindate").val() == "") {
+            $("#joindateMsg").css("display", "block").css("visibility", "visible");
+            $("#joindate").addClass("is-invalid");
+            submitResult = false;
+        }
+        if ($("#orgId").val() == "") {
+            $("#orgIdMsg").css("display", "block").css("visibility", "visible");
+            $("#orgId").addClass("is-invalid");
+            submitResult = false;
+        }
+        return submitResult;
+    })
+
+    // 아이디 입력 시 is-invalid 클래스 제거
+    $("#userid").on("keyup", function () {
+        if ($(this).val().trim() !== "") {
+            $("#idMsg").css("display", "none").css("visibility", "hidden");
+            $("#idCheckMsg").css("display", "none").css("visibility", "hidden");
+            $("#idRegMsg").css("display", "none").css("visibility", "hidden");
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+
+    // 비밀번호 입력 시 is-invalid 클래스 제거
+    /*$("#passwd").on("keyup", function () {
+        if ($(this).val().trim() !== "") {
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+    if ($("#passwd").val() == "") {
+        $(this).removeClass("is-invalid");
+    }*/
+
+
+    // 이름 입력 시 is-invalid 클래스 제거
+    $("#name").on("keyup", function () {
+        if ($(this).val().trim() !== "") {
+            $("#nameMsg").css("display", "none").css("visibility", "hidden");
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+    // 전화번호 입력 시 is-invalid 클래스 제거
+    $("#phone").on("keyup", function () {
+        if ($(this).val().trim() !== "") {
+            $("#phoneMsg").css("display", "none").css("visibility", "hidden");
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+    // 주소 입력 시 is-invalid 클래스 제거
+    $("#address").on("keyup", function () {
+        if ($(this).val().trim() !== "") {
+            $("#addressMsg").css("display", "none").css("visibility", "hidden");
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+    // 이메일 입력 시 is-invalid 클래스 제거
+    $("#email").on("keyup", function () {
+        if ($(this).val().trim() !== "") {
+            $("#emailMsg").css("display", "none").css("visibility", "hidden");
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+    // 생일 입력 시 is-invalid 클래스 제거
+    $("#birthday").on("change", function () {
+        if ($(this).val().trim() !== "") {
+            $("#birthdayMsg").css("display", "none").css("visibility", "hidden");
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+    // 입사일 입력 시 is-invalid 클래스 제거
+    $("#joindate").on("change", function () {
+        if ($(this).val().trim() !== "") {
+            $("#joindateMsg").css("display", "none").css("visibility", "hidden");
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+    // 부서 ID 입력 시 is-invalid 클래스 제거
+    $("#orgId").on("keyup", function () {
+        if ($(this).val().trim() !== "") {
+            $("#orgIdMsg").css("display", "none").css("visibility", "hidden");
+            $(this).removeClass("is-invalid");
+        }
+    });
+
+    /* 중복 검사 */
+    $("#idCheck").click(function () {
+        $("#idMsg").css("display", "none").css("visibility", "hidden");
+        $("#idRegMsg").css("display", "none").css("visibility", "hidden");
+        $("#idCheckMsg").css("display", "none").css("visibility", "hidden");
+
+        if ($("#userid").val() == "") {
+            $("#idMsg").css("display", "block").css("visibility", "visible");
+            $("#userid").addClass("is-invalid");
+            return;
+        } else if (!idReg.test($("#userid").val())) {
+            $("#idRegMsg").css("display", "block").css("visibility", "visible");
+            $("#userid").addClass("is-invalid");
+            return;
+        }
+        $("#userid").removeClass("is-invalid");
+
+        // 중복 검사할 수 있는 창을 띄움
+        window.open('/admin/idCheck?userid=' + $("#userid").val(), 'idCheck', 'width=600,height=400,left=700,top=400');
+    });
+
+    /* 아이디 바꾸면 다시 중복검사할 수 있게 */
+    $("#userid").change(function () {
+        $("#idCheckResult").val("0");
+        $("#userid").removeClass("is-invalid");
+    })
 </script>
 </body>
 </html>

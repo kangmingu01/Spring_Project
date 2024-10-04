@@ -42,10 +42,10 @@ public class SupplierController {
     // 공급업체 등록 - 모든 로그인 사용자 가능
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<Void> register(@RequestBody Supplier supplier) {
+    public ResponseEntity<Supplier> register(@RequestBody Supplier supplier) {
         try {
             supplierService.addSupplier(supplier);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(supplier);  // 등록된 공급업체 정보를 반환
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -60,7 +60,7 @@ public class SupplierController {
         return ResponseEntity.ok(response);
     }
 
- // 공급업체 정보 수정
+    // 공급업체 정보 수정 - 모든 로그인 사용자 가능
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public String modify(@ModelAttribute Supplier supplier, 

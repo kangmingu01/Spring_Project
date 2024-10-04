@@ -37,7 +37,7 @@
         </where>
     </select>
     
-     <!-- 공급업체 정보 리스트 조회 (페이징 처리 및 검색 기능 포함) -->
+    <!-- 공급업체 정보 리스트 조회 (페이징 처리 및 검색 기능 포함) -->
     <select id="selectSupplierList" resultType="Supplier">
         select * from (select rownum rn, supplier.* from (
         	select supplier_id, supplier_name, supplier_phone, supplier_email from supplier
@@ -55,7 +55,9 @@
                 order by supplier_id desc) supplier) where rn between #{startRow} and #{endRow}
     </select>
     
+    <!-- 공급업체 이름 중복 여부 확인 -->
 	<select id="existsByName" resultType="int" parameterType="String">
 	    select count(*) from supplier where supplier_name = #{supplierName}
 	</select>
+	
 </mapper>

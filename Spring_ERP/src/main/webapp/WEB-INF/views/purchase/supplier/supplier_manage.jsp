@@ -334,6 +334,35 @@ function resetForm() {
     $("#registerButton").prop("disabled", true);
     $("#registerButton").off('click').attr("onclick", "registerSupplier()");
 }
+
+//공급업체 등록 함수
+function registerSupplier() {
+    // 등록할 정보 가져오기
+    const supplierName = $("#newSupplierName").val().trim();
+    const supplierPhone = $("#newSupplierPhone").val().trim();
+    const supplierEmail = $("#newSupplierEmail").val().trim();
+
+    // 서버에 등록 요청
+    $.ajax({
+        url: "<c:url value='/purchase/supplier/register' />",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+            supplierName: supplierName,
+            supplierPhone: supplierPhone,
+            supplierEmail: supplierEmail
+        }),
+        success: function(response) {
+            // 등록 성공 시 테이블 갱신 및 폼 초기화          
+            resetForm(); // 필드 초기화 및 목록 갱신
+            fetchUpdatedSuppliers(); // 갱신된 목록을 가져옴
+        },
+        error: function(xhr) {
+            $("#errorMessage").text("등록 중 오류가 발생했습니다: " + xhr.responseText).show();
+        }
+    });
+}
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

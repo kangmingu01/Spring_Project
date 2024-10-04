@@ -16,7 +16,8 @@ import util.Pager;
 @RequiredArgsConstructor
 public class SupplierServiceImpl implements SupplierService {
     private final SupplierDAO supplierDAO;
-
+    
+    //공급업체 추가
     @Transactional
     @Override
     public void addSupplier(Supplier supplier) {
@@ -26,7 +27,9 @@ public class SupplierServiceImpl implements SupplierService {
         }
         supplierDAO.insertSupplier(supplier);
     }
-
+    
+    
+    //공급업체 수정
     @Transactional
     @Override
     public void modifySupplier(Supplier supplier) {
@@ -82,7 +85,8 @@ public class SupplierServiceImpl implements SupplierService {
 
         return result;
     }
-
+    
+    //공급업체 이름 존재 여부 확인
     @Override
     public int existsByName(String supplierName) {
         return supplierDAO.existsByName(supplierName);

@@ -70,6 +70,10 @@
             <input type="text" id="supplierEmail" name="supplierEmail" class="search-field" value="${searchMap.supplierEmail}"/>            
           </div>
         </div>
+       <div>
+       <div></div>
+          <div id="modifyerrorMessage" style="color: red; display:none; margin-top:10px;"></div> <!-- 오류 메시지 표시 -->            
+        </div>       
       </form>
 
       <!-- 추가사항 태그 -->
@@ -102,15 +106,15 @@
             </div>
             <button type="button" id="registerButton" onclick="registerSupplier()" disabled>완료</button>
           </div>
-          <div>
-          	<div id="errorMessage" style="color: red; display:none; margin-top:10px;"></div> <!-- 오류 메시지 표시 --></div>            
+          <div>          	
+          	<div id="errorMessage" style="color: red; display:none; margin-top:10px;"></div> <!-- 오류 메시지 표시 -->           
           </div>
          </form>
       </div>
 
       <!-- 테이블 부분 -->
       <div class="content_body_list">
-        <table class="table table-striped">
+        <table>
           <thead>
             <tr>
               <th>공급업체번호</th>
@@ -278,7 +282,30 @@ function editSupplier(id, name, phone, email) {
 
 //수정 완료 버튼 클릭 시
 function completeUpdate(id) {
-    // 기존의 폼 데이터를 사용하여 수정을 요청하고 페이지를 갱신하도록 변경
+    const supplierName = $('#supplierName').val().trim();
+    
+    // 이름 중복 확인
+    $.ajax({
+        url: "<c:url value='/purchase/supplier/checkName' />",
+        method: "GET",
+        data: { supplierName: supplierName },
+        success: function(response) {
+            if (response.exists) {
+                // 이름이 중복되면 에러 메시지 출력하고 수정 취소
+                $("#modifyerrorMessage").text("이미 존재하는 공급업체 이름입니다.").show();
+            } else {
+                // 이름이 중복되지 않으면 수정 요청 진행
+                modifySupplier(id);
+            }
+        },
+        error: function() {
+            $("#modifyerrorMessage").text("이름 중복 확인 중 오류가 발생했습니다.").show();
+        }
+    });
+}
+
+// 실제 수정 요청 함수
+function modifySupplier(id) {
     $.ajax({
         url: "<c:url value='/purchase/supplier/modify' />",
         method: 'POST',
@@ -301,7 +328,6 @@ function completeUpdate(id) {
         }
     });
 }
-
 
 // 테이블 갱신을 위한 함수
 function fetchUpdatedSuppliers() {

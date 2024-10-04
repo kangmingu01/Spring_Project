@@ -60,16 +60,21 @@ public class SupplierController {
         return ResponseEntity.ok(response);
     }
 
- // 공급업체 정보 수정 - 모든 로그인 사용자 가능
+    // 공급업체 정보 수정 - 모든 로그인 사용자 가능
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public ResponseEntity<String> modify(@ModelAttribute Supplier supplier, 
                                          @RequestParam Map<String, Object> map,
                                          RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
-        // 중복 확인
-        int count = supplierService.existsByName(supplier.getSupplierName());
-        if (count > 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 공급업체 이름입니다.");
+        // 기존 데이터 확인
+        Supplier originalSupplier = supplierService.getSupplierById(supplier.getSupplierId());
+
+        // 이름이 변경된 경우에만 중복 확인
+        if (!supplier.getSupplierName().equals(originalSupplier.getSupplierName())) {
+            int count = supplierService.existsByName(supplier.getSupplierName());
+            if (count > 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 공급업체 이름입니다.");
+            }
         }
 
         supplierService.modifySupplier(supplier);
@@ -83,7 +88,6 @@ public class SupplierController {
 
         return ResponseEntity.ok("공급업체 정보가 수정되었습니다.");
     }
-
 
     // 공급업체 검색 및 초기화 - 전체 목록을 기본으로 조회
     @RequestMapping(value = "/search", method = RequestMethod.GET)

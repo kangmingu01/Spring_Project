@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reset.css' />">    
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/supplier.css' />">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/purchase.css' />">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
@@ -267,41 +267,87 @@ function validateFields() {
 //수정 버튼 클릭 시 필드 채우기 및 수정 모드로 전환
 function editSupplier(id, name, phone, email) {
     // 필드에 데이터 채우기
-    $("#supplierId").val(id).prop("readonly", true);
+    $("#supplierId").val(id).prop("readonly", true);  // 공급업체 번호는 수정 불가
     $("#supplierName").val(name);
     $("#supplierPhone").val(phone);
     $("#supplierEmail").val(email);
 
-    // 수정 모드로 변경
+    // 원래 값들을 숨겨진 필드에 저장 (이름, 연락처, 이메일)
+    if (!$("#originalSupplierName").length) {
+        // 숨겨진 필드가 없을 경우 동적으로 추가
+        $("<input>").attr({
+            type: "hidden",
+            id: "originalSupplierName",
+            value: name
+        }).appendTo("#searchForm");
+        $("<input>").attr({
+            type: "hidden",
+            id: "originalSupplierPhone",
+            value: phone
+        }).appendTo("#searchForm");
+        $("<input>").attr({
+            type: "hidden",
+            id: "originalSupplierEmail",
+            value: email
+        }).appendTo("#searchForm");
+    } else {
+        // 숨겨진 필드가 이미 있을 경우 값 업데이트
+        $("#originalSupplierName").val(name);
+        $("#originalSupplierPhone").val(phone);
+        $("#originalSupplierEmail").val(email);
+    }
+
+    // 현재 클릭한 수정 버튼을 완료 버튼으로 변경
     const editButton = $("#editButton-" + id);
     editButton.text("완료");
     editButton.removeClass("btn-warning").addClass("btn-success");
     editButton.attr("id", "completeButton-" + id); // ID 변경하여 수정 완료 버튼으로 전환
     editButton.attr("onclick", "completeUpdate('" + id + "')");
+
+    // 다른 행의 수정 버튼 비활성화
+    $("button[id^='editButton-']").prop("disabled", true);
+    editButton.prop("disabled", false); // 현재 수정 버튼만 활성화 유지
 }
 
-//수정 완료 버튼 클릭 시
+// 수정 완료 버튼 클릭 시
 function completeUpdate(id) {
-    const supplierName = $('#supplierName').val().trim();
-    
-    // 이름 중복 확인
-    $.ajax({
-        url: "<c:url value='/purchase/supplier/checkName' />",
-        method: "GET",
-        data: { supplierName: supplierName },
-        success: function(response) {
-            if (response.exists) {
-                // 이름이 중복되면 에러 메시지 출력하고 수정 취소
-                $("#modifyerrorMessage").text("이미 존재하는 공급업체 이름입니다.").show();
-            } else {
-                // 이름이 중복되지 않으면 수정 요청 진행
-                modifySupplier(id);
+    const currentName = $('#supplierName').val().trim();
+    const currentPhone = $('#supplierPhone').val().trim();
+    const currentEmail = $('#supplierEmail').val().trim();
+
+    const originalName = $('#originalSupplierName').val().trim();
+    const originalPhone = $('#originalSupplierPhone').val().trim();
+    const originalEmail = $('#originalSupplierEmail').val().trim();
+
+    // 모든 값이 동일하면 수정 요청을 하지 않음
+    if (currentName === originalName && currentPhone === originalPhone && currentEmail === originalEmail) {
+    	$("#modifyerrorMessage").text("수정된 내용이 없습니다.").show();
+        return;
+    }
+
+    // 이름이 변경된 경우에만 중복 확인
+    if (currentName !== originalName) {
+        $.ajax({
+            url: "<c:url value='/purchase/supplier/checkName' />",
+            method: "GET",
+            data: { supplierName: currentName },
+            success: function(response) {
+                if (response.exists) {
+                    // 이름이 중복되면 에러 메시지 출력하고 수정 취소
+                    $("#modifyerrorMessage").text("이미 존재하는 공급업체 이름입니다.").show();
+                } else {
+                    // 이름이 중복되지 않으면 수정 요청 진행
+                    modifySupplier(id);
+                }
+            },
+            error: function() {
+                $("#modifyerrorMessage").text("이름 중복 확인 중 오류가 발생했습니다.").show();
             }
-        },
-        error: function() {
-            $("#modifyerrorMessage").text("이름 중복 확인 중 오류가 발생했습니다.").show();
-        }
-    });
+        });
+    } else {
+        // 이름이 변경되지 않았다면 중복 검사 없이 바로 수정
+        modifySupplier(id);
+    }
 }
 
 // 실제 수정 요청 함수
@@ -324,26 +370,11 @@ function modifySupplier(id) {
             location.reload();
         },
         error: function(xhr) {
-            alert('수정 중 오류가 발생했습니다: ' + xhr.responseText);
+        	$("#modifyerrorMessage").text("등록 중 오류가 발생했습니다: " + xhr.responseText).show();
         }
     });
 }
 
-// 테이블 갱신을 위한 함수
-function fetchUpdatedSuppliers() {
-    $.ajax({
-        url: "<c:url value='/purchase/supplier/manage' />",
-        method: 'GET',
-        success: function(data) {
-            // 테이블을 갱신하는 로직 작성
-            // 서버에서 받은 새로운 데이터를 테이블에 렌더링합니다.
-            $("#supplierTable").html($(data).find("#supplierTable").html());
-        },
-        error: function() {
-            alert("테이블 갱신 중 오류가 발생했습니다.");
-        }
-    });
-}
 
 // 초기화 버튼 클릭 시 필드 초기화 및 전체 목록 조회
 function resetForm() {
@@ -356,6 +387,7 @@ function resetForm() {
     submitForm("searchForm");
 
     // 수정 모드 초기화
+    $("button[id^='editButton-']").prop("disabled", false); // 모든 수정 버튼 다시 활성화
     $("#registerButton").text("완료");
     $("#registerButton").prop("disabled", true);
     $("#registerButton").off('click').attr("onclick", "registerSupplier()");

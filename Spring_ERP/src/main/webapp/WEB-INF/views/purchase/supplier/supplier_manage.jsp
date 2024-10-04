@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reset.css' />">    
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/supplier.css' />">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/purchase.css' />">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
@@ -278,12 +278,16 @@ function editSupplier(id, name, phone, email) {
     editButton.removeClass("btn-warning").addClass("btn-success");
     editButton.attr("id", "completeButton-" + id); // ID 변경하여 수정 완료 버튼으로 전환
     editButton.attr("onclick", "completeUpdate('" + id + "')");
+
+    // 다른 행의 수정 버튼 비활성화
+    $("button[id^='editButton-']").prop("disabled", true);
+    editButton.prop("disabled", false); // 현재 수정 버튼만 활성화 유지
 }
 
 //수정 완료 버튼 클릭 시
 function completeUpdate(id) {
     const supplierName = $('#supplierName').val().trim();
-    
+
     // 이름 중복 확인
     $.ajax({
         url: "<c:url value='/purchase/supplier/checkName' />",
@@ -329,22 +333,6 @@ function modifySupplier(id) {
     });
 }
 
-// 테이블 갱신을 위한 함수
-function fetchUpdatedSuppliers() {
-    $.ajax({
-        url: "<c:url value='/purchase/supplier/manage' />",
-        method: 'GET',
-        success: function(data) {
-            // 테이블을 갱신하는 로직 작성
-            // 서버에서 받은 새로운 데이터를 테이블에 렌더링합니다.
-            $("#supplierTable").html($(data).find("#supplierTable").html());
-        },
-        error: function() {
-            alert("테이블 갱신 중 오류가 발생했습니다.");
-        }
-    });
-}
-
 // 초기화 버튼 클릭 시 필드 초기화 및 전체 목록 조회
 function resetForm() {
     // 검색 필드 초기화
@@ -356,10 +344,12 @@ function resetForm() {
     submitForm("searchForm");
 
     // 수정 모드 초기화
+    $("button[id^='editButton-']").prop("disabled", false); // 모든 수정 버튼 다시 활성화
     $("#registerButton").text("완료");
     $("#registerButton").prop("disabled", true);
     $("#registerButton").off('click').attr("onclick", "registerSupplier()");
 }
+
 
 //공급업체 등록 함수
 function registerSupplier() {

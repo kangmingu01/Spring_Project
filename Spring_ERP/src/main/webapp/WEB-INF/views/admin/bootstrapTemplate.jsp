@@ -280,7 +280,7 @@
             <c:choose>
                 <c:when test="${empty resultMap.erpUserList}">
                     <tr>
-                        <td colspan="11" class="text-center">검색된 게시글이 없습니다</td>
+                        <td colspan="12" class="text-center">검색된 게시글이 없습니다</td>
                     </tr>
                 </c:when>
                 <c:otherwise>

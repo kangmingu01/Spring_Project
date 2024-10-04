@@ -26,7 +26,7 @@
             <if test="email != null and email != ''">
                 email = #{email},
             </if>
-            <if test="enabled != null and enabled != ''">
+            <if test="enabled != null">
                 enabled = #{enabled},
             </if>
             <if test="orgId != null and orgId != ''">

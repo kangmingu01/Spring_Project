@@ -26,6 +26,11 @@ public class ErpUserDAOImpl implements ErpUserDAO {
     }
 
     @Override
+    public int deleteErpUser(String userid) {
+        return sqlSession.getMapper(ErpUserMapper.class).deleteErpUser(userid);
+    }
+
+    @Override
     public ErpUser selectErpUserByUserid(String userid) {
         return sqlSession.getMapper(ErpUserMapper.class).selectErpUserByUserid(userid);
     }

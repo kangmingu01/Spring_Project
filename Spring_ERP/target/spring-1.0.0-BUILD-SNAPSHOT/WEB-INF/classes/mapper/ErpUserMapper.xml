@@ -27,11 +27,20 @@
                 email = #{email},
             </if>
             <if test="enabled != null and enabled != ''">
-                enabled = #{enabled}
+                enabled = #{enabled},
             </if>
-            <if test="orgId != null and orgId != ''">  <!-- org_id를 orgId로 변경 -->
-                org_id = #{orgId},
+            <if test="orgId != null and orgId != ''">
+                org_id = #{orgId}
             </if>
+        </set>
+        where userid = #{userid}
+    </update>
+
+    <!-- 사용자 삭제 기능(enabled => 1에서 0으로) -->
+    <update id="deleteErpUser">
+        update erp_user
+        <set>
+            enabled = 0
         </set>
         where userid = #{userid}
     </update>
@@ -93,7 +102,7 @@
             <bind name="word" value="'%' + keyword + '%'"/>
             where ${column} like #{word}
         </if>
-        order by joindate desc
+        order by joindate desc, name asc
         ) erp_user
         )
         where rn between #{startRow} and #{endRow}

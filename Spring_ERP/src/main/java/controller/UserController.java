@@ -2,10 +2,13 @@ package controller;
 
 import dto.ErpUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.ErpUserService;
 
@@ -16,6 +19,7 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class UserController {
     private final ErpUserService erpUserService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @RequestMapping("/user")
     public String user(Model model) {
@@ -26,7 +30,7 @@ public class UserController {
     public String boot(@RequestParam Map<String, Object> map, @ModelAttribute ErpUser erpUser, Model model) {
         model.addAttribute("resultMap", erpUserService.getErpUserList(map));
         model.addAttribute("searchMap", map);
-        return "bootstrapTemplate";
+        return "/admin/bootstrapTemplate";
     }
 
     @RequestMapping("/idCheck")
@@ -49,6 +53,38 @@ public class UserController {
 
 
         // View Resolver 우회
-        return "forward:/WEB-INF/views/id_check.jsp";
+        return "forward:/WEB-INF/views/admin/id_check.jsp";
+    }
+
+    /* 사용자 추가 */
+    @RequestMapping(value ="/addUser", method = RequestMethod.POST)
+    public String addUser(@ModelAttribute ErpUser erpUser, Model model) {
+        String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
+        erpUser.setPasswd(encodedPassword);
+        erpUserService.addErpUser(erpUser);
+
+        return "redirect:/admin/boot";
+    }
+
+    /* 사용자 삭제 */
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+    public String deleteUser(@RequestParam("userid") String userid) {
+        erpUserService.deleteErpUser(userid);
+        return "redirect:/admin/boot";
+    }
+
+    /* 사용자 정보 수정 */
+    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+    public String updateUser(@ModelAttribute ErpUser erpUser) {
+        System.out.println(erpUser.getUserid());
+        System.out.println(erpUser.getPasswd());
+        System.out.println(erpUser.getName());
+        System.out.println(erpUser.getPhone());
+        System.out.println(erpUser.getAddress());
+        System.out.println(erpUser.getEmail());
+        System.out.println(erpUser.getEnabled());
+        System.out.println(erpUser.getOrgId());
+        erpUserService.updateErpUser(erpUser);
+        return "redirect:/admin/boot";
     }
 }

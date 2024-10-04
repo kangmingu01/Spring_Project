@@ -27,6 +27,11 @@ public class ErpUserServiceImpl implements ErpUserService {
         erpUserDAO.updateErpUser(erpUser);
     }
 
+    @Override
+    public void deleteErpUser(String userid) {
+        erpUserDAO.deleteErpUser(userid);
+    }
+
     /* 유저 아이디로 유저 찾기 */
     @Override
     public ErpUser getErpUserByUserid(String userid) {
@@ -55,7 +60,7 @@ public class ErpUserServiceImpl implements ErpUserService {
 
         int totalUserList = erpUserDAO.selectUserCount(map);
 
-        int blockSize = 10;
+        int blockSize = 5;
 
         Pager pager = new Pager(pageNum, pageSize, totalUserList, blockSize);
 

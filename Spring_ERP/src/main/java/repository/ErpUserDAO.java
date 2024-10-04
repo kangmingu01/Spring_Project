@@ -9,6 +9,7 @@ import java.util.Map;
 public interface ErpUserDAO {
     int insertErpUser(ErpUser erpUser);
     int updateErpUser(ErpUser erpUser);
+    int deleteErpUser(String userid);
     ErpUser selectErpUserByUserid(String userid);
     int insertErpAuth(ErpAuth erpAuth);
 

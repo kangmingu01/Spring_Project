@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.salesRequestMapper">
+  <!-- Sales Request 단일 데이터 삽입 -->
+    <insert id="insertSalesRequest" >
+    <selectKey resultType="int" keyProperty="num" order="BEFORE">
+			select SALES_REQUEST_SEQ.NEXTVAL from dual
+		</selectKey>
+       insert into salesRequest values (
+            # {request_id}, <!-- requestId는 시퀀스로 생성 -->
+              SYSDATE,
+            #{orgId}, 
+            #{productId}, 
+            #{requestQuantity}, 
+            #{salesPrice}, 
+            #{requestStatus}
+        )
+       
+    </insert>
+    
+    <select id="selectSalesReqeustById" resultType="SalesRequest">
+		SELECT sr.request_id, 
+	       sr.request_date, 
+	       sr.org_id AS request_org_id, 
+	       sr.product_id, 
+	       sr.request_quantity, 
+	       sr.sales_price,
+	       sr.tax,
+	       sr.total_amount, 
+	       sr.request_status, 
+	       o.org_name 
+		FROM salesRequest sr
+		JOIN organization o ON sr.org_id = o.org_id 
+		WHERE sr.request_id = #{requestId};
+  
+	</select>
+		
+	<select id="selectSalesRequestByCount" resultType="int">
+    SELECT COUNT(*) 
+    FROM SALES_REQUEST sr 
+    JOIN organization o ON o.org_id = sr.org_id 
+    <if test="keyword != null and keyword != ''">
+        <bind name="word" value="'%'+keyword+'%'"/>
+        WHERE ${column} LIKE #{word}
+    </if>
+	</select>
+	
+	<select id="selectSalesRequest" parameterType="map" resultMap="salesRequestResultMap">
+    SELECT * FROM (
+        SELECT ROWNUM AS rn, board.* 
+        FROM (
+            SELECT 
+                sr.request_id, 
+                sr.request_date, 
+                sr.org_id, 
+                sr.product_id, 
+                sr.request_quantity, 
+                sr.sales_price, 
+                sr.tax, 
+                sr.total_amount, 
+                sr.request_status, 
+                organization.org_name 
+            FROM 
+                SALESREQUEST sr 
+            JOIN 
+                organization ON organization.org_id = sr.org_id 
+            <if test="keyword != null and keyword != ''">
+                <bind name="word" value="'%'+keyword+'%'"/>
+                WHERE ${column} LIKE #{word}
+            </if>
+            ORDER BY sr.request_id DESC
+        ) board
+    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+	
+	
+	
+     
+    
+
+</mapper>

@@ -738,7 +738,7 @@
         $("#userid").removeClass("is-invalid");
 
         // 중복 검사할 수 있는 창을 띄움
-        window.open('/admin/idCheck?userid=' + $("#userid").val(), 'idCheck', 'width=600,height=400,left=700,top=400');
+        window.open('<c:url value="/admin/idCheck"/>?userid=' + $("#userid").val(), 'idCheck', 'width=600,height=400,left=700,top=400');
     });
 
     /* 아이디 바꾸면 다시 중복검사할 수 있게 */

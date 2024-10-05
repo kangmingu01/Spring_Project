@@ -27,6 +27,8 @@ public class SalesRequest {
 	private double tax;
 	private double totalAmount;
 	private int requestStatus;
-
+	private String orgName;
+	private String productCategory;
+	private String productName;
 
 }

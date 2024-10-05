@@ -39,5 +39,20 @@ public class SalesRequestDAOImpl implements SalesRequestDAO {
 		// TODO Auto-generated method stub
 		return sqlSession.getMapper(SalesRequestMapper.class).selectSalesRequestList(map);
 	}
+
+
+
+	@Override
+	 public int updateSalesRequest(List<SalesRequest> salesRequests) {
+        return sqlSession.getMapper(SalesRequestMapper.class).updateSalesRequest(salesRequests);
+    }
+
+
+
+	@Override
+	public int deleteSalesRequest(SalesRequest salesRequest) {
+		// TODO Auto-generated method stub
+		return sqlSession.getMapper(SalesRequestMapper.class).deleteSalesRequest(salesRequest);
+	}
 	
 }

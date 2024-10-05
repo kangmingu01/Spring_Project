@@ -64,9 +64,21 @@ public class SalesRequestServiceImpl implements SalesRequestService {
 		
 		Map<String, Object> result=new HashMap<String, Object>();
 		result.put("pager", pager);
-		result.put("securityBoardList", boardList);
+		result.put("salesRequestList", boardList);
 		
 		return result;
+	}
+
+	   @Override
+	    public void modifySalesRequest(List<SalesRequest> salesRequests) {
+	        salesRequestDAO.updateSalesRequest(salesRequests);
+	    }
+    
+
+	@Override
+	public void removeSalesRequest(SalesRequest salesRequest) {
+		salesRequestDAO.deleteSalesRequest(salesRequest);
+
 	}
 
 	

@@ -8,6 +8,8 @@ import dto.SalesRequest;
 public interface SalesRequestService {
 
 	void addSalesRequest(SalesRequest salesRequest);
+	void modifySalesRequest(List<SalesRequest> salesRequests);
+	void removeSalesRequest(SalesRequest salesRequest);
 	SalesRequest getSalesRequestById(int requestId);
 	Map<String,Object> getSalesRequestList(Map<String,Object> map);
 }

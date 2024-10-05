@@ -7,6 +7,8 @@ import dto.SalesRequest;
 
 public interface SalesRequestDAO {
 	int insertSalesRequest(SalesRequest salesRequest);
+	 int updateSalesRequest(List<SalesRequest> salesRequests);
+	int deleteSalesRequest(SalesRequest salesRequest);
 	SalesRequest selectSalesReqeustById(int requestId);
 	int selectSalesReqeustByCount(Map<String,Object> map);
 	

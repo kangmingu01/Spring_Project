@@ -7,7 +7,7 @@
 			select SALES_REQUEST_SEQ.NEXTVAL from dual
 		</selectKey>
        insert into salesRequest values (
-            # {request_id}, <!-- requestId는 시퀀스로 생성 -->
+            # {requestId}, <!-- requestId는 시퀀스로 생성 -->
               SYSDATE,
             #{orgId}, 
             #{productId}, 
@@ -17,6 +17,22 @@
         )
        
     </insert>
+    
+    <update id="updateSalesRequest">
+        <foreach collection="salesRequests" item="salesRequest" separator=";">
+            UPDATE salesRequest
+            SET request_Quantity = #{salesRequest.requestQuantity}
+            WHERE request_id = #{salesRequest.requestId}
+        </foreach>
+    </update>
+
+	
+	<delete id="deleteSalesRequest">
+		  UPDATE salesRequest
+    SET request_Status =   #{requestStatus}
+    WHERE request_id = #{requestId}
+	</delete>
+	
     
     <select id="selectSalesReqeustById" resultType="SalesRequest">
 		SELECT sr.request_id, 
@@ -45,7 +61,7 @@
     </if>
 	</select>
 	
-	<select id="selectSalesRequest" parameterType="map" resultMap="salesRequestResultMap">
+<select id="selectSalesRequestList" resultType="salesRequest">
     SELECT * FROM (
         SELECT ROWNUM AS rn, board.* 
         FROM (
@@ -59,11 +75,15 @@
                 sr.tax, 
                 sr.total_amount, 
                 sr.request_status, 
-                organization.org_name 
+                organization.org_name,
+                p.product_category,  <!-- product_category 추가 -->
+                p.product_name       <!-- product_name 추가 -->
             FROM 
                 SALESREQUEST sr 
             JOIN 
                 organization ON organization.org_id = sr.org_id 
+            JOIN 
+                product p ON p.product_id = sr.product_id  <!-- product 테이블과 조인 -->
             <if test="keyword != null and keyword != ''">
                 <bind name="word" value="'%'+keyword+'%'"/>
                 WHERE ${column} LIKE #{word}
@@ -72,7 +92,6 @@
         ) board
     ) WHERE rn BETWEEN #{startRow} AND #{endRow}
 </select>
-	
 	
 	
      

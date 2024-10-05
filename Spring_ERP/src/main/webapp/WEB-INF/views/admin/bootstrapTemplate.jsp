@@ -235,8 +235,8 @@
                 <div class="col-4">
                     <select name="column" class="form-select">
                         <option value="userid">유저 ID</option>
-                        <option value="name">이름</option>
-                        <option value="orgID">부서 ID</option>
+                        <option value="name" selected>이름</option>
+                        <option value="org_Id">부서 ID</option>
                     </select>
                 </div>
                 <div class="col-5">

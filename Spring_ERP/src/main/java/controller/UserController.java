@@ -76,14 +76,8 @@ public class UserController {
     /* 사용자 정보 수정 */
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
     public String updateUser(@ModelAttribute ErpUser erpUser) {
-        System.out.println(erpUser.getUserid());
-        System.out.println(erpUser.getPasswd());
-        System.out.println(erpUser.getName());
-        System.out.println(erpUser.getPhone());
-        System.out.println(erpUser.getAddress());
-        System.out.println(erpUser.getEmail());
-        System.out.println(erpUser.getEnabled());
-        System.out.println(erpUser.getOrgId());
+        String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
+        erpUser.setPasswd(encodedPassword);
         erpUserService.updateErpUser(erpUser);
         return "redirect:/admin/boot";
     }

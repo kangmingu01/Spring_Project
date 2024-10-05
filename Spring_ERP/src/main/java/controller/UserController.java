@@ -53,7 +53,7 @@ public class UserController {
 
 
         // View Resolver 우회
-        return "forward:/WEB-INF/views/admin/id_check.jsp";
+        return "idCheck";
     }
 
     /* 사용자 추가 */

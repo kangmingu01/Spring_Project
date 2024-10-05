@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Bootstrap</title>
+    <title>user</title>
     <style>
         .content {
             background-color: #6571ff;
@@ -286,13 +286,13 @@
                 <c:otherwise>
                     <c:forEach var="erpUser" items="${resultMap.erpUserList}">
                         <tr>
-                            <td class="align-middle">${erpUser.userid}</td>
+                            <td class="align-middle text-center">${erpUser.userid}</td>
                                 <%--<td>${erpUser.passwd}</td>--%>
-                            <td class="align-middle">${erpUser.name}</td>
-                            <td class="align-middle">${erpUser.phone}</td>
-                            <td class="align-middle">${erpUser.address}</td>
-                            <td class="align-middle">${erpUser.email}</td>
-                            <td class="align-middle">
+                            <td class="align-middle text-center">${erpUser.name}</td>
+                            <td class="align-middle text-center">${erpUser.phone}</td>
+                            <td class="align-middle text-center">${erpUser.address}</td>
+                            <td class="align-middle text-center">${erpUser.email}</td>
+                            <td class="align-middle text-center">
                                 <c:choose>
                                     <c:when test="${erpUser.gender == 1}">
                                         남자
@@ -303,8 +303,8 @@
                                 </c:choose>
 
                             </td>
-                            <td class="align-middle">${erpUser.birthday}</td>
-                            <td class="align-middle">${erpUser.joindate}</td>
+                            <td class="align-middle text-center">${erpUser.birthday}</td>
+                            <td class="align-middle text-center">${erpUser.joindate}</td>
                             <td class="text-center align-middle">
                                 <c:choose>
                                     <c:when test="${erpUser.enabled == 0}">

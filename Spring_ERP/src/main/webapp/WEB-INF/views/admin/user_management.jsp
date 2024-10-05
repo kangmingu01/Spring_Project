@@ -100,7 +100,7 @@
     </div>
     <div class="">
         <div class="m-1 p-2 border rounded bg-white">
-            <form action="/admin/addUser" id="userForm" method="post">
+            <form action="<c:url value="/admin/addUser"/>" id="userForm" method="post">
                 <%-- 아이디 중복 체크 --%>
                 <input type="hidden" id="idCheckResult" value="0">
 
@@ -347,7 +347,8 @@
                 </c:otherwise>
             </c:choose>
         </table>
-    </div><!-- 모달 -->
+    </div>
+    <!-- 모달 -->
     <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -355,7 +356,7 @@
                     <h5 class="modal-title" id="editUserModalLabel">유저 정보 수정</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="editUserForm" action="/admin/updateUser" method="post">
+                <form id="editUserForm" action="<c:url value="/admin/updateUser"/>" method="post">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="userid_modal" class="form-label">유저 ID</label>

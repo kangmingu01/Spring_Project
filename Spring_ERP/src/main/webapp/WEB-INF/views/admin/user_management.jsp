@@ -207,12 +207,12 @@
                             <option value="0">비활성화</option>
                         </select>
                     </div>
-                    <!-- 부서 ID -->
+                    <!-- 조직 ID -->
                     <div class="col-md-4">
-                        <label for="orgId" class="form-label">부서 ID</label>
+                        <label for="orgId" class="form-label">조직 ID</label>
                         <input type="text" class="form-control" id="orgId" name="orgId">
-                        <%-- 여기가 문제임 부서명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 --%>
-                        <div id="orgIdMsg" class="error">부서 ID를 입력해주세요. 입력값이 없다면 null로 입력해주세요</div>
+                        <%-- 여기가 문제임 조직명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 --%>
+                        <div id="orgIdMsg" class="error">조직 ID를 입력해주세요. 입력값이 없다면 null로 입력해주세요</div>
                     </div>
                 </div>
 
@@ -236,7 +236,7 @@
                     <select name="column" class="form-select">
                         <option value="userid">유저 ID</option>
                         <option value="name" selected>이름</option>
-                        <option value="org_Id">부서 ID</option>
+                        <option value="org_Id">조직 ID</option>
                     </select>
                 </div>
                 <div class="col-5">
@@ -272,7 +272,7 @@
                 <th scope="col" class="text-center fs-6">생일</th>
                 <th scope="col" class="text-center fs-6">가입일</th>
                 <th scope="col" class="text-center fs-6">유저상태</th>
-                <th scope="col" class="text-center fs-6">부서 ID</th>
+                <th scope="col" class="text-center fs-6">조직 ID</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
@@ -420,7 +420,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="orgId_modal" class="form-label">부서 ID</label>
+                            <label for="orgId_modal" class="form-label">조직 ID</label>
                             <input type="text" class="form-control" id="orgId_modal" name="orgId">
                         </div>
                         <sec:csrfInput/>
@@ -713,7 +713,7 @@
         }
     });
 
-    // 부서 ID 입력 시 is-invalid 클래스 제거
+    // 조직 ID 입력 시 is-invalid 클래스 제거
     $("#orgId").on("keyup", function () {
         if ($(this).val().trim() !== "") {
             $("#orgIdMsg").css("display", "none").css("visibility", "hidden");

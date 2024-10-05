@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
     <title>organization</title>
@@ -66,16 +68,17 @@
 <section>
     <div class="content d-md-flex justify-content-between pt-2 pb-2 ps-4 pe-4 align-items-center">
         <div class="title fw-bold">
-            부서/매장 관리 테이블
+            조직(부서/매장) 관리 테이블
         </div>
 
         <form action="<c:url value='/admin/organization'/>" method="post">
             <div class="row g-2 align-items-center">
                 <div class="col-4">
                     <select name="column" class="form-select">
-                        <option value="userid">유저 ID</option>
-                        <option value="name" selected>이름</option>
-                        <option value="org_Id">부서 ID</option>
+                        <option value="org_name" selected>조직 이름</option>
+                        <option value="org_id">조직 ID</option>
+                        <option value="address">주소</option>
+
                     </select>
                 </div>
                 <div class="col-5">
@@ -96,13 +99,12 @@
     </div>
     <div style="overflow-x: auto">
         <%-- 값 넘어오는지 테스트 --%>
-        <%--<c:out value="${resultMap.erpUserList}"/>--%>
+        <%--<c:out value="${resultMap.organizationList}"/>--%>
         <%-- 유저 정보를 볼 수 있는 테이블 --%>
         <table class="table table-striped table-hover">
             <thead>
             <tr>
                 <th scope="col" class="text-center fs-6">조직 ID</th>
-                <%--<th scope="col">비밀번호</th>--%>
                 <th scope="col" class="text-center fs-6">조직 이름</th>
                 <th scope="col" class="text-center fs-6">조직 유형</th>
                 <th scope="col" class="text-center fs-6">주소</th>
@@ -121,13 +123,27 @@
                 <c:otherwise>
                     <c:forEach var="organization" items="${resultMap.organizationList}">
                         <tr>
-                            <td class="align-middle">${organization.orgId}</td>
-                                <%--<td>${erpUser.passwd}</td>--%>
-                            <td class="align-middle">${organization.orgName}</td>
-                            <td class="align-middle">${organization.orgType}</td>
-                            <td class="align-middle">${organization.address}</td>
-                            <td class="align-middle">${organization.phoneNumber}</td>
-                            <td class="align-middle">${organization.created}</td>
+                            <td class="align-middle text-center">${organization.orgId}</td>
+                            <td class="align-middle text-center">${organization.orgName}</td>
+                            <td class="align-middle text-center">
+                                <c:choose>
+                                    <c:when test="${organization.orgType == 0}">
+                                        <span class="text-primary">본사</span>
+                                    </c:when>
+                                    <c:when test="${organization.orgType == 1}">
+                                        <span class="text-warning">매장</span>
+                                    </c:when>
+                                    <c:when test="${organization.orgType == 9}">
+                                        <span class="text-danger">사라짐</span>
+                                    </c:when>
+                                </c:choose>
+                            </td>
+                            <td class="align-middle text-center">${organization.address}</td>
+                            <td class="align-middle text-center">${organization.phoneNumber}</td>
+                            <td class="align-middle text-center">
+                                <%-- JSTL fmt를 이용해 날짜 자름 --%>
+                                <fmt:formatDate value="${organization.created}" pattern="yyyy-MM-dd" />
+                            </td>
                             <%--<td class="align-middle">
                                 <c:choose>
                                     <c:when test="${erpUser.gender == 1}">
@@ -170,10 +186,17 @@
                                 </button>
                             </td>
                             <td>
-                                <form action="<c:url value="/admin/deleteUser"/>" method="post">
-                                    <input type="hidden" name="userid" value="${erpUser.userid}">
+                                <form action="<c:url value="/admin/deleteOrg"/>" method="post">
+                                    <input type="hidden" name="orgId" value="${organization.orgId}">
                                     <button type="submit" class="btn btn-danger"
-                                            onclick="return confirm('정말로 이 유저를 삭제하시겠습니까?')">삭제
+                                    <c:choose>
+                                        <c:when test="${organization.orgType == 0}">
+                                            onclick="return confirm('해당 부서[${organization.orgName}]를 정말 삭제하시겠습니까?')">삭제
+                                        </c:when>
+                                        <c:when test="${organization.orgType == 1}">
+                                            onclick="return confirm('해당 매장[${organization.orgName}]를 폐업 처리 하시겠습니까?')">삭제
+                                        </c:when>
+                                    </c:choose>
                                     </button>
                                     <sec:csrfInput/>
                                 </form>

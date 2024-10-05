@@ -2,6 +2,7 @@ package repository;
 
 import dto.Organization;
 import lombok.RequiredArgsConstructor;
+import mapper.OrganizationMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -12,29 +13,30 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OrganizationDAOImpl implements OrganizationDAO {
     private final SqlSession sqlSession;
+
+
     @Override
     public int insertOrganization(Organization organization) {
-        return sqlSession.insert("Organization.insertOrganization", organization);
+        return sqlSession.getMapper(OrganizationMapper.class).insertOrganization(organization);
     }
 
     @Override
     public int updateOrganization(Organization organization) {
-        return sqlSession.update("Organization.updateOrganization", organization);
+        return sqlSession.getMapper(OrganizationMapper.class).updateOrganization(organization);
     }
 
     @Override
     public int deleteOrganization(String orgId) {
-        return sqlSession.delete("Organization.deleteOrganization", orgId);
+        return sqlSession.getMapper(OrganizationMapper.class).deleteOrganization(orgId);
     }
-
 
     @Override
     public int selectOrganizationCount(Map<String, Object> map) {
-        return sqlSession.selectOne("Organization.selectOrganizationCount", map);
+        return sqlSession.getMapper(OrganizationMapper.class).selectOrganizationCount(map);
     }
 
     @Override
     public List<Organization> selectOrganizationList(Map<String, Object> map) {
-        return sqlSession.selectList("Organization.selectOrganizationList", map);
+        return sqlSession.getMapper(OrganizationMapper.class).selectOrganizationList(map);
     }
 }

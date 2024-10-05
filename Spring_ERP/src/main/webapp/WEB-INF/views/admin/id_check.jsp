@@ -50,7 +50,7 @@
 <p>입력된 [${userid}]는 사용중인 아이디입니다.</p>
 <p>새로운 아이디를 입력하고 [확인] 버튼을 눌러주세요.</p>
     <%-- /idCheck를 다시 요청해서 같은 값이 있으면 다시 검증할 수 있게 해줘야하고, 같은 값이 없으면 사용자 ID 입력 필드에 입력한 값이 들어갈 수 있게--%>
-<form action="/admin/idCheck" method="post" id="id_check_form">
+<form action="<c:url value="/admin/idCheck"/>" method="post" id="id_check_form">
     <input type="text" name="userid" id="userid">
     <div id="idMsg" class="error">아이디를 입력해주세요</div>
     <div id="idRegMsg" class="error">아이디는 영문자로 시작되는 영문자, 숫자의 범위 6~15범위의 문자로만 작성 가능합니다</div>

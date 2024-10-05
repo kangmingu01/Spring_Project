@@ -208,8 +208,8 @@
     width: 165px;
     height: 25px;
     color: #575757; /* Added color */
-    font-weight: 800; /* Added font-weight */
-    background-color: #e9e9e9; /* Added background color */
+    /* font-weight: 800;  Added font-weight */
+    /* background-color: #e9e9e9; /* Added background color */
     border: 1px solid #cbd6dd;
     text-align: right;
 }
@@ -273,4 +273,9 @@ tr:nth-child(odd) {
 .read-only-field {
     background-color: #e9e9e9; /* 회색 배경으로 비활성화된 느낌 */
     cursor: not-allowed; /* 커서가 접근 불가로 보이게 */
+}
+select {
+    appearance: auto; /* 브라우저 기본 스타일을 사용하게 설정 */
+    -webkit-appearance: auto; /* Webkit 기반 브라우저 (Chrome, Safari)에서 기본 스타일 사용 */
+    -moz-appearance: auto; /* Mozilla 기반 브라우저에서 기본 스타일 사용 */
 }

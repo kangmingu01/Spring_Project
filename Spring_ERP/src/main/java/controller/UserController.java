@@ -21,23 +21,23 @@ public class UserController {
     private final ErpUserService erpUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @RequestMapping("/user")
+    @RequestMapping("/html")
     public String user(Model model) {
         return "htmlTemplate";
     }
 
-    @RequestMapping("/boot")
+    @RequestMapping("/user")
     public String boot(@RequestParam Map<String, Object> map, @ModelAttribute ErpUser erpUser, Model model) {
         model.addAttribute("resultMap", erpUserService.getErpUserList(map));
         model.addAttribute("searchMap", map);
-        return "/admin/bootstrapTemplate";
+        return "/admin/user_management";
     }
 
     @RequestMapping("/idCheck")
     public String idCheck(@RequestParam("userid") String userid, Model model) {
         // User ID를 받아서 중복 체크 처리
         if (userid == null || userid.isEmpty()) {
-            return "redirect:/admin/boot";
+            return "redirect:/admin/user";
         }
 
         /* 로직 구현 */
@@ -63,14 +63,14 @@ public class UserController {
         erpUser.setPasswd(encodedPassword);
         erpUserService.addErpUser(erpUser);
 
-        return "redirect:/admin/boot";
+        return "redirect:/admin/user";
     }
 
     /* 사용자 삭제 */
     @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
     public String deleteUser(@RequestParam("userid") String userid) {
         erpUserService.deleteErpUser(userid);
-        return "redirect:/admin/boot";
+        return "redirect:/admin/user";
     }
 
     /* 사용자 정보 수정 */
@@ -79,6 +79,6 @@ public class UserController {
         String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
         erpUser.setPasswd(encodedPassword);
         erpUserService.updateErpUser(erpUser);
-        return "redirect:/admin/boot";
+        return "redirect:/admin/user";
     }
 }

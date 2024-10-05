@@ -230,7 +230,7 @@
             유저 정보 테이블
         </div>
 
-        <form action="<c:url value='/admin/boot'/>" method="post">
+        <form action="<c:url value='/admin/user'/>" method="post">
             <div class="row g-2 align-items-center">
                 <div class="col-4">
                     <select name="column" class="form-select">
@@ -437,7 +437,7 @@
         <c:choose>
             <c:when test="${resultMap.pager.pageNum > 1}">
                 <a class="btn btn-primary"
-                   href="<c:url value='/admin/boot'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+                   href="<c:url value='/admin/user'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
                     &laquo; 이전
                 </a>
             </c:when>
@@ -457,7 +457,7 @@
                 </c:when>
                 <c:otherwise>
                     <a class="btn btn-outline-primary mx-1"
-                       href="<c:url value='/admin/boot'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+                       href="<c:url value='/admin/user'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
                             ${i}
                     </a>
                 </c:otherwise>
@@ -467,7 +467,7 @@
         <c:choose>
             <c:when test="${resultMap.pager.pageNum < resultMap.pager.totalPage}">
                 <a class="btn btn-primary"
-                   href="<c:url value='/admin/boot'/>?pageNum=${resultMap.pager.pageNum + 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+                   href="<c:url value='/admin/user'/>?pageNum=${resultMap.pager.pageNum + 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
                     다음 &raquo;
                 </a>
             </c:when>

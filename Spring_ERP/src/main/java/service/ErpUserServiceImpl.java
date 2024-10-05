@@ -4,6 +4,7 @@ import dto.ErpAuth;
 import dto.ErpUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import repository.ErpUserDAO;
 import util.Pager;
 
@@ -16,17 +17,20 @@ import java.util.Map;
 public class ErpUserServiceImpl implements ErpUserService {
     private final ErpUserDAO erpUserDAO;
     /* 유저 추가 */
+    @Transactional
     @Override
     public void addErpUser(ErpUser erpUser) {
         erpUserDAO.insertErpUser(erpUser);
     }
 
     /* 유저 정보 업데이트 */
+    @Transactional
     @Override
     public void updateErpUser(ErpUser erpUser) {
         erpUserDAO.updateErpUser(erpUser);
     }
 
+    @Transactional
     @Override
     public void deleteErpUser(String userid) {
         erpUserDAO.deleteErpUser(userid);

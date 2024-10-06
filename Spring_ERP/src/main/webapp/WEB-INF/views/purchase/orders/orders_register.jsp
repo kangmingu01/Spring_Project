@@ -129,45 +129,45 @@
      </form>
 
      <!-- 발주 목록 테이블 -->
-<!-- 발주 목록 테이블 -->
-<div class="content_body_list">
-    <table>
-        <thead>
-        <tr>
-            <th>제품번호</th>
-            <th>제품명</th>
-            <th>브랜드</th>
-            <th>종류</th>
-            <th>색상</th>
-            <th>사이즈</th>
-            <th>성별</th>
-            <th>공급업체</th>
-            <th>발주수량</th>
-            <th>단가</th>
-            <th>총액</th>
-            <th>납기일</th>
-        </tr>
-        </thead>
-        <tbody id="orderTable" class="sty">
-            <c:if test="${not empty newOrder}">
-                <tr>
-                    <td>${newOrder.productId}</td>
-                    <td>${newOrder.productName}</td>
-                    <td>${newOrder.productCategoryDetails.brand}</td>
-                    <td>${newOrder.productCategoryDetails.type}</td>
-                    <td>${newOrder.productCategoryDetails.color}</td>
-                    <td>${newOrder.productCategoryDetails.size}</td>
-                    <td>${newOrder.productCategoryDetails.gender}</td>
-                    <td>${newOrder.supplierName}</td>
-                    <td>${newOrder.ordersQuantity}</td>
-                    <td>${newOrder.productPrice}</td>
-                    <td>${newOrder.ordersQuantity * newOrder.productPrice}</td>
-                    <td>${fn:substring(newOrder.deliveryDate, 0, 10)}</td>
-                </tr>
-            </c:if>
-        </tbody>
-    </table>
-</div>
+		<!-- 발주 목록 테이블 -->
+		<div class="content_body_list">
+		    <table>
+		        <thead>
+		        <tr>
+		            <th>제품번호</th>
+		            <th>제품명</th>
+		            <th>브랜드</th>
+		            <th>종류</th>
+		            <th>색상</th>
+		            <th>사이즈</th>
+		            <th>성별</th>
+		            <th>공급업체</th>
+		            <th>발주수량</th>
+		            <th>단가</th>
+		            <th>총액</th>
+		            <th>납기일</th>
+		        </tr>
+		        </thead>
+		        <tbody id="orderTable" class="sty">
+		            <c:if test="${not empty newOrder}">
+		                <tr>
+		                    <td>${newOrder.productId}</td>
+		                    <td>${newOrder.productName}</td>
+		                    <td>${newOrder.productCategoryDetails.brand}</td>
+		                    <td>${newOrder.productCategoryDetails.type}</td>
+		                    <td>${newOrder.productCategoryDetails.color}</td>
+		                    <td>${newOrder.productCategoryDetails.size}</td>
+		                    <td>${newOrder.productCategoryDetails.gender}</td>
+		                    <td>${newOrder.supplierName}</td>
+		                    <td>${newOrder.ordersQuantity}</td>
+		                    <td>${newOrder.productPrice}</td>
+		                    <td>${newOrder.ordersQuantity * newOrder.productPrice}</td>
+		                    <td>${fn:substring(newOrder.deliveryDate, 0, 10)}</td>
+		                </tr>
+		            </c:if>
+		        </tbody>
+		    </table>
+		</div>
     </div>
 </div>
 

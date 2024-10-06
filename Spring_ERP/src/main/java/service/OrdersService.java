@@ -11,7 +11,7 @@ public interface OrdersService {
 	Map<String, Object> getProductList(Map<String, Object> map);
 	List<Supplier> getSupplierList();
 	//List<Supplier> getSupplierListByKeyword(String keyword);
-	List<Orders> getAllOrders();
+	List<Orders> getOrdersList();
 	Orders getOrdersById(int ordersId);
 	
 }

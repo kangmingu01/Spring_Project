@@ -32,7 +32,7 @@ public class OrdersController {
         List<Supplier> supplierList = ordersService.getSupplierList();
         model.addAttribute("supplierList", supplierList);
 
-        // 제품 목록 조회 및 추가
+        // 제품 목록 조회 및 추가 (기본적으로 첫 페이지에 10개 조회)
         Map<String, Object> productMap = new HashMap<>();
         productMap.put("pageNum", "1");
         productMap.put("pageSize", "10");
@@ -44,13 +44,18 @@ public class OrdersController {
         String userId = principal.getName(); // 로그인한 사용자의 아이디 가져오기
         model.addAttribute("userId", userId);
 
-        return "purchase/orders/orders_register";
+        return "purchase/orders/orders_register"; // 발주 등록 페이지로 이동
     }
 
+ // 발주 등록 처리 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute Orders orders, Model model) {
-        // 발주 등록
+    public String register(@ModelAttribute Orders orders, Principal principal, Model model) {
+        // 로그인한 사용자의 아이디를 발주 정보에 추가
+        String userId = principal.getName(); // 로그인한 사용자의 아이디 가져오기
+        orders.setUserid(userId); // 발주 객체에 사용자 아이디 설정
+
+        // 발주 등록 서비스 호출
         ordersService.addOrders(orders);
 
         // 등록된 발주 ID로 발주 정보 다시 조회
@@ -59,7 +64,7 @@ public class OrdersController {
         // 새로 등록된 발주 정보를 모델에 추가
         model.addAttribute("newOrder", newOrder);
 
-        // 공급 업체 목록 및 제품 목록 다시 추가
+        // 공급 업체 목록 및 제품 목록 다시 추가 (등록 후 화면 초기화 위해 재조회)
         List<Supplier> supplierList = ordersService.getSupplierList();
         model.addAttribute("supplierList", supplierList);
 
@@ -70,8 +75,9 @@ public class OrdersController {
         Map<String, Object> productResult = ordersService.getProductList(productMap);
         model.addAttribute("productList", productResult.get("productList"));
 
-        return "purchase/orders/orders_register";
+        return "purchase/orders/orders_register"; // 발주 등록 페이지로 다시 이동
     }
+
 
     // 제품 리스트 조회 - 모달 창에서 페이징 및 검색 처리
     @RequestMapping(value = "/productList", method = RequestMethod.GET)
@@ -87,15 +93,15 @@ public class OrdersController {
         Map<String, Object> resultMap = ordersService.getProductList(map);
 
         // 페이징 정보와 제품 리스트를 모델에 추가
-        model.addAttribute("pager", resultMap.get("pager"));
-        model.addAttribute("productList", resultMap.get("productList"));
-        model.addAttribute("searchMap", map);
+        model.addAttribute("pager", resultMap.get("pager")); 
+        model.addAttribute("productList", resultMap.get("productList")); 
+        model.addAttribute("searchMap", map); 
 
         return "purchase/orders/product_list";  // 제품 리스트 페이지 뷰 (모달에서 사용)
     }
 
     /*
-    // 공급업체 검색 - Ajax 요청 처리
+    // 공급업체 검색 - Ajax 요청 처리 
     @GetMapping("/supplier/search")
     @ResponseBody
     public List<Map<String, Object>> searchSuppliers(@RequestParam String keyword) {

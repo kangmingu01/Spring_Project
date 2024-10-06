@@ -79,9 +79,8 @@ public class OrdersServiceImpl implements OrdersService {
 
     // 전체 발주 목록 조회
     @Override
-    public List<Orders> getAllOrders() {
-        // ordersMapper를 통해 모든 발주 목록을 가져옴
-        List<Orders> ordersList = ordersDAO.selectAllOrders();
+    public List<Orders> getOrdersList() {
+        List<Orders> ordersList = ordersDAO.selectOrdersList();
         
         // 각 주문에 대해 productCategory 필드를 파싱하여 productCategoryDetails 설정
         for (Orders order : ordersList) {
@@ -98,7 +97,6 @@ public class OrdersServiceImpl implements OrdersService {
     // 특정 발주 정보 조회
     @Override
     public Orders getOrdersById(int ordersId) {
-        // 특정 발주 정보를 DAO에서 가져옴
         Orders order = ordersDAO.selectOrdersById(ordersId);
 
         // 해당 발주 정보에 제품 카테고리 정보 설정

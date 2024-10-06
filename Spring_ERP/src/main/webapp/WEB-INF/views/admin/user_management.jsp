@@ -742,8 +742,8 @@
         var screenWidth = window.screen.width;
         var screenHeight = window.screen.height;
 
-        var popupWidth = 600;
-        var popupHeight = 400;
+        var popupWidth = 500;
+        var popupHeight = 300;
 
         // 창을 화면 가운데에 위치시키기 위한 좌표 계산
         var left = (screenWidth / 2) - (popupWidth / 2);

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
@@ -61,8 +61,6 @@
       color: white;
     }
   </style>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 
@@ -73,22 +71,22 @@
       조직(부서/매장) 관리 테이블
     </div>
 
-    <form id="searchForm">
+    <form action="<c:url value='/admin/organization'/>" method="post">
       <div class="row g-2 align-items-center">
         <div class="col-4">
           <select name="column" class="form-select">
             <option value="org_name" selected>조직 이름</option>
             <option value="org_id">조직 ID</option>
             <option value="address">주소</option>
+
           </select>
         </div>
         <div class="col-5">
           <input type="text" class="form-control" name="keyword" placeholder="검색어를 입력하세요">
         </div>
         <div class="col-3 d-flex justify-content-end">
-          <button type="button" id="searchButton" class="btn btn-primary text-white d-flex align-items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
-                 class="bi bi-search" viewBox="0 0 16 16">
+          <button type="submit" class="btn btn-primary text-white d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
             </svg>
             <span class="ms-2 text-nowrap">조회</span>
@@ -116,131 +114,144 @@
         <th scope="col"></th>
       </tr>
       </thead>
-      <tbody id="organizationList"></tbody>
+      <c:choose>
+        <c:when test="${empty resultMap.organizationList}">
+          <tr>
+            <td colspan="12" class="text-center">검색된 게시글이 없습니다</td>
+          </tr>
+        </c:when>
+        <c:otherwise>
+          <c:forEach var="organization" items="${resultMap.organizationList}">
+            <tr>
+              <td class="align-middle text-center">${organization.orgId}</td>
+              <td class="align-middle text-center">${organization.orgName}</td>
+              <td class="align-middle text-center">
+                <c:choose>
+                  <c:when test="${organization.orgType == 0}">
+                    <span class="text-primary">본사</span>
+                  </c:when>
+                  <c:when test="${organization.orgType == 1}">
+                    <span class="text-warning">매장</span>
+                  </c:when>
+                  <c:when test="${organization.orgType == 9}">
+                    <span class="text-danger">사라짐</span>
+                  </c:when>
+                </c:choose>
+              </td>
+              <td class="align-middle text-center">${organization.address}</td>
+              <td class="align-middle text-center">${organization.phoneNumber}</td>
+              <td class="align-middle text-center">
+                  <%-- JSTL fmt를 이용해 날짜 자름 --%>
+                <fmt:formatDate value="${organization.created}" pattern="yyyy-MM-dd" />
+              </td>
+                <%--<td class="align-middle">
+                    <c:choose>
+                        <c:when test="${erpUser.gender == 1}">
+                            남자
+                        </c:when>
+                        <c:otherwise>
+                            여자
+                        </c:otherwise>
+                    </c:choose>
+
+                </td>
+                <td class="align-middle">${organization.created}</td>
+                <td class="align-middle">${organization.joindate}</td>
+                <td class="text-center align-middle">
+                    <c:choose>
+                        <c:when test="${organization.enabled == 0}">
+                            <p class="text-danger">비활성화</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="text-primary">활성화</p>
+                        </c:otherwise>
+                    </c:choose>
+
+                </td>
+                <td class="text-center align-middle">${organization.orgId}</td>--%>
+              <td>
+                <button type="button" class="btn btn-secondary"
+                        data-bs-toggle="modal" data-bs-target="#editUserModal"
+                        data-userid="${erpUser.userid}"
+                        data-name="${erpUser.name}"
+                        data-phone="${erpUser.phone}"
+                        data-address="${erpUser.address}"
+                        data-email="${erpUser.email}"
+                        data-gender="${erpUser.gender}"
+                        data-birthday="${erpUser.birthday}"
+                        data-joindate="${erpUser.joindate}"
+                        data-enabled="${erpUser.enabled}"
+                        data-orgid="${erpUser.orgId}">
+                  수정
+                </button>
+              </td>
+              <td>
+                <form action="<c:url value="/admin/deleteOrg"/>" method="post">
+                  <input type="hidden" name="orgId" value="${organization.orgId}">
+                  <button type="submit" class="btn btn-danger"
+                          <c:choose>
+                            <c:when test="${organization.orgType == 0}">
+                              onclick="return confirm('해당 부서[${organization.orgName}]를 정말 삭제하시겠습니까?')">삭제
+                            </c:when>
+                            <c:when test="${organization.orgType == 1}">
+                              onclick="return confirm('해당 매장[${organization.orgName}]를 폐업 처리 하시겠습니까?')">삭제
+                            </c:when>
+                          </c:choose>
+                  </button>
+                  <sec:csrfInput/>
+                </form>
+              </td>
+            </tr>
+          </c:forEach>
+        </c:otherwise>
+      </c:choose>
     </table>
   </div>
-  <div id="pagination-container" class="pagination-container text-center mt-4"></div>
+  <div class="pagination-container text-center mt-4">
+    <c:choose>
+      <c:when test="${resultMap.pager.pageNum > 1}">
+        <a class="btn btn-primary"
+           href="<c:url value='/admin/organization'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+          &laquo; 이전
+        </a>
+      </c:when>
+      <c:otherwise>
+      <span class="btn btn-secondary disabled">
+        &laquo; 이전
+      </span>
+      </c:otherwise>
+    </c:choose>
+
+    <c:forEach var="i" begin="${resultMap.pager.startPage}" end="${resultMap.pager.endPage}" step="1">
+      <c:choose>
+        <c:when test="${resultMap.pager.pageNum == i}">
+        <span class="btn btn-primary mx-1 active">
+            ${i}
+        </span>
+        </c:when>
+        <c:otherwise>
+          <a class="btn btn-outline-primary mx-1"
+             href="<c:url value='/admin/organization'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+              ${i}
+          </a>
+        </c:otherwise>
+      </c:choose>
+    </c:forEach>
+
+    <c:choose>
+      <c:when test="${resultMap.pager.pageNum < resultMap.pager.totalPage}">
+        <a class="btn btn-primary"
+           href="<c:url value='/admin/organization'/>?pageNum=${resultMap.pager.pageNum + 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+          다음 &raquo;
+        </a>
+      </c:when>
+      <c:otherwise>
+      <span class="btn btn-secondary disabled">
+        다음 &raquo;
+      </span>
+      </c:otherwise>
+    </c:choose>
+  </div>
 </section>
-
-<script>
-  $(document).ready(function() {
-    // 초기 페이지 로딩 (GET 요청 사용)
-    loadInitialOrganizationList({
-      "pageNum": 1,
-      "pageSize": 10,
-      "orgType": 0
-    });
-
-    // 검색 버튼 클릭 시 AJAX 호출 (POST 요청 사용)
-    $('#searchButton').click(function() {
-      var formData = $('#searchForm').serializeArray();
-      var params = {
-        "pageNum": 1,
-        "pageSize": 10
-      };
-
-      // 폼 데이터를 params 객체에 추가
-      $.each(formData, function() {
-        params[this.name] = this.value;
-      });
-
-      // 검색 결과 로드 (POST 방식)
-      searchOrganizationList(params);
-    });
-  });
-
-  // 초기 데이터 로드 (GET 방식)
-  function loadInitialOrganizationList(params) {
-    $.ajax({
-      url: '/api/organization/list', // GET 방식으로 데이터를 가져오기 위한 엔드포인트
-      type: 'GET',
-      data: params,
-      dataType: 'json',
-      success: function(result) {
-        renderOrganizationList(result);
-      },
-      error: function(error) {
-        console.error('데이터를 불러오는 중 오류가 발생했습니다.', error);
-      }
-    });
-  }
-
-  // 검색을 위한 데이터 로드 (POST 방식)
-  function searchOrganizationList(params) {
-    $.ajax({
-      url: '/api/organization/list', // 검색을 위한 엔드포인트
-      type: 'POST',
-      data: params,
-      dataType: 'json',
-      success: function(result) {
-        renderOrganizationList(result);
-      },
-      error: function(error) {
-        console.error('데이터를 불러오는 중 오류가 발생했습니다.', error);
-      }
-    });
-  }
-
-  // 조직 목록을 렌더링하는 함수
-  function renderOrganizationList(result) {
-    var html = '';
-
-    // 검색 결과 처리
-    if (result.organizationList.length === 0) {
-      html += '<tr><td colspan="8" class="text-center">검색된 게시글이 없습니다</td></tr>';
-    } else {
-      $(result.organizationList).each(function() {
-        let orgTypeHtml = '';
-
-        if (this.orgType === 0) {
-          orgTypeHtml = '<span class="text-primary">본사</span>';
-        } else if (this.orgType === 1) {
-          orgTypeHtml = '<span class="text-warning">매장</span>';
-        } else if (this.orgType === 9) {
-          orgTypeHtml = '<span class="text-danger">사라짐</span>';
-        }
-
-        // JavaScript 형식으로 날짜 쪼갬
-        let createdDate = new Date(this.created);
-        let formattedDate = isNaN(createdDate) ? '' : createdDate.toISOString().split('T')[0];
-
-        html += '<tr>';
-        html += '<td class="align-middle text-center">' + this.orgId + '</td>';
-        html += '<td class="align-middle text-center">' + this.orgName + '</td>';
-        html += '<td class="align-middle text-center">' + orgTypeHtml + '</td>';
-        html += '<td class="align-middle text-center">' + (this.address || '') + '</td>';
-        html += '<td class="align-middle text-center">' + this.phoneNumber + '</td>';
-        html += '<td class="align-middle text-center">' + formattedDate + '</td>';
-        html += '<td class="align-middle text-center">' +
-                '<button type="button" class="btn btn-secondary" ' +
-                'data-bs-toggle="modal" data-bs-target="#editUserModal" ' +
-                'data-userid="' + this.orgId + '" ' +
-                'data-name="' + this.orgName + '" ' +
-                'data-phone="' + this.phoneNumber + '" ' +
-                'data-address="' + this.address + '">' +
-                '수정' +
-                '</button>' +
-                '</td>';
-
-        let deleteConfirmHtml = '';
-        if (this.orgType === 0) {
-          deleteConfirmHtml = '정말로 해당 부서[' + this.orgName + ']를 삭제하시겠습니까?';
-        } else if (this.orgType === 1) {
-          deleteConfirmHtml = '정말로 해당 매장[' + this.orgName + ']을 폐업처리 하시겠습니까?';
-        }
-
-        html += '<td class="align-middle text-center">' +
-                '<form action="/admin/deleteOrg" method="post" onsubmit="return confirm(\'' + deleteConfirmHtml + '\')">' +
-                '<input type="hidden" name="orgId" value="' + this.orgId + '">' +
-                '<button type="submit" class="btn btn-danger">삭제</button>' +
-                '<input type="hidden" name="_csrf" value="' + csrfToken + '">' +
-                '</form>' +
-                '</td>';
-        html += '</tr>';
-      });
-    }
-    $("#organizationList").html(html);
-  }
-</script>
 </body>
 </html>

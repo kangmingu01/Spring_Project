@@ -79,8 +79,8 @@
             <button type="button" onclick="selectId()">아이디 사용</button>
         </c:when>
         <c:otherwise>
-            <p>입력하신 아이디 [${userid}] 는 이미 사용 중입니다.</p>
-            <p>새로운 아이디를 입력한 후 [확인] 버튼을 눌러 주세요.</p>
+            <p>입력하신 아이디 <strong>[${userid}]</strong> 는 이미 사용 중입니다.</p>
+            <p>새로운 아이디를 입력한 후 <strong>[확인]</strong> 버튼을 눌러 주세요.</p>
 
             <form action="<c:url value='/admin/idCheck'/>" method="post" id="id_check_form">
                 <div class="input-group mb-3">
@@ -90,7 +90,7 @@
                         <label for="userid">아이디 입력</label>
                     </div>
                     <!-- 확인 버튼 -->
-                    <button type="submit" class="btn btn-primary ms-2">확인</button>
+                    <button type="submit" class="btn btn-primary">확인</button>
                 </div>
 
                 <!-- 오류 메시지 -->

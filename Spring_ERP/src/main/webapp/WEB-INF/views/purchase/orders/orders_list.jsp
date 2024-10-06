@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -12,7 +12,6 @@
   <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/purchase.css'/>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <title>발주 목록</title>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <meta name="_csrf" content="${_csrf.token}"/>
   <meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -97,21 +96,21 @@
       
       <!-- 추가 가격 태그 -->
       <div class="content_body_search_price">
-        <div>
-          <div>
-            <label>발주수량</label>
-            <input type="number" id="ordersQuantity" />
-          </div>
-          <div>
-            <label>단가</label>
-            <input type="number" id="unitPrice"  />
-          </div>
-          <div>
-            <label>납기일</label>
-            <input type="date" id="dueDate" style="text-align: left;"/>
-          </div>
-        </div>
-      </div>
+	  <div>
+	    <div>
+	      <label>발주수량</label>
+	      <input type="number" id="ordersQuantity" name="ordersQuantity" class="disabled-field" readonly />
+	    </div>
+	    <div>
+	      <label>단가</label>
+	      <input type="number" id="productPrice" name="productPrice" class="disabled-field" readonly />
+	    </div>
+	    <div>
+	      <label>납기일</label>
+	      <input type="date" id="deliveryDate" name="deliveryDate" class="disabled-field" readonly style="text-align: left;" />
+	    </div>
+	  </div>
+	</div>
       
       <!-- 테이블 부분 -->
       <div class="content_body_list">
@@ -163,10 +162,10 @@
                   </c:choose>
                 </td>
                 <td>
-                  <c:if test="${orders.ordersStatus == 1}">
-                    <button onclick="editOrders('${orders.ordersId}')">수정</button>
-                  </c:if>
-                </td>
+				  <c:if test="${orders.ordersStatus == 1}">
+				    <button class="editButton" data-orders-id="${orders.ordersId}">수정</button>
+				  </c:if>
+				</td>
                 <td>
 				  <c:if test="${orders.ordersStatus == 1}">
 				    <form action="<c:url value='/purchase/orders/confirm'/>" method="post">
@@ -222,57 +221,89 @@
   </div>
 
   <script>
- function searchOrders() {
-    // 폼 데이터 가져오기
-    const form = document.getElementById('ordersForm');
-    
-    // 서버로 GET 요청을 보내도록 폼 제출
-    form.submit();
+  
+function searchOrders() {
+   // 폼 데이터 가져오기
+   const form = document.getElementById('ordersForm');
+   
+   // 서버로 GET 요청을 보내도록 폼 제출
+   form.submit();
 }
 
-// 수정 버튼 클릭 시 해당 데이터를 폼에 채워 넣기
+document.addEventListener('DOMContentLoaded', function() {
+    // 모든 수정 버튼에 클릭 이벤트 추가
+    document.querySelectorAll('.editButton').forEach(button => {
+        button.addEventListener('click', function() {
+            const ordersId = button.getAttribute('data-orders-id');
+            editOrders(ordersId);
+        });
+    });
+});
+
 function editOrders(ordersId) {
-  const orders = window.orders.find(o => o.ordersId === ordersId);
+    // 각 필드에 값을 채우기
+    const row = document.querySelector(`button[data-orders-id='${ordersId}']`).closest('tr');
 
-  // 수정 불가 필드 설정
-  document.getElementById("ordersId").value = orders.ordersId;
-  document.getElementById("ordersId").readOnly = true;
-  document.getElementById("productId").value = orders.productId;
-  document.getElementById("productId").readOnly = true;
-  document.getElementById("ordersDate").value = orders.ordersDate;
-  document.getElementById("ordersDate").readOnly = true;
-  document.getElementById("userid").value = orders.userid;
-  document.getElementById("userid").readOnly = true;
-  document.getElementById("productName").value = orders.productName;
-  document.getElementById("productName").readOnly = true;
-  document.getElementById("brand").value = orders.productCategoryDetails.brand;
-  document.getElementById("brand").readOnly = true;
-  document.getElementById("supplier").value = orders.supplierName;
-  document.getElementById("supplier").disabled = true;
-  document.getElementById("ordersStatus").value = orders.ordersStatus;
-  document.getElementById("ordersStatus").disabled = true;
+    if (!row) {
+        alert("해당 행을 찾을 수 없습니다.");
+        return;
+    }
 
-  // 수정 가능 항목
-  document.getElementById("ordersQuantity").value = orders.ordersQuantity;
-  document.getElementById("unitPrice").value = orders.productPrice;
-  document.getElementById("dueDate").value = orders.deliveryDate;
+    // 조회 가능한 필드 설정
+    document.getElementById('ordersId').value = row.children[0].innerText.trim();
+    document.getElementById('ordersDate').value = row.children[1].innerText.trim();
+    document.getElementById('userid').value = row.children[2].innerText.trim();
+    document.getElementById('productId').value = row.children[3].innerText.trim();
+    document.getElementById('productName').value = row.children[4].innerText.trim();
+    document.getElementById('brand').value = row.children[5].innerText.trim();
+    document.getElementById('supplier').value = row.children[10].getAttribute('data-supplier-id');
 
-  // 수정 버튼을 완료 버튼으로 변경
-  document.querySelector(`#editButton_${ordersId}`).innerText = "완료";
-  document.querySelector(`#editButton_${ordersId}`).setAttribute("onclick", `saveOrders('${ordersId}')`);
+    // 수정 가능한 필드 설정
+    document.getElementById('ordersQuantity').value = row.children[11].innerText.trim();
+    document.getElementById('productPrice').value = row.children[12].innerText.trim();
+    document.getElementById('deliveryDate').value = row.children[14].innerText.trim();
+
+    // 발주수량, 단가, 납기일 필드 수정 가능하게 설정
+    document.getElementById('ordersQuantity').readOnly = false;
+    document.getElementById('productPrice').readOnly = false;
+    document.getElementById('deliveryDate').readOnly = false;
+
+    // 완료 버튼으로 변경 후 클릭 이벤트 설정
+    button.innerText = "완료";
+    button.removeEventListener('click', editOrders);
+    button.addEventListener('click', function() {
+        saveOrderChanges(ordersId);
+    });
 }
 
-// 수정 완료 후 저장하는 함수
-function saveOrders(ordersId) {
-  // 업데이트된 값 저장
-  const updatedOrders = window.orders.find(o => o.ordersId === ordersId);
-  updatedOrders.ordersQuantity = parseInt(document.getElementById("ordersQuantity").value);
-  updatedOrders.productPrice = parseInt(document.getElementById("unitPrice").value);
-  updatedOrders.deliveryDate = document.getElementById("dueDate").value;
+function saveOrderChanges(ordersId) {
+    // 수정된 값 가져오기
+    const ordersQuantity = document.getElementById('ordersQuantity').value;
+    const productPrice = document.getElementById('productPrice').value;
+    const deliveryDate = document.getElementById('deliveryDate').value;
 
-  // 수정된 데이터 테이블에 반영 (서버에서 새로고침 없이 적용할 수 있도록 하려면 Ajax 사용 고려)
-  loadOrdersTable(window.orders);
-}    
+    // 서버에 수정 요청 보내기
+    $.ajax({
+        url: "<c:url value='/purchase/orders/modify'/>",
+        type: "POST",
+        data: {
+            ordersId: ordersId,
+            ordersQuantity: ordersQuantity,
+            productPrice: productPrice,
+            deliveryDate: deliveryDate,
+            _csrf: $('meta[name="_csrf"]').attr('content')
+        },
+        success: function(response) {
+            // 수정이 완료되면 페이지를 다시 로드하여 업데이트된 발주 목록을 보여줌
+            alert('수정이 완료되었습니다.');
+            window.location.reload();
+        },
+        error: function(xhr, status, error) {
+            alert('수정 중 오류가 발생했습니다.');
+        }
+    });
+}
+
 
 function resetForm() {
     // 폼 데이터 초기화

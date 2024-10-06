@@ -285,3 +285,7 @@ select {
     align-items: center;      /* 자식 요소를 수직 가운데로 정렬 */
     margin-top: 20px;         /* 필요에 따라 간격을 조정 */
 }
+.disabled-field {
+    background-color: #f0f0f0;
+    pointer-events: none; /* 클릭 금지 */
+}

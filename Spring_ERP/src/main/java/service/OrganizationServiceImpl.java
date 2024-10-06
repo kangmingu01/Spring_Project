@@ -16,17 +16,24 @@ import java.util.Map;
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationDAO organizationDAO;
 
+    /* 기본값을 상수로 선언하여 가독성을 높임, 또한 유지보수 효율성을 높임 */
+    private static final int DEFAULT_PAGE_NUM = 1;
+    private static final int DEFAULT_PAGE_SIZE = 5;
+    private static final int DEFAULT_BLOCK_SIZE = 5;
+
     @Transactional
     @Override
     public void addOrganization(Organization organization) {
         organizationDAO.insertOrganization(organization);
     }
 
+    @Transactional
     @Override
     public void updateOrganization(Organization organization) {
         organizationDAO.updateOrganization(organization);
     }
 
+    @Transactional
     @Override
     public void deleteOrganization(String orgId) {
         organizationDAO.deleteOrganization(orgId);
@@ -34,19 +41,19 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Map<String, Object> getOrganizationList(Map<String, Object> map) {
-        int pageNum = 1;
+        int pageNum = DEFAULT_PAGE_NUM;
         if(map.get("pageNum") != null && !map.get("pageNum").equals("")) {
             pageNum = Integer.parseInt(map.get("pageNum").toString());
         }
 
-        int pageSize = 5;
+        int pageSize = DEFAULT_PAGE_SIZE;
         if(map.get("pageSize") != null && !map.get("pageSize").equals("")) {
             pageSize = Integer.parseInt(map.get("pageSize").toString());
         }
 
         int totalOrganizationList = organizationDAO.selectOrganizationCount(map);
 
-        int blockSize = 5;
+        int blockSize = DEFAULT_BLOCK_SIZE;
 
         Pager pager = new Pager(pageNum, pageSize, totalOrganizationList, blockSize);
 

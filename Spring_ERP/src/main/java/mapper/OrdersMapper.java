@@ -13,6 +13,9 @@ public interface OrdersMapper {
 	List<Product> selectProductList(Map<String, Object> map);
 	List<Supplier> selectSupplierList();
 	//List<Supplier> selectSupplierListByKeyword(String keyword);
-	List<Orders> selectOrdersList();
 	Orders selectOrdersById(int ordersId);
+	int selectOrdersCount(Map<String, Object> map);
+	List<Orders> selectOrdersList(Map<String, Object> map);
+	int updateOrders(Orders orders);
+	int updateOrdersStatus(int ordersId);  
 }

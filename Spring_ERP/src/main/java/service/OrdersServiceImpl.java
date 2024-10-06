@@ -77,23 +77,6 @@ public class OrdersServiceImpl implements OrdersService {
         return ordersDAO.selectSupplierList();
     }
 
-    // 전체 발주 목록 조회
-    @Override
-    public List<Orders> getOrdersList() {
-        List<Orders> ordersList = ordersDAO.selectOrdersList();
-        
-        // 각 주문에 대해 productCategory 필드를 파싱하여 productCategoryDetails 설정
-        for (Orders order : ordersList) {
-            String productCategoryCode = order.getProductCategory(); // productCategory 필드를 가져옴
-            if (productCategoryCode != null) {
-                ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);
-                order.setProductCategoryDetails(productCategoryDetails);
-            }
-        }
-        
-        return ordersList;
-    }
-
     // 특정 발주 정보 조회
     @Override
     public Orders getOrdersById(int ordersId) {
@@ -109,6 +92,66 @@ public class OrdersServiceImpl implements OrdersService {
         }
 
         return order;
+    }
+
+    // 전체 발주 목록 조회 (페이징 처리 및 검색 기능 포함)
+    @Override
+    public Map<String, Object> getOrdersList(Map<String, Object> map) {
+        // 페이지 번호 설정 (기본값: 1)
+        int pageNum = 1;
+        if (map.get("pageNum") != null && !map.get("pageNum").equals("")) {
+            pageNum = Integer.parseInt((String) map.get("pageNum"));
+        }
+
+        // 페이지 크기 설정 (기본값: 10)
+        int pageSize = 10;
+        if (map.get("pageSize") != null && !map.get("pageSize").equals("")) {
+            pageSize = Integer.parseInt((String) map.get("pageSize"));
+        }
+
+        // 전체 발주 개수 조회
+        int totalOrdersCount = ordersDAO.selectOrdersCount(map);
+
+        // 블록 크기 설정
+        int blockSize = 5;
+
+        // 페이지 정보 생성
+        Pager pager = new Pager(pageNum, pageSize, totalOrdersCount, blockSize);
+
+        // 페이징 정보를 이용하여 데이터 조회
+        map.put("startRow", pager.getStartRow());
+        map.put("endRow", pager.getEndRow());
+        List<Orders> ordersList = ordersDAO.selectOrdersList(map);
+
+        // 각 발주의 제품 카테고리 정보를 설정
+        for (Orders order : ordersList) {
+            String productCategoryCode = order.getProductCategory();
+            if (productCategoryCode != null) {
+                ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);
+                order.setProductCategoryDetails(productCategoryDetails);
+            }
+        }
+
+        // 결과 맵 생성
+        Map<String, Object> result = new HashMap<>();
+        result.put("pager", pager);
+        result.put("ordersList", ordersList);
+
+        return result;
+    }
+
+    // 발주 수정
+    @Transactional
+    @Override
+    public void modifyOrders(Orders orders) {
+        ordersDAO.updateOrders(orders);
+    }
+
+    // 발주 상태 수정 (발주 대기 -> 발주 완료로 확정)
+    @Transactional
+    @Override
+    public int modifyOrdersStatus(int ordersId) {
+        return ordersDAO.updateOrdersStatus(ordersId);
     }
     
     /*

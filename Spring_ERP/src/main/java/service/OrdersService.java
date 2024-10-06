@@ -11,7 +11,9 @@ public interface OrdersService {
 	Map<String, Object> getProductList(Map<String, Object> map);
 	List<Supplier> getSupplierList();
 	//List<Supplier> getSupplierListByKeyword(String keyword);
-	List<Orders> getOrdersList();
 	Orders getOrdersById(int ordersId);
+	Map<String, Object> getOrdersList(Map<String, Object> map);
+	void modifyOrders(Orders orders);
+    int modifyOrdersStatus(int ordersId);
 	
 }

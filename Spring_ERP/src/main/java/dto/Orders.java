@@ -38,4 +38,6 @@ public class Orders {
     private String supplierName;   
     private String productCategory; // 제품 카테고리 문자열 (예: "NI-SN-BL-270-M")
     private ProductCategory productCategoryDetails;  // 제품 카테고리 파싱 결과
+    
+    private String name;
 }

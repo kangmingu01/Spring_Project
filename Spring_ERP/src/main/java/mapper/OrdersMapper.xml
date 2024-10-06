@@ -39,6 +39,7 @@
             order by product_id desc) product) where rn between #{startRow} and #{endRow}
 	</select>
 
+
     <!-- 공급 업체 이름 목록 조회 -->
     <select id="selectSupplierList" resultType="Supplier">
         select supplier_id, supplier_name from supplier order by supplier_name 

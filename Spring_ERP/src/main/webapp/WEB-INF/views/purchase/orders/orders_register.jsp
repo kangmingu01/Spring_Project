@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -34,7 +35,7 @@
              <span>제품조회</span>
          </div>
          <div class="content_header_registers_btn" onclick="submitForm('registerForm')">
-             <div>
+		    <div>
                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                      <path d="M8 4a.5.5 0 0 1 .5.5V7.5H11.5a.5.5 0 0 1 0 1H8.5V11.5a.5.5 0 0 1-1 0V8.5H4.5a.5.5 0 0 1 0-1H7.5V4.5A.5.5 0 0 1 8 4z"/>
                      <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zM8 14A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
@@ -103,7 +104,7 @@
              <div>
                  <div>
                     <label>공급업체</label>
-					<select id="supplier" name="supplierId">
+					<select id="supplier" name="supplierId" required >
 					    <option value="">공급 업체 선택</option>
 					    <c:forEach var="supplier" items="${supplierList}">
 					        <option value="${supplier.supplierId}">${supplier.supplierName}</option>
@@ -112,15 +113,15 @@
                  </div>
                  <div>
                      <label>발주수량</label>
-                     <input type="number" id="ordersQuantity" name="ordersQuantity"/>
+                     <input type="number" id="ordersQuantity" name="ordersQuantity" required />
                  </div>
                  <div>
                      <label>단가</label>
-                     <input type="number" id=productPrice name="productPrice"/>
+                     <input type="number" id=productPrice name="productPrice" required />
                  </div>
                  <div>
                      <label>납기일</label>
-                     <input type="date" id="deliveryDate" name="deliveryDate" style="text-align: left;"/>
+                     <input type="date" id="deliveryDate" name="deliveryDate" style="text-align: left;" required />
                  </div>
              </div>
          </div>
@@ -129,44 +130,43 @@
 
      <!-- 발주 목록 테이블 -->
      <div class="content_body_list">
-         <table>
-             <thead>
-             <tr>
-                 <th>제품번호</th>
-                 <th>제품명</th>
-                 <th>브랜드</th>
-                 <th>종류</th>
-                 <th>색상</th>
-                 <th>사이즈</th>
-                 <th>성별</th>
-                 <th>공급업체</th>
-                 <th>발주수량</th>
-                 <th>단가</th>
-                 <th>총액</th>
-                 <th>납기일</th>
-             </tr>
-             </thead>
-             <tbody id="orderTable" class="sty">
-          	    <c:forEach var="order" items="${ordersList}">
-			        <tr>
-			            <td>${order.productId}</td>
-			            <td>${order.productName}</td>
-			            <td>${order.brand}</td>
-			            <td>${order.type}</td>
-			            <td>${order.color}</td>
-			            <td>${order.size}</td>
-			            <td>${order.gender}</td>
-			            <td>${order.supplierId}</td>
-			            <td>${order.ordersQuantity}</td>
-			            <td>${order.productPrice}</td>
-			            <td>${order.totalPrice}</td> <!-- 총액 계산 필드 필요 시 추가 -->
-			            <td>${order.deliveryDate}</td>
-			        </tr>
-			    </c:forEach>
-			</tbody>
-                </tbody>
-            </table>
-        </div>
+	    <table>
+	        <thead>
+	        <tr>
+	            <th>제품번호</th>
+	            <th>제품명</th>
+	            <th>브랜드</th>
+	            <th>종류</th>
+	            <th>색상</th>
+	            <th>사이즈</th>
+	            <th>성별</th>
+	            <th>공급업체</th>
+	            <th>발주수량</th>
+	            <th>단가</th>
+	            <th>총액</th>
+	            <th>납기일</th>
+	        </tr>
+	        </thead>
+	        <tbody id="orderTable" class="sty">
+		    <c:forEach var="order" items="${ordersList}">
+		        <tr>
+		            <td>${order.productId}</td>
+		            <td>${order.productName}</td>
+		            <td>${order.productCategoryDetails.brand}</td>
+		            <td>${order.productCategoryDetails.type}</td>
+		            <td>${order.productCategoryDetails.color}</td>
+		            <td>${order.productCategoryDetails.size}</td>
+		            <td>${order.productCategoryDetails.gender}</td>
+		            <td>${order.supplierName}</td>
+		            <td>${order.ordersQuantity}</td>
+		            <td>${order.productPrice}</td>
+		            <td>${order.ordersQuantity * order.productPrice}</td>
+		            <td>${fn:substring(order.deliveryDate, 0, 10)}</td>
+		        </tr>
+		    </c:forEach>
+		</tbody>
+	    </table>
+	</div>
     </div>
 </div>
 
@@ -338,7 +338,7 @@ function selectProduct(code, name, brand, type, color, size, gender) {
 }
 
 function submitForm(formId) {
-    document.getElementById(formId).submit();
+    document.getElementById(formId).submit(); 
 }
 
 function resetForm() {

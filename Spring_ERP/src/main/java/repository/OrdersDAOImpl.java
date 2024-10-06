@@ -37,6 +37,11 @@ public class OrdersDAOImpl implements OrdersDAO{
 		return sqlSession.getMapper(OrdersMapper.class).selectSupplierList();
 	}
 
+	@Override
+	public List<Orders> selectAllOrders() {
+		return sqlSession.getMapper(OrdersMapper.class).selectAllOrders();
+	}
+
 	/*
 	@Override
 	public List<Supplier> selectSupplierListByKeyword(String keyword) {

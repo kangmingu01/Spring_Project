@@ -76,6 +76,23 @@ public class OrdersServiceImpl implements OrdersService {
     public List<Supplier> getSupplierList() {
         return ordersDAO.selectSupplierList();
     }
+
+    @Override
+    public List<Orders> getAllOrders() {
+        // ordersMapper를 통해 모든 발주 목록을 가져옴
+        List<Orders> ordersList = ordersDAO.selectAllOrders();
+        
+        // 각 주문에 대해 productCategory 필드를 파싱하여 productCategoryDetails 설정
+        for (Orders order : ordersList) {
+            String productCategoryCode = order.getProductCategory(); // productCategory 필드를 가져옴
+            if (productCategoryCode != null) {
+                ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);
+                order.setProductCategoryDetails(productCategoryDetails);
+            }
+        }
+        
+        return ordersList;
+    }
     
     /*
     @Override

@@ -50,4 +50,15 @@
 	</select>
 	-->
     
+    <!-- 전체 발주 목록 조회 -->
+    <select id="selectAllOrders" resultType="Orders">
+	    SELECT o.orders_id, o.orders_date, o.userid, o.supplier_id, o.product_id, o.orders_quantity,
+	           o.product_price, o.delivery_date, o.orders_status, p.product_name, p.product_category,
+	           s.supplier_name
+	    FROM orders o
+	    JOIN product p ON o.product_id = p.product_id
+	    JOIN supplier s ON o.supplier_id = s.supplier_id
+	    ORDER BY o.orders_date DESC
+	</select>
+    
 </mapper>

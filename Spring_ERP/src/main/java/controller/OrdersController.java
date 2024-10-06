@@ -39,7 +39,12 @@ public class OrdersController {
 
         Map<String, Object> productResult = ordersService.getProductList(productMap);
         model.addAttribute("productList", productResult.get("productList"));
-
+        
+        // 발주 목록 조회하여 모델에 추가
+        // 등록된 이후의 전체 발주 목록 조회하여 모델에 추가
+        List<Orders> ordersList = ordersService.getAllOrders();
+        model.addAttribute("ordersList", ordersList);
+        
         // 로그인한 사용자 아이디를 모델에 추가
         String userId = principal.getName(); // 로그인한 사용자의 아이디 가져오기
         model.addAttribute("userId", userId);
@@ -47,17 +52,16 @@ public class OrdersController {
         return "purchase/orders/orders_register";
     }
 
-    // 발주 등록 처리 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute Orders orders) {
-        // 발주 등록 (발주 상태는 기본적으로 발주 대기 상태로 설정)
+    public String register(@ModelAttribute Orders orders, Model model) {
+        // 발주 등록
         ordersService.addOrders(orders);
 
-        // 발주 등록 후 등록된 항목 목록에 표시
-        return "redirect:/purchase/orders/register";  
+        // 등록 후 리다이렉트
+        return "redirect:/purchase/orders/register";
     }
-
+    
     // 제품 리스트 조회 - 모달 창에서 페이징 및 검색 처리
     @RequestMapping(value = "/productList", method = RequestMethod.GET)
     public String getProductList(@RequestParam Map<String, Object> map, Model model) {

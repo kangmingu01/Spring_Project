@@ -13,4 +13,5 @@ public interface OrdersDAO {
 	List<Product> selectProductList(Map<String, Object> map);
 	List<Supplier> selectSupplierList();
 	//List<Supplier> selectSupplierListByKeyword(String keyword);
+	List<Orders> selectAllOrders();
 }

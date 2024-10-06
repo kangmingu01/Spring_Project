@@ -77,6 +77,7 @@ public class OrdersServiceImpl implements OrdersService {
         return ordersDAO.selectSupplierList();
     }
 
+    // 전체 발주 목록 조회
     @Override
     public List<Orders> getAllOrders() {
         // ordersMapper를 통해 모든 발주 목록을 가져옴
@@ -92,6 +93,24 @@ public class OrdersServiceImpl implements OrdersService {
         }
         
         return ordersList;
+    }
+
+    // 특정 발주 정보 조회
+    @Override
+    public Orders getOrdersById(int ordersId) {
+        // 특정 발주 정보를 DAO에서 가져옴
+        Orders order = ordersDAO.selectOrdersById(ordersId);
+
+        // 해당 발주 정보에 제품 카테고리 정보 설정
+        if (order != null) {
+            String productCategoryCode = order.getProductCategory(); // productCategory 필드를 가져옴
+            if (productCategoryCode != null) {
+                ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);
+                order.setProductCategoryDetails(productCategoryDetails);
+            }
+        }
+
+        return order;
     }
     
     /*

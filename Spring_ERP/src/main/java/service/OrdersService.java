@@ -12,5 +12,6 @@ public interface OrdersService {
 	List<Supplier> getSupplierList();
 	//List<Supplier> getSupplierListByKeyword(String keyword);
 	List<Orders> getAllOrders();
+	Orders getOrdersById(int ordersId);
 	
 }

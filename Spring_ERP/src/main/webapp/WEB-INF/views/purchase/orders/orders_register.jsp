@@ -129,44 +129,45 @@
      </form>
 
      <!-- 발주 목록 테이블 -->
-     <div class="content_body_list">
-	    <table>
-	        <thead>
-	        <tr>
-	            <th>제품번호</th>
-	            <th>제품명</th>
-	            <th>브랜드</th>
-	            <th>종류</th>
-	            <th>색상</th>
-	            <th>사이즈</th>
-	            <th>성별</th>
-	            <th>공급업체</th>
-	            <th>발주수량</th>
-	            <th>단가</th>
-	            <th>총액</th>
-	            <th>납기일</th>
-	        </tr>
-	        </thead>
-	        <tbody id="orderTable" class="sty">
-		    <c:forEach var="order" items="${ordersList}">
-		        <tr>
-		            <td>${order.productId}</td>
-		            <td>${order.productName}</td>
-		            <td>${order.productCategoryDetails.brand}</td>
-		            <td>${order.productCategoryDetails.type}</td>
-		            <td>${order.productCategoryDetails.color}</td>
-		            <td>${order.productCategoryDetails.size}</td>
-		            <td>${order.productCategoryDetails.gender}</td>
-		            <td>${order.supplierName}</td>
-		            <td>${order.ordersQuantity}</td>
-		            <td>${order.productPrice}</td>
-		            <td>${order.ordersQuantity * order.productPrice}</td>
-		            <td>${fn:substring(order.deliveryDate, 0, 10)}</td>
-		        </tr>
-		    </c:forEach>
-		</tbody>
-	    </table>
-	</div>
+<!-- 발주 목록 테이블 -->
+<div class="content_body_list">
+    <table>
+        <thead>
+        <tr>
+            <th>제품번호</th>
+            <th>제품명</th>
+            <th>브랜드</th>
+            <th>종류</th>
+            <th>색상</th>
+            <th>사이즈</th>
+            <th>성별</th>
+            <th>공급업체</th>
+            <th>발주수량</th>
+            <th>단가</th>
+            <th>총액</th>
+            <th>납기일</th>
+        </tr>
+        </thead>
+        <tbody id="orderTable" class="sty">
+            <c:if test="${not empty newOrder}">
+                <tr>
+                    <td>${newOrder.productId}</td>
+                    <td>${newOrder.productName}</td>
+                    <td>${newOrder.productCategoryDetails.brand}</td>
+                    <td>${newOrder.productCategoryDetails.type}</td>
+                    <td>${newOrder.productCategoryDetails.color}</td>
+                    <td>${newOrder.productCategoryDetails.size}</td>
+                    <td>${newOrder.productCategoryDetails.gender}</td>
+                    <td>${newOrder.supplierName}</td>
+                    <td>${newOrder.ordersQuantity}</td>
+                    <td>${newOrder.productPrice}</td>
+                    <td>${newOrder.ordersQuantity * newOrder.productPrice}</td>
+                    <td>${fn:substring(newOrder.deliveryDate, 0, 10)}</td>
+                </tr>
+            </c:if>
+        </tbody>
+    </table>
+</div>
     </div>
 </div>
 
@@ -253,11 +254,15 @@
  
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function () {
-    // 발주일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
+	// 발주일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
     const ordersDateInput = document.getElementById("ordersDate");
     const today = new Date().toISOString().split('T')[0];
     ordersDateInput.value = today;
 
+    // 납기일 필드의 최소값을 현재 날짜로 설정
+    const deliveryDateInput = document.getElementById("deliveryDate");
+    deliveryDateInput.setAttribute('min', today); // 현재 날짜 이후만 선택 가능하게 설정
+    
     // 모든 필드가 입력되었는지 확인하는 함수
     function checkFields() {
         const productId = document.getElementById("productId").value;

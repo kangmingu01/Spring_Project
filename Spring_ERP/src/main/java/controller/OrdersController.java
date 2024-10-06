@@ -23,7 +23,7 @@ import service.OrdersService;
 @RequiredArgsConstructor
 public class OrdersController {
     private final OrdersService ordersService;
-
+    
     // 발주 등록 페이지 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -40,11 +40,6 @@ public class OrdersController {
         Map<String, Object> productResult = ordersService.getProductList(productMap);
         model.addAttribute("productList", productResult.get("productList"));
         
-        // 발주 목록 조회하여 모델에 추가
-        // 등록된 이후의 전체 발주 목록 조회하여 모델에 추가
-        List<Orders> ordersList = ordersService.getAllOrders();
-        model.addAttribute("ordersList", ordersList);
-        
         // 로그인한 사용자 아이디를 모델에 추가
         String userId = principal.getName(); // 로그인한 사용자의 아이디 가져오기
         model.addAttribute("userId", userId);
@@ -58,10 +53,26 @@ public class OrdersController {
         // 발주 등록
         ordersService.addOrders(orders);
 
-        // 등록 후 리다이렉트
-        return "redirect:/purchase/orders/register";
+        // 등록된 발주 ID로 발주 정보 다시 조회
+        Orders newOrder = ordersService.getOrdersById(orders.getOrdersId());
+        
+        // 새로 등록된 발주 정보를 모델에 추가
+        model.addAttribute("newOrder", newOrder);
+
+        // 공급 업체 목록 및 제품 목록 다시 추가
+        List<Supplier> supplierList = ordersService.getSupplierList();
+        model.addAttribute("supplierList", supplierList);
+
+        Map<String, Object> productMap = new HashMap<>();
+        productMap.put("pageNum", "1");
+        productMap.put("pageSize", "10");
+
+        Map<String, Object> productResult = ordersService.getProductList(productMap);
+        model.addAttribute("productList", productResult.get("productList"));
+
+        return "purchase/orders/orders_register";
     }
-    
+
     // 제품 리스트 조회 - 모달 창에서 페이징 및 검색 처리
     @RequestMapping(value = "/productList", method = RequestMethod.GET)
     public String getProductList(@RequestParam Map<String, Object> map, Model model) {
@@ -82,7 +93,7 @@ public class OrdersController {
 
         return "purchase/orders/product_list";  // 제품 리스트 페이지 뷰 (모달에서 사용)
     }
-    
+
     /*
     // 공급업체 검색 - Ajax 요청 처리
     @GetMapping("/supplier/search")
@@ -99,5 +110,4 @@ public class OrdersController {
                 .collect(Collectors.toList());
     }
     */
-
 }

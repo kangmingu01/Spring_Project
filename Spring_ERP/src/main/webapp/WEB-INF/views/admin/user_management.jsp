@@ -738,8 +738,20 @@
         }
         $("#userid").removeClass("is-invalid");
 
-        // 중복 검사할 수 있는 창을 띄움
-        window.open('<c:url value="/admin/idCheck"/>?userid=' + $("#userid").val(), 'idCheck', 'width=600,height=400,left=700,top=400');
+        // 화면 크기 및 브라우저 창 크기 계산
+        var screenWidth = window.screen.width;
+        var screenHeight = window.screen.height;
+
+        var popupWidth = 600;
+        var popupHeight = 400;
+
+        // 창을 화면 가운데에 위치시키기 위한 좌표 계산
+        var left = (screenWidth / 2) - (popupWidth / 2);
+        var top = (screenHeight / 2) - (popupHeight / 2);
+
+        // 새 창 열기
+        window.open('<c:url value="/admin/idCheck"/>?userid=' + $("#userid").val(), 'idCheck', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top);
+
     });
 
     /* 아이디 바꾸면 다시 중복검사할 수 있게 */

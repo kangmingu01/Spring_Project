@@ -214,48 +214,111 @@
 					</c:forEach>
 					</tbody>
                  </table>
+                 <div class="pagination">                   
+                <div style="text-align: center;">
+                    <c:choose>
+                        <c:when test="${pager.startPage > pager.blockSize}">
+                            <button type="button" onclick="loadProductPage(${pager.prevPage})" class="btn btn-link">[이전]</button>
+                        </c:when>
+                        <c:otherwise>
+                            <span>[이전]</span>
+                        </c:otherwise>
+                    </c:choose>
+
+                    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+                        <c:choose>
+                            <c:when test="${pager.pageNum != i}">
+                                <button type="button" onclick="loadProductPage(${i})" class="btn btn-link">[${i}]</button>
+                            </c:when>
+                            <c:otherwise>
+                                <span>[${i}]</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+
+                    <c:choose>
+                        <c:when test="${pager.endPage != pager.totalPage}">
+                            <button type="button" onclick="loadProductPage(${pager.nextPage})" class="btn btn-link">[다음]</button>
+                        </c:when>
+                        <c:otherwise>
+                            <span>[다음]</span>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                </div>
              </div>
          </div>
      </div>
  </div>
+ 
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function () {
-// 발주일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
-   const ordersDateInput = document.getElementById("ordersDate");
-   const today = new Date().toISOString().split('T')[0];
-   ordersDateInput.value = today;
+    // 발주일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
+    const ordersDateInput = document.getElementById("ordersDate");
+    const today = new Date().toISOString().split('T')[0];
+    ordersDateInput.value = today;
+
+    // 모든 필드가 입력되었는지 확인하는 함수
+    function checkFields() {
+        const productId = document.getElementById("productId").value;
+        const ordersQuantity = document.getElementById("ordersQuantity").value;
+        const productPrice = document.getElementById("productPrice").value;
+        const supplier = document.getElementById("supplier").value;
+        const deliveryDate = document.getElementById("deliveryDate").value;
+
+        // 모든 필드가 비어있지 않으면 등록 버튼 활성화
+        if (productId && ordersQuantity && productPrice && supplier && deliveryDate) {
+            document.querySelector(".content_header_registers_btn").classList.remove("disabled");
+            document.querySelector(".content_header_registers_btn").onclick = function() {
+                submitForm('registerForm');
+            };
+        } else {
+            document.querySelector(".content_header_registers_btn").classList.add("disabled");
+            document.querySelector(".content_header_registers_btn").onclick = null;
+        }
+    }
+
+    // 입력 필드에 이벤트 리스너 추가
+    document.getElementById("ordersQuantity").addEventListener("input", checkFields);
+    document.getElementById("productPrice").addEventListener("input", checkFields);
+    document.getElementById("supplier").addEventListener("change", checkFields);
+    document.getElementById("deliveryDate").addEventListener("input", checkFields);
+    document.getElementById("productId").addEventListener("input", checkFields);
+
+    // 초기 상태에서 버튼 비활성화
+    checkFields();
 });
 
 // 제품 목록 모달 열기
 function openProductModal() {
-  var productModal = new bootstrap.Modal(document.getElementById('productModal'));
-  productModal.show();
+    var productModal = new bootstrap.Modal(document.getElementById('productModal'));
+    productModal.show();
 }
 
 // 검색 버튼 클릭 시 제품 목록 모달 열기
 function searchOrder() {
-  openProductModal();
+    openProductModal();
 }
 
 // 제품 목록 검색 필터 함수 (하나의 검색 필드에서 제품명과 브랜드 검색)
 function filterProducts() {
-  const searchQuery = document.getElementById("productSearch").value.toLowerCase();
-  const productTable = document.getElementById("productTable");
-  const rows = productTable.getElementsByTagName("tr");
+    const searchQuery = document.getElementById("productSearch").value.toLowerCase();
+    const productTable = document.getElementById("productTable");
+    const rows = productTable.getElementsByTagName("tr");
 
-  for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 제외
-    const productName = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase();
-    const productBrand = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
+    for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 제외
+        const productName = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase();
+        const productBrand = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
 
-    if (productName.includes(searchQuery) || productBrand.includes(searchQuery) || searchQuery === "") {
-      rows[i].style.display = ""; // 검색 조건에 맞으면 표시
-    } else {
-      rows[i].style.display = "none"; // 검색 조건에 맞지 않으면 숨기기
+        if (productName.includes(searchQuery) || productBrand.includes(searchQuery) || searchQuery === "") {
+            rows[i].style.display = ""; // 검색 조건에 맞으면 표시
+        } else {
+            rows[i].style.display = "none"; // 검색 조건에 맞지 않으면 숨기기
+        }
     }
-  }
 }
 
-// 제품 선택 함수
+//제품 선택 함수
 function selectProduct(code, name, brand, type, color, size, gender) {
     document.getElementById("productId").value = code;   // 제품번호 필드에 ID 수정
     document.getElementById("productName").value = name;
@@ -265,9 +328,13 @@ function selectProduct(code, name, brand, type, color, size, gender) {
     document.getElementById("size").value = size;
     document.getElementById("gender").value = gender;
 
-// 모달 닫기
-	var productModal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
-	productModal.hide();
+ 	// 모달 닫기
+    var productModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('productModal'));
+    productModal.hide();
+    
+    // 필드 채워짐에 따라 등록 버튼 상태 확인
+    checkFields();
+    
 }
 
 function submitForm(formId) {
@@ -276,10 +343,11 @@ function submitForm(formId) {
 
 function resetForm() {
     document.getElementById('registerForm').reset();
+    checkFields(); // 초기화 후 등록 버튼 상태 업데이트
 }
 
-
 </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

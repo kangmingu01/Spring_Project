@@ -279,3 +279,9 @@ select {
     -webkit-appearance: auto; /* Webkit 기반 브라우저 (Chrome, Safari)에서 기본 스타일 사용 */
     -moz-appearance: auto; /* Mozilla 기반 브라우저에서 기본 스타일 사용 */
 }
+.pagination {
+    display: flex;
+    justify-content: center;  /* 자식 요소를 수평 가운데로 정렬 */
+    align-items: center;      /* 자식 요소를 수직 가운데로 정렬 */
+    margin-top: 20px;         /* 필요에 따라 간격을 조정 */
+}

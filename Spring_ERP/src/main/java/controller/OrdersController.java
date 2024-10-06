@@ -119,14 +119,14 @@ public class OrdersController {
     }
     */
     
-    // 발주 목록 페이지 - 구매팀 ROLE만 접근 가능
+ // 발주 목록 페이지 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listOrders(@RequestParam Map<String, Object> map, Model model, Principal principal) {
-    	// 로그인한 사용자 아이디를 모델에 추가
+        // 로그인한 사용자 아이디를 모델에 추가
         String userId = principal.getName(); 
         model.addAttribute("userId", userId);
-        
+
         // 기본 페이징 및 검색 설정
         if (!map.containsKey("pageNum")) {
             map.put("pageNum", "1");
@@ -134,6 +134,16 @@ public class OrdersController {
         if (!map.containsKey("pageSize")) {
             map.put("pageSize", "10");
         }
+
+        // 검색 필드가 없는 경우 처리 (기본 값 세팅)
+        map.putIfAbsent("ordersId", "");
+        map.putIfAbsent("ordersDate", "");
+        map.putIfAbsent("userid", "");
+        map.putIfAbsent("productId", "");
+        map.putIfAbsent("productName", "");
+        map.putIfAbsent("brand", "");
+        map.putIfAbsent("supplierId", "");
+        map.putIfAbsent("ordersStatus", "");
 
         // 발주 목록 조회 (페이징 처리 및 검색 포함)
         Map<String, Object> resultMap = ordersService.getOrdersList(map);

@@ -812,7 +812,6 @@
     function submitEditForm() {
         $("#userid_modal").prop("disabled", false);
         $("#passwd_modal").prop("disabled", false);
-
         $("#editUserModal").submit();
     }
 </script>

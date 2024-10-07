@@ -63,8 +63,95 @@
   </style>
 </head>
 <body>
+<main class="bg-light pb-1px">
+  <div class="content d-flex justify-content-between pt-2 pb-2 ps-4 pe-4 align-items-center">
+    <div class="title fw-bold">
+      조직 추가
+    </div>
+    <div class="d-flex">
+      <div class="btn text-white" onclick="resetForm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+             class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+          <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+        </svg>
+        <span>초기화</span>
+      </div>
+    </div>
+  </div>
+
+  <%-- 조직 관리 폼 --%>
+  <div class="">
+    <div class="m-1 p-2 border rounded bg-white">
+      <form action="<c:url value="/admin/addUser"/>" id="userForm" method="post">
+
+        <div class="row mb-3">
+          <!-- 조직 ID -->
+          <div class="col-md-4">
+            <label for="orgId" class="form-label">조직 ID</label>
+
+            <div class="d-flex input-group row">
+              <select class="form-select col-3" id="orgSelect" name="orgSelect">
+                <option value="DEP">부서</option>
+                <option value="STORE">매장</option>
+              </select>
+              <input type="text" class="form-control col-9" id="orgNum" name="orgNum">
+            </div>
+
+            <div id="idMsg" class="error">아이디를 입력해주세요</div>
+            <div id="idRegMsg" class="error">아이디는 영문자로 시작되는 영문자, 숫자의 범위 6~15범위의 문자로만 작성 가능합니다</div>
+            <div id="idCheckMsg" class="error">아이디 중복 검사를 반드시 실행해주세요</div>
+
+          </div>
+
+          <!-- 조직이름 -->
+          <div class="col-md-4">
+            <label for="orgName" class="form-label">조직이름</label>
+            <div class="d-flex form-control-position">
+              <input type="text" class="form-control" id="orgName" name="orgName">
+            </div>
+            <div id="passwdMsg" class="error">랜덤생성 버튼을 눌러주세요</div>
 
 
+          </div>
+          <!-- 조직 유형 -->
+          <div class="col-md-4">
+            <label for="name" class="form-label">조직유형</label>
+            <select class="form-select" id="orgType" name="orgType">
+              <option value="0">본사</option>
+              <option value="1">매장</option>
+            </select>
+            <div id="nameMsg" class="error">이름을 입력해 주세요.</div>
+            <div id="nameRegMsg" class="error">한글만 입력 가능합니다.</div>
+            <%-- 이름 입력 오류 메시지 --%>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <!-- 주소 -->
+          <div class="col-md-4">
+            <label for="address" class="form-label">주소</label>
+            <input type="text" class="form-control" id="address" name="address">
+            <div id="addressMsg" class="error">주소를 입력해 주세요.</div>
+            <%-- 주소 입력 오류 메시지 --%>
+          </div>
+          <!-- 전화번호 -->
+          <div class="col-md-4">
+            <label for="phone" class="form-label">전화번호</label>
+            <input type="text" class="form-control" id="phone" name="phone">
+            <div id="phoneMsg" class="error">전화번호를 입력해 주세요.</div>
+            <div id="phoneHyphenMsg" class="error">전화번호에 (-) 빼고 입력해주세요</div>
+            <div id="phoneRegMsg" class="error">010이 포함되어야 하며 11자리 맞춰 입력해 주세요</div>
+            <%-- 전화번호 형식 오류 메시지 --%>
+          </div>
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary">조직 생성</button>
+        </div>
+        <sec:csrfInput/>
+      </form>
+    </div>
+  </div>
+</main>
 <section>
   <div class="content d-md-flex justify-content-between pt-2 pb-2 ps-4 pe-4 align-items-center">
     <div class="title fw-bold">

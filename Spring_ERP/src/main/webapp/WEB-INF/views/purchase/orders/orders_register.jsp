@@ -68,7 +68,7 @@
                      <input type="date" id="ordersDate" name="ordersDate" readonly class="read-only-field"/>
                  </div>
                  <div>
-                     <label style="color: red;">제품번호</label>
+                     <label>제품번호</label>
                      <input type="text" name="productId" class="result" id="productId" readonly style="background-color: #e9e9e9;"/>
                  </div>
                  <div>
@@ -142,10 +142,10 @@
 		            <th>사이즈</th>
 		            <th>성별</th>
 		            <th>공급업체</th>
-		            <th>발주수량</th>
-		            <th>단가</th>
-		            <th>총액</th>
-		            <th>납기일</th>
+		            <th style="color: red;">발주수량</th>
+		            <th style="color: red;">단가</th>
+		            <th style="color: red;">총액</th>
+		            <th style="color: red;">납기일</th>
 		        </tr>
 		        </thead>
 		        <tbody id="orderTable" class="sty">

@@ -254,7 +254,7 @@
  
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function () {
-	// 발주일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
+    // 발주일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
     const ordersDateInput = document.getElementById("ordersDate");
     const today = new Date().toISOString().split('T')[0];
     ordersDateInput.value = today;
@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 납기일 필드의 최소값을 현재 날짜로 설정
     const deliveryDateInput = document.getElementById("deliveryDate");
     deliveryDateInput.setAttribute('min', today); // 현재 날짜 이후만 선택 가능하게 설정
-    
+
     // 모든 필드가 입력되었는지 확인하는 함수
     function checkFields() {
         const productId = document.getElementById("productId").value;
@@ -333,13 +333,12 @@ function selectProduct(code, name, brand, type, color, size, gender) {
     document.getElementById("size").value = size;
     document.getElementById("gender").value = gender;
 
- 	// 모달 닫기
+    // 모달 닫기
     var productModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('productModal'));
     productModal.hide();
-    
+
     // 필드 채워짐에 따라 등록 버튼 상태 확인
     checkFields();
-    
 }
 
 function submitForm(formId) {
@@ -347,11 +346,26 @@ function submitForm(formId) {
 }
 
 function resetForm() {
+    // 폼 필드 초기화
     document.getElementById('registerForm').reset();
-    checkFields(); // 초기화 후 등록 버튼 상태 업데이트
-}
+    
+    // 발주일자와 납기일의 최소 날짜를 다시 설정
+    const ordersDateInput = document.getElementById("ordersDate");
+    const today = new Date().toISOString().split('T')[0];
+    ordersDateInput.value = today;
+    
+    const deliveryDateInput = document.getElementById("deliveryDate");
+    deliveryDateInput.setAttribute('min', today);
 
+    // 발주 목록 테이블 초기화
+    const orderTable = document.getElementById("orderTable");
+    orderTable.innerHTML = '';
+
+    // 초기화 후 등록 버튼 상태 업데이트
+    checkFields(); 
+}
 </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

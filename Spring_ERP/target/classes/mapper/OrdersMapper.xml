@@ -68,31 +68,35 @@
     
     <!-- 발주 목록 개수 조회 (페이징 처리를 위한 전체 개수) -->
 	<select id="selectOrdersCount" resultType="int">
-	    select count(*) from orders
+	    select count(*)
+	    from orders o
+	    join product p on o.product_id = p.product_id
+	    join supplier s on o.supplier_id = s.supplier_id
+	    join erp_user u on o.userid = u.userid
 	    <where>
 	        <if test="ordersId != null and ordersId != ''">
-	            orders_id = #{ordersId}
+	            o.orders_id = #{ordersId}
 	        </if>
 	        <if test="ordersDate != null and ordersDate != ''">
-	            and to_char(orders_date, 'YYYY-MM-DD') = #{ordersDate}
+	            and to_char(o.orders_date, 'YYYY-MM-DD') = #{ordersDate}
 	        </if>
-	        <if test="userid != null and userid != ''">
-	            and userid like '%' || #{userid} || '%'
-	        </if>
+	        <if test="name != null and name != ''">
+			    and u.name = #{name} 
+			</if>
 	        <if test="productId != null and productId != ''">
-	            and product_id = #{productId}
+	            and o.product_id = #{productId}
 	        </if>
 	        <if test="productName != null and productName != ''">
-	            and product_name like '%' || #{productName} || '%'
+	            and p.product_name like '%' || #{productName} || '%'
 	        </if>
 	        <if test="brand != null and brand != ''">
-                and SUBSTR(product_category, 1, 2) = #{brand}
-            </if>
+	            and SUBSTR(p.product_category, 1, 2) = #{brand}
+	        </if>
 	        <if test="supplierId != null and supplierId != ''">
-	            and supplier_id = #{supplierId}
+	            and o.supplier_id = #{supplierId}
 	        </if>
 	        <if test="ordersStatus != null and ordersStatus != ''">
-	            and orders_status = #{ordersStatus}
+	            and o.orders_status = #{ordersStatus}
 	        </if>
 	    </where>
 	</select>
@@ -100,13 +104,14 @@
 	<!-- 발주 목록 조회 (페이징 처리 및 검색 기능 포함) -->
 	<select id="selectOrdersList" resultType="Orders">
 	    select * from (
-	        select rownum rn, o.orders_id, o.orders_date, o.userid, u.name, o.supplier_id, o.product_id, 
-	               o.orders_quantity, o.product_price, o.delivery_date, o.orders_status, 
-	               p.product_name, p.product_category, s.supplier_name
+	        select rownum rn, o.orders_id, o.orders_date, o.userid, u.name,
+	               o.supplier_id, o.product_id, o.orders_quantity, o.product_price,
+	               o.delivery_date, o.orders_status, p.product_name, p.product_category,
+	               s.supplier_name
 	        from orders o
 	        join product p on o.product_id = p.product_id
 	        join supplier s on o.supplier_id = s.supplier_id
-	        join erp_user u on o.userid = u.userid  
+	        join erp_user u on o.userid = u.userid
 	        <where>
 	            <if test="ordersId != null and ordersId != ''">
 	                o.orders_id = #{ordersId}
@@ -114,9 +119,9 @@
 	            <if test="ordersDate != null and ordersDate != ''">
 	                and to_char(o.orders_date, 'YYYY-MM-DD') = #{ordersDate}
 	            </if>
-	            <if test="userid != null and userid != ''">
-	                and o.userid like '%' || #{userid} || '%'
-	            </if>
+	            <if test="name != null and name != ''">
+				    and u.name = #{name} 
+				</if>
 	            <if test="productId != null and productId != ''">
 	                and o.product_id = #{productId}
 	            </if>
@@ -134,14 +139,26 @@
 	            </if>
 	        </where>
 	        order by o.orders_date desc
-	    ) where rn between #{startRow} and #{endRow}
+	    )
+	    where rn between #{startRow} and #{endRow}
 	</select>
-	
+
 	<!-- 발주 정보 수정 (발주 대기 상태일 때) -->
 	<update id="updateOrders" parameterType="Orders">
-	    update orders set orders_quantity = #{ordersQuantity}, product_price = #{productPrice},
-	        delivery_date = #{deliveryDate} where orders_id = #{ordersId} and orders_status = 1
-	</update>    
+	    update orders
+	    <set>
+	        <if test="ordersQuantity != null">
+	            orders_quantity = #{ordersQuantity},
+	        </if>
+	        <if test="productPrice != null">
+	            product_price = #{productPrice},
+	        </if>
+	        <if test="deliveryDate != null">
+	            delivery_date = #{deliveryDate}
+	        </if>
+	    </set>
+	    where orders_id = #{ordersId}
+	</update>  
 	
 	<!-- 발주 상태 업데이트 (확정 버튼 눌렀을 때) -->
 	<update id="updateOrdersStatus" parameterType="int">

@@ -15,6 +15,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <meta name="_csrf" content="${_csrf.token}"/>
   <meta name="_csrf_header" content="${_csrf.headerName}"/>
+  
 </head>
 
 <body>
@@ -57,7 +58,7 @@
 	            </div>
 	            <div>
 	                <label>담당자</label>
-	                <input type="text" name="userid" id="userid" />
+	                <input type="text" name="name" id="userid" />
 	            </div>
 	            <div>
 	                <label style="color: red;">제품번호</label>
@@ -163,7 +164,7 @@
                 </td>
                 <td>
 				  <c:if test="${orders.ordersStatus == 1}">
-				    <button class="editButton" data-orders-id="${orders.ordersId}">수정</button>
+				    <button class="editButton" data-orders-id="${orders.ordersId}">수정</button>					
 				  </c:if>
 				</td>
                 <td>
@@ -220,134 +221,135 @@
     </div>
   </div>
 
-  <script>
-  
-function searchOrders() {
-   // 폼 데이터 가져오기
-   const form = document.getElementById('ordersForm');
-   
-   // 서버로 GET 요청을 보내도록 폼 제출
-   form.submit();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
+ <script>
+ $(document).ready(function() {
     // 모든 수정 버튼에 클릭 이벤트 추가
-    document.querySelectorAll('.editButton').forEach(button => {
-        button.addEventListener('click', function(event) {
-            const ordersId = button.getAttribute('data-orders-id');
-            editOrders(event.target, ordersId);
-        });
+    $('.editButton').on('click', function() {
+        const ordersId = $(this).data('orders-id');
+        editOrders($(this), ordersId);
+    });
+
+    // 조회 버튼에 대한 클릭 이벤트 추가
+    $('.content_header_search_btn').on('click', function() {
+        searchOrders();
+    });
+
+    // 초기화 버튼에 대한 클릭 이벤트 추가
+    $('.content_header_reset_btn').on('click', function() {
+        resetForm();
     });
 });
 
+function searchOrders() {
+    // 폼 데이터 가져오기
+    $('#ordersForm').submit();
+}
+
 function setAllFieldsReadOnly(readOnly) {
     const fields = [
-        'ordersId', 'ordersDate', 'userid', 
-        'productId', 'productName', 'brand', 
-        'supplier', 'ordersStatus', 'ordersQuantity', 
-        'productPrice', 'deliveryDate'
+        '#ordersId', '#ordersDate', '#userid', 
+        '#productId', '#productName', '#brand', 
+        '#supplier', '#ordersStatus', '#ordersQuantity', 
+        '#productPrice', '#deliveryDate'
     ];
 
     fields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
+        const field = $(fieldId);
 
-        if (field) {
-            if (field.tagName === 'SELECT' || field.type === 'select-one') {
-                field.disabled = readOnly;
+        if (field.length) {
+            if (field.prop('tagName') === 'SELECT') {
+                field.prop('disabled', readOnly);
             } else {
-                field.readOnly = readOnly;
+                field.prop('readonly', readOnly);
             }
 
             if (readOnly) {
-                field.style.backgroundColor = "#f0f0f0"; 
+                field.css('background-color', '#f0f0f0');
             } else {
-                field.style.backgroundColor = ""; 
+                field.css('background-color', '');
             }
         }
     });
 }
 
 function editOrders(button, ordersId) {
+    // 다른 수정 버튼 비활성화
+    $('.editButton').prop('disabled', true);
+    button.prop('disabled', false); // 현재 버튼만 활성화 상태 유지
+
     // 각 필드에 값을 채우기
     const row = button.closest('tr');
 
-    if (!row) {
-        alert("해당 행을 찾을 수 없습니다.");
+    if (!row.length) {
+        alert('해당 행을 찾을 수 없습니다.');
         return;
     }
-   
-    document.getElementById('ordersId').value = row.children[0].innerText.trim();
-    document.getElementById('ordersDate').value = row.children[1].innerText.trim();
-    document.getElementById('userid').value = row.children[2].innerText.trim();
-    document.getElementById('productId').value = row.children[3].innerText.trim();
-    document.getElementById('productName').value = row.children[4].innerText.trim();
-    document.getElementById('brand').value = row.children[5].innerText.trim();
 
-    const supplierName = row.children[10].innerText.trim();
-    const supplierOptions = document.getElementById('supplier').options;
-    for (let i = 0; i < supplierOptions.length; i++) {
-        if (supplierOptions[i].text === supplierName) {
-            supplierOptions[i].selected = true;
-            break;
-        }
-    }
+    $('#ordersId').val($.trim(row.children().eq(0).text()));
+    $('#ordersDate').val($.trim(row.children().eq(1).text()));
+    $('#userid').val($.trim(row.children().eq(2).text()));
+    $('#productId').val($.trim(row.children().eq(3).text()));
+    $('#productName').val($.trim(row.children().eq(4).text()));
+    $('#brand').val($.trim(row.children().eq(5).text()));
 
-    const orderStatusText = row.children[15].innerText.trim();
-    const statusOptions = document.getElementById('ordersStatus').options;
-    for (let i = 0; i < statusOptions.length; i++) {
-        if (statusOptions[i].text === orderStatusText) {
-            statusOptions[i].selected = true;
-            break;
+    const supplierName = $.trim(row.children().eq(10).text());
+    $('#supplier option').each(function() {
+        if ($(this).text() === supplierName) {
+            $(this).prop('selected', true);
         }
-    }
+    });
+
+    const orderStatusText = $.trim(row.children().eq(15).text());
+    $('#ordersStatus option').each(function() {
+        if ($(this).text() === orderStatusText) {
+            $(this).prop('selected', true);
+        }
+    });
 
     // 수정 가능한 필드 설정
-    document.getElementById('ordersQuantity').value = row.children[11].innerText.trim();
-    document.getElementById('productPrice').value = row.children[12].innerText.trim();
-    document.getElementById('deliveryDate').value = row.children[14].innerText.trim();
+    $('#ordersQuantity').val($.trim(row.children().eq(11).text()));
+    $('#productPrice').val($.trim(row.children().eq(12).text()));
+    $('#deliveryDate').val($.trim(row.children().eq(14).text()));
 
     // 모든 필드를 읽기 전용으로 설정한 후 필요한 필드만 활성화
     setAllFieldsReadOnly(true);
 
-	// 발주수량, 단가, 납기일 필드만 수정 가능하게 설정
-    document.getElementById('ordersQuantity').readOnly = false;
-    document.getElementById('ordersQuantity').disabled = false;
-
-    document.getElementById('productPrice').readOnly = false;
-    document.getElementById('productPrice').disabled = false;
-
-    document.getElementById('deliveryDate').readOnly = false;
-    document.getElementById('deliveryDate').disabled = false;
-  
-    document.getElementById('ordersQuantity').style.backgroundColor = "#ffffff";
-    document.getElementById('productPrice').style.backgroundColor = "#ffffff";
-    document.getElementById('deliveryDate').style.backgroundColor = "#ffffff";
+    // 발주수량, 단가, 납기일 필드만 수정 가능하게 설정
+    $('#ordersQuantity').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
+    $('#productPrice').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
+    $('#deliveryDate').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
 
     // 버튼을 수정 상태로 전환
-    button.innerText = "완료";
-    button.removeEventListener('click', editOrders);
-    button.addEventListener('click', function() {
+    button.text('완료');
+    button.off('click').on('click', function() {
         saveOrderChanges(ordersId);
     });
 }
 
 function saveOrderChanges(ordersId) {
     // 수정된 값 가져오기
-    const ordersQuantity = document.getElementById('ordersQuantity').value;
-    const productPrice = document.getElementById('productPrice').value;
-    const deliveryDate = document.getElementById('deliveryDate').value;
+    const data = { ordersId: ordersId };
+    
+    const ordersQuantity = $('#ordersQuantity').val();
+    if (ordersQuantity) {
+        data.ordersQuantity = ordersQuantity;
+    }
+
+    const productPrice = $('#productPrice').val();
+    if (productPrice) {
+        data.productPrice = productPrice;
+    }
+
+    const deliveryDate = $('#deliveryDate').val();
+    if (deliveryDate) {
+        data.deliveryDate = deliveryDate;
+    }
 
     // 서버에 수정 요청 보내기
     $.ajax({
-        url: "<c:url value='/purchase/orders/modify'/>",
-        type: "POST",
-        data: {
-            ordersId: ordersId,
-            ordersQuantity: ordersQuantity,
-            productPrice: productPrice,
-            deliveryDate: deliveryDate,
-            _csrf: $('meta[name="_csrf"]').attr('content')
-        },
+        url: '<c:url value="/purchase/orders/modify"/>',
+        type: 'PATCH',
+        data: data,
         success: function(response) {
             // 수정이 완료되면 페이지를 다시 로드하여 업데이트된 발주 목록을 보여줌
             alert('수정이 완료되었습니다.');
@@ -359,17 +361,17 @@ function saveOrderChanges(ordersId) {
     });
 }
 
-
 function resetForm() {
     // 폼 데이터 초기화
-    document.getElementById('ordersForm').reset();
-    
+    $('#ordersForm')[0].reset();
+
     // 전체 목록 조회를 위해 폼을 제출
-    const form = document.getElementById('ordersForm');
-    form.action = "<c:url value='/purchase/orders/list'/>";
-    form.method = "get";
-    form.submit();
+    $('#ordersForm').attr('action', '<c:url value="/purchase/orders/list"/>').attr('method', 'get').submit();
+
+    // 수정 버튼들을 다시 활성화
+    $('.editButton').prop('disabled', false);
 }
+
 </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

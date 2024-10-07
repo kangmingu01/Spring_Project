@@ -25,7 +25,7 @@ import service.OrdersService;
 @RequiredArgsConstructor
 public class OrdersController {
     private final OrdersService ordersService;
-    
+
     // 발주 등록 페이지 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -80,10 +80,10 @@ public class OrdersController {
         return "purchase/orders/orders_register"; // 발주 등록 페이지로 다시 이동
     }
 
-
     // 제품 리스트 조회 - 모달 창에서 페이징 및 검색 처리
     @RequestMapping(value = "/productList", method = RequestMethod.GET)
     public String getProductList(@RequestParam Map<String, Object> map, Model model) {
+        // 페이지 번호와 페이지 크기 기본 설정
         if (!map.containsKey("pageNum")) {
             map.put("pageNum", "1");
         }
@@ -107,6 +107,7 @@ public class OrdersController {
     @GetMapping("/supplier/search")
     @ResponseBody
     public List<Map<String, Object>> searchSuppliers(@RequestParam String keyword) {
+        // 공급업체 검색 결과를 리스트로 반환
         List<Supplier> suppliers = ordersService.getSupplierListByKeyword(keyword);
         return suppliers.stream()
                 .map(supplier -> {
@@ -118,8 +119,7 @@ public class OrdersController {
                 .collect(Collectors.toList());
     }
     */
-    
- // 발주 목록 페이지 - 구매팀 ROLE만 접근 가능
+    // 발주 목록 페이지 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listOrders(@RequestParam Map<String, Object> map, Model model, Principal principal) {
@@ -138,10 +138,10 @@ public class OrdersController {
         // 검색 필드가 없는 경우 처리 (기본 값 세팅)
         map.putIfAbsent("ordersId", "");
         map.putIfAbsent("ordersDate", "");
-        map.putIfAbsent("userid", "");
+        map.putIfAbsent("name", "");      
         map.putIfAbsent("productId", "");
-        map.putIfAbsent("productName", "");
-        map.putIfAbsent("brand", "");
+        map.putIfAbsent("productName", "");   
+        map.putIfAbsent("brand", "");        
         map.putIfAbsent("supplierId", "");
         map.putIfAbsent("ordersStatus", "");
 
@@ -161,6 +161,7 @@ public class OrdersController {
     }
 
     // 발주 수정 후 목록으로 이동 - 페이징 및 검색 조건 유지
+    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public String modifyOrder(@ModelAttribute Orders orders, @RequestParam Map<String, Object> map, Model model, Principal principal)
     		throws UnsupportedEncodingException {
@@ -171,12 +172,12 @@ public class OrdersController {
         // 발주 정보 수정 처리
         ordersService.modifyOrders(orders);
 
-     // 페이징 및 검색 정보를 유지하면서 목록으로 리다이렉트
+        // 페이징 및 검색 정보를 유지하면서 목록으로 리다이렉트
         String pageNum = (String) map.get("pageNum");
         String pageSize = (String) map.get("pageSize");
         String ordersId = (String) map.get("ordersId");
         String ordersDate = URLEncoder.encode((String) map.get("ordersDate"), "utf-8");
-        String userid = URLEncoder.encode((String) map.get("userid"), "utf-8");
+        String name = URLEncoder.encode((String) map.get("name"), "utf-8");
         String productName = URLEncoder.encode((String) map.get("productName"), "utf-8");
         String supplierId = (String) map.get("supplierId");
         String ordersStatus = (String) map.get("ordersStatus");
@@ -185,12 +186,11 @@ public class OrdersController {
                 + "&pageSize=" + pageSize
                 + "&ordersId=" + ordersId
                 + "&ordersDate=" + ordersDate
-                + "&userid=" + userid
+                + "&name=" + name
                 + "&productName=" + productName
                 + "&supplierId=" + supplierId
                 + "&ordersStatus=" + ordersStatus;
     }
-
 
     // 발주 확정 - 발주 대기 상태에서 발주 완료 상태로 변경
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
@@ -201,7 +201,7 @@ public class OrdersController {
         String userId = principal.getName(); 
         model.addAttribute("userId", userId);
         
-        // 발주 상태 수정 처리
+        // 발주 상태 수정 처리 (발주 대기 -> 발주 완료)
         ordersService.modifyOrdersStatus(ordersId);
 
         // 페이징 정보를 유지하면서 목록으로 리다이렉트, 검색 조건은 초기화
@@ -211,6 +211,4 @@ public class OrdersController {
         return "redirect:/purchase/orders/list?pageNum=" + pageNum
                 + "&pageSize=" + pageSize;
     }
-
-
 }

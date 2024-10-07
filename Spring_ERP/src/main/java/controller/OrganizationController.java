@@ -20,15 +20,52 @@ public class OrganizationController {
         model.addAttribute("resultMap", organizationService.getOrganizationList(map));
         model.addAttribute("searchMap", map);
 
+
+        Organization org = (Organization) map.get("Organization");
+
+        if (org != null && org.getOrgId() != null) {
+            String orgIdPrefix = org.getOrgId().substring(0, 3);
+            model.addAttribute("isDepartment", "DEP".equals(orgIdPrefix));
+        } else {
+            model.addAttribute("isDepartment", false);
+        }
+
         return "/admin/organization_management";
     }
 
     @PostMapping("/addOrganization")
-    public String addOrganization(@ModelAttribute Organization organization, @RequestParam("orgPrefix") String orgPrefix) {
-        // orgPrefix = 부서, 매장인지 값 넘어오는 건 DEP, STORE로 넘어옴
+    public String addOrganization(@RequestParam Map<String, Object> map, Model model) {
+
+        // 다음에 생성될 orgId 값 구하는 파람
+        String orgPrefix  = map.get("orgPrefix").toString();
+
+        String startNum = map.get("startNum").toString();
+        String middleNum = map.get("middleNum").toString();
+        String endNum = map.get("endNum").toString();
+
+        String phoneNumber = startNum + '-' + middleNum + '-' + endNum;
+
+        // orgId 생성
         String orgId = organizationService.generateNextOrgId(orgPrefix);
+
+        // Organization 객체 생성 후 추가
+        Organization organization = new Organization();
         organization.setOrgId(orgId);
+        organization.setOrgName(map.get("orgName").toString());
+        organization.setOrgType(Integer.parseInt(map.get("orgType").toString()));
+        organization.setAddress(map.get("address").toString());
+        organization.setPhoneNumber(phoneNumber);
+
+        // 서비스 호출하여 조직 추가
         organizationService.addOrganization(organization);
+
+
+        System.out.println(orgPrefix);
+        System.out.println(orgId);
+        System.out.println(map.get("orgName").toString());
+        System.out.println(map.get("address").toString());
+        System.out.println(phoneNumber);
+
 
         return "redirect:/admin/organization";
     }

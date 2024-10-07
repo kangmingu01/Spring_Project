@@ -83,7 +83,7 @@
     <%-- 조직 관리 폼 --%>
     <div class="">
         <div class="m-1 p-2 border rounded bg-white">
-            <form action="<c:url value="/admin/addOrganization"/>" id="orgFrom" method="post">
+            <form action="<c:url value="/admin/addOrganization"/>" id="orgForm" method="post">
                 <div class="row mb-3">
                     <!-- 조직 ID -->
                     <div class="col-md-4">
@@ -109,7 +109,7 @@
                     <div class="col-md-4">
                         <label for="address" class="form-label">주소</label>
                         <input type="text" class="form-control" id="address" name="address">
-                        <div id="addressMsg" class="error">주소를 입력해 주세요.</div>
+                        <div id="addressMsg" class="error">주소를 입력해 주세요. 본사라면 [본사]라고 적어주세요</div>
                         <%-- 주소 입력 오류 메시지 --%>
                     </div>
                 </div>
@@ -231,7 +231,14 @@
                                         <span class="text-warning">매장</span>
                                     </c:when>
                                     <c:when test="${organization.orgType == 9}">
-                                        <span class="text-danger">사라짐</span>
+                                        <c:choose>
+                                            <c:when test="${isDepartment}">
+                                                <span class="text-danger">부서 폐지</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="text-danger">매장 폐업</span>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
                                 </c:choose>
                             </td>
@@ -243,33 +250,38 @@
                             </td>
                             <td>
                                 <button type="button" class="btn btn-secondary"
-                                        data-bs-toggle="modal" data-bs-target="#editUserModal"
-                                        data-userid="${erpUser.userid}"
-                                        data-name="${erpUser.name}"
-                                        data-phone="${erpUser.phone}"
-                                        data-address="${erpUser.address}"
-                                        data-email="${erpUser.email}"
-                                        data-gender="${erpUser.gender}"
-                                        data-birthday="${erpUser.birthday}"
-                                        data-joindate="${erpUser.joindate}"
-                                        data-enabled="${erpUser.enabled}"
-                                        data-orgid="${erpUser.orgId}">
+                                        data-bs-toggle="modal" data-bs-target="#editOrgModal"
+                                        data-orgId="${organization.orgId}"
+                                        data-orgName="${organization.orgName}"
+                                        data-orgType="${organization.orgType}"
+                                        data-address="${organization.address}"
+                                        data-phoneNumber="${organization.phoneNumber}"
+                                        data-created="${organization.created}">
                                     수정
                                 </button>
                             </td>
                             <td>
                                 <form action="<c:url value="/admin/deleteOrg"/>" method="post">
                                     <input type="hidden" name="orgId" value="${organization.orgId}">
-                                    <button type="submit" class="btn btn-danger"
+
                                             <c:choose>
                                                 <c:when test="${organization.orgType == 0}">
+                                    <button type="submit" class="btn btn-danger"
                                                     onclick="return confirm('해당 부서[${organization.orgName}]를 정말 삭제하시겠습니까?')">삭제
+                                    </button>
                                                 </c:when>
                                                 <c:when test="${organization.orgType == 1}">
+                                                    <button type="submit" class="btn btn-danger"
                                                     onclick="return confirm('해당 매장[${organization.orgName}]를 폐업 처리 하시겠습니까?')">삭제
+                                                    </button>
                                                 </c:when>
+                                                <c:otherwise>
+                                                    <button type="submit" class="btn btn-danger disabled">
+                                                    삭제
+                                                    </button>
+                                                </c:otherwise>
                                             </c:choose>
-                                    </button>
+
                                     <sec:csrfInput/>
                                 </form>
                             </td>
@@ -278,6 +290,51 @@
                 </c:otherwise>
             </c:choose>
         </table>
+    </div>
+    <!-- 모달 -->
+    <div class="modal fade" id="editOrgModal" tabindex="-1" aria-labelledby="editOrgModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editOrgModalLabel">조직 정보 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editOrgForm" action="<c:url value="/admin/updateUser"/>" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="orgName_modal" class="form-label">조직 이름</label>
+                            <input type="text" class="form-control" id="orgName_modal" name="orgName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="orgId_modal" class="form-label">조직 ID</label>
+                            <input type="text" class="form-control" id="orgId_modal" name="orgId" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="orgType_modal" class="form-label">조직 유형</label>
+                            <select class="form-select" id="orgType_modal" name="orgType" disabled>
+                                <option value="0">부서</option>
+                                <option value="1">매장</option>
+                                <option value="9">부서 폐지/폐업</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address_modal" class="form-label">주소</label>
+                            <input type="text" class="form-control" id="address_modal" name="address">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phoneNumber_modal" class="form-label">조직 전화번호</label>
+                            <input type="text" class="form-control" id="phoneNumber_modal" name="phoneNumber" disabled>
+                        </div>
+                        <sec:csrfInput/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="submit" class="btn btn-primary" onclick="submitEditForm()">저장</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <div class="pagination-container text-center mt-4">
         <c:choose>
@@ -325,7 +382,19 @@
         </c:choose>
     </div>
 </section>
+<script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
 <script>
+
+    function resetForm() {
+        document.getElementById("orgForm").reset();
+
+        /* 모든 에러 메세지 숨김 */
+        $(".error").css("display", "none").css("visibility", "hidden");
+        $("#orgName").removeClass("is-invalid");
+        $("#middleNum").removeClass("is-invalid");
+        $("#endNum").removeClass("is-invalid");
+    }
+
     /* 부서 선택 시 orgType의 값을 자동으로 들어갈 수 있도록 하는 함수 */
     function setOrgType() {
         const orgPrefix = document.getElementById("orgPrefix").value;
@@ -365,15 +434,17 @@
     /* 한글만 입력 검증 */
     const orgReg = /^[가-힣]+$/;
 
-    $("#orgFrom").submit(function (e) {
-        e.preventDefault(); // 기본 제출 동작 차단
-
+    $("#orgForm").submit(function (e) {
+        /*e.preventDefault();*/
         /* 제출 여부 확인 */
         var submitResult = true;
 
         /* 모든 에러 메세지 숨김 */
         $(".error").css("display", "none").css("visibility", "hidden").removeClass("is-invalid");
-
+        $("#orgName").removeClass("is-invalid");
+        $("#address").removeClass("is-invalid");
+        $("#middleNum").removeClass("is-invalid");
+        $("#endNum").removeClass("is-invalid");
         if ($("#orgName").val() == "") {
             $("#orgMsg").css("display", "block").css("visibility", "visible");
             $("#orgName").addClass("is-invalid");
@@ -409,10 +480,41 @@
             submitResult = false;
         }
 
-        if (submitResult) {
-            // 검증이 통과된 경우 폼 제출
-            this.submit();
-        }
+        console.log($("#orgPrefix").val());
+        console.log($("#orgName").val());
+        console.log($("#orgType").val());
+        console.log($("#address").val());
+        console.log($("#startNum").val());
+        console.log($("#middleNum").val());
+        console.log($("#endNum").val());
+        console.log("==============================");
+
+
+        return submitResult;
+    });
+
+    /* 모달창 열릴 때 값 들어갈 수 있게 */
+    document.addEventListener('DOMContentLoaded', function () {
+        var editOrgModal = document.getElementById('editOrgModal');
+
+        editOrgModal.addEventListener('show.bs.modal', function (event) {
+            // 버튼에서 데이터 가져오기
+            var button = event.relatedTarget;
+            var orgId = button.getAttribute('data-orgId');
+            var orgName = button.getAttribute('data-orgName');
+            var orgType = button.getAttribute('data-orgType');
+            var address = button.getAttribute('data-address');
+            var phoneNumber = button.getAttribute('data-phoneNumber');
+
+
+            // 모달 내 입력 필드에 값을 설정
+            document.getElementById('orgId_modal').value = orgId;
+            document.getElementById('orgName_modal').value = orgName;
+            document.getElementById('orgType_modal').value = orgType;
+            document.getElementById('address_modal').value = address;
+            document.getElementById('phoneNumber_modal').value = phoneNumber;
+
+        });
     });
 
 </script>

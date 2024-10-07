@@ -4,6 +4,13 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!-- partial:partials/_navbar.html -->
 
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SPRING</title>
+</head>
+<body>
 <%-- 사용자 로그인 정보가 담겨있는 변수 --%>
 <sec:authentication property="principal" var="loginUser"/>
 
@@ -491,3 +498,5 @@
         document.getElementById("logoutForm").submit();
     }
 </script>
+</body>
+</html>

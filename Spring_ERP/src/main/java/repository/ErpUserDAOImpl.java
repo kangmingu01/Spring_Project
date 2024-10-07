@@ -7,6 +7,9 @@ import mapper.ErpUserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 @Repository
 @RequiredArgsConstructor
 public class ErpUserDAOImpl implements ErpUserDAO {
@@ -23,6 +26,11 @@ public class ErpUserDAOImpl implements ErpUserDAO {
     }
 
     @Override
+    public int deleteErpUser(String userid) {
+        return sqlSession.getMapper(ErpUserMapper.class).deleteErpUser(userid);
+    }
+
+    @Override
     public ErpUser selectErpUserByUserid(String userid) {
         return sqlSession.getMapper(ErpUserMapper.class).selectErpUserByUserid(userid);
     }
@@ -30,5 +38,15 @@ public class ErpUserDAOImpl implements ErpUserDAO {
     @Override
     public int insertErpAuth(ErpAuth erpAuth) {
         return sqlSession.getMapper(ErpUserMapper.class).insertErpAuth(erpAuth);
+    }
+
+    @Override
+    public int selectUserCount(Map<String, Object> map) {
+        return sqlSession.getMapper(ErpUserMapper.class).selectUserCount(map);
+    }
+
+    @Override
+    public List<ErpUser> selectUserList(Map<String, Object> map) {
+        return sqlSession.getMapper(ErpUserMapper.class).selectUserList(map);
     }
 }

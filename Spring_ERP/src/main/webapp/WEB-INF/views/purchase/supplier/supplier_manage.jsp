@@ -351,6 +351,7 @@ function completeUpdate(id) {
 }
 
 // 실제 수정 요청 함수
+// 수정 요청 함수도 CSRF 토큰을 설정
 function modifySupplier(id) {
     $.ajax({
         url: "<c:url value='/purchase/supplier/modify' />",
@@ -365,12 +366,16 @@ function modifySupplier(id) {
             column: $("#column").val(), // 검색 컬럼을 보냄
             keyword: $("#keyword").val() // 검색 키워드를 보냄
         },
-        success: function() {          
+        beforeSend: function(xhr) {
+            // CSRF 토큰을 헤더에 추가
+            xhr.setRequestHeader($('meta[name="_csrf_header"]').attr('content'), $('meta[name="_csrf"]').attr('content'));
+        },
+        success: function() {
             // 수정 완료 후 현재 페이지를 리로드하여 목록을 갱신
             location.reload();
         },
         error: function(xhr) {
-        	$("#modifyerrorMessage").text("등록 중 오류가 발생했습니다: " + xhr.responseText).show();
+            $("#modifyerrorMessage").text("등록 중 오류가 발생했습니다: " + xhr.responseText).show();
         }
     });
 }
@@ -410,6 +415,10 @@ function registerSupplier() {
             supplierPhone: supplierPhone,
             supplierEmail: supplierEmail
         }),
+        beforeSend: function(xhr) {
+            // CSRF 토큰을 헤더에 추가
+            xhr.setRequestHeader($('meta[name="_csrf_header"]').attr('content'), $('meta[name="_csrf"]').attr('content'));
+        },
         success: function(response) {
             // 등록 성공 시 테이블 갱신 및 폼 초기화          
             resetForm(); // 필드 초기화 및 목록 갱신

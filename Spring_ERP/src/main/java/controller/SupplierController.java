@@ -27,6 +27,7 @@ public class SupplierController {
     private final SupplierService supplierService;
 
     // 공급업체 관리 페이지 - 기본 전체 목록 조회
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping("/manage")
     public String manage(@RequestParam Map<String, Object> map, Model model) {
         if (map.isEmpty()) {

@@ -68,4 +68,17 @@ public class OrganizationServiceImpl implements OrganizationService {
 
         return result;
     }
+
+    @Override
+    public String generateNextOrgId(String orgPrefix) {
+        String lastOrgId = organizationDAO.selectLastOrgId(orgPrefix);
+        if (lastOrgId == null) {
+            // 만약 해당 prefix로 조직이 없다면 첫 번째 ID를 "001"로 설정합니다.
+            return orgPrefix + "001";
+        }
+        // 마지막으로 생성된 조직 ID의 숫자 부분을 추출하고, 1을 더해 다음 순번을 생성합니다.
+        int nextNum = Integer.parseInt(lastOrgId.substring(orgPrefix.length())) + 1;
+        // 새로운 조직 ID를 생성하고, 숫자는 항상 3자리로 포맷합니다 (예: 001, 002, ...).
+        return orgPrefix + String.format("%03d", nextNum);
+    }
 }

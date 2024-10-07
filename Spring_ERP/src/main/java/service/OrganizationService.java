@@ -10,4 +10,6 @@ public interface OrganizationService {
     void deleteOrganization(String orgId);
 
     Map<String, Object> getOrganizationList(Map<String, Object> map);
+
+    String generateNextOrgId(String orgPrefix);
 }

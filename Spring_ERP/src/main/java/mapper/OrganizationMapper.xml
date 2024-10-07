@@ -68,4 +68,14 @@
         )
         where rn between #{startRow} and #{endRow}
     </select>
+
+    <!-- 가장 최근에 생성된 조직 ID를 조회 -->
+    <select id="selectLastOrgId" parameterType="String" resultType="String">
+        SELECT org_id
+        FROM (SELECT org_id
+        FROM organization
+        WHERE org_id LIKE ? || '%'
+        ORDER BY org_id DESC)
+        WHERE ROWNUM = 1
+    </select>
 </mapper>

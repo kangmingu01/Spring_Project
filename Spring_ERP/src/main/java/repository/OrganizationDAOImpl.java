@@ -39,4 +39,9 @@ public class OrganizationDAOImpl implements OrganizationDAO {
     public List<Organization> selectOrganizationList(Map<String, Object> map) {
         return sqlSession.getMapper(OrganizationMapper.class).selectOrganizationList(map);
     }
+
+    @Override
+    public String selectLastOrgId(String orgPrefix) {
+        return sqlSession.getMapper(OrganizationMapper.class).selectLastOrgId(orgPrefix);
+    }
 }

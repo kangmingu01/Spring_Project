@@ -99,15 +99,15 @@
 	  <div>
 	    <div>
 	      <label>발주수량</label>
-	      <input type="number" id="ordersQuantity" name="ordersQuantity" class="disabled-field" readonly />
+	      <input type="number" id="ordersQuantity" name="ordersQuantity" style="background-color: #f0f0f0" readonly />
 	    </div>
 	    <div>
 	      <label>단가</label>
-	      <input type="number" id="productPrice" name="productPrice" class="disabled-field" readonly />
+	      <input type="number" id="productPrice" name="productPrice" style="background-color: #f0f0f0" readonly />
 	    </div>
 	    <div>
 	      <label>납기일</label>
-	      <input type="date" id="deliveryDate" name="deliveryDate" class="disabled-field" readonly style="text-align: left;" />
+	      <input type="date" id="deliveryDate" name="deliveryDate" style="text-align: left; background-color: #f0f0f0" readonly/>
 	    </div>
 	  </div>
 	</div>
@@ -233,42 +233,97 @@ function searchOrders() {
 document.addEventListener('DOMContentLoaded', function() {
     // 모든 수정 버튼에 클릭 이벤트 추가
     document.querySelectorAll('.editButton').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(event) {
             const ordersId = button.getAttribute('data-orders-id');
-            editOrders(ordersId);
+            editOrders(event.target, ordersId);
         });
     });
 });
 
-function editOrders(ordersId) {
+function setAllFieldsReadOnly(readOnly) {
+    const fields = [
+        'ordersId', 'ordersDate', 'userid', 
+        'productId', 'productName', 'brand', 
+        'supplier', 'ordersStatus', 'ordersQuantity', 
+        'productPrice', 'deliveryDate'
+    ];
+
+    fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+
+        if (field) {
+            if (field.tagName === 'SELECT' || field.type === 'select-one') {
+                field.disabled = readOnly;
+            } else {
+                field.readOnly = readOnly;
+            }
+
+            if (readOnly) {
+                field.style.backgroundColor = "#f0f0f0"; 
+            } else {
+                field.style.backgroundColor = ""; 
+            }
+        }
+    });
+}
+
+function editOrders(button, ordersId) {
     // 각 필드에 값을 채우기
-    const row = document.querySelector(`button[data-orders-id='${ordersId}']`).closest('tr');
+    const row = button.closest('tr');
 
     if (!row) {
         alert("해당 행을 찾을 수 없습니다.");
         return;
     }
-
-    // 조회 가능한 필드 설정
+   
     document.getElementById('ordersId').value = row.children[0].innerText.trim();
     document.getElementById('ordersDate').value = row.children[1].innerText.trim();
     document.getElementById('userid').value = row.children[2].innerText.trim();
     document.getElementById('productId').value = row.children[3].innerText.trim();
     document.getElementById('productName').value = row.children[4].innerText.trim();
     document.getElementById('brand').value = row.children[5].innerText.trim();
-    document.getElementById('supplier').value = row.children[10].getAttribute('data-supplier-id');
+
+    const supplierName = row.children[10].innerText.trim();
+    const supplierOptions = document.getElementById('supplier').options;
+    for (let i = 0; i < supplierOptions.length; i++) {
+        if (supplierOptions[i].text === supplierName) {
+            supplierOptions[i].selected = true;
+            break;
+        }
+    }
+
+    const orderStatusText = row.children[15].innerText.trim();
+    const statusOptions = document.getElementById('ordersStatus').options;
+    for (let i = 0; i < statusOptions.length; i++) {
+        if (statusOptions[i].text === orderStatusText) {
+            statusOptions[i].selected = true;
+            break;
+        }
+    }
 
     // 수정 가능한 필드 설정
     document.getElementById('ordersQuantity').value = row.children[11].innerText.trim();
     document.getElementById('productPrice').value = row.children[12].innerText.trim();
     document.getElementById('deliveryDate').value = row.children[14].innerText.trim();
 
-    // 발주수량, 단가, 납기일 필드 수정 가능하게 설정
-    document.getElementById('ordersQuantity').readOnly = false;
-    document.getElementById('productPrice').readOnly = false;
-    document.getElementById('deliveryDate').readOnly = false;
+    // 모든 필드를 읽기 전용으로 설정한 후 필요한 필드만 활성화
+    setAllFieldsReadOnly(true);
 
-    // 완료 버튼으로 변경 후 클릭 이벤트 설정
+	// 발주수량, 단가, 납기일 필드만 수정 가능하게 설정
+    document.getElementById('ordersQuantity').readOnly = false;
+    document.getElementById('ordersQuantity').disabled = false;
+
+    document.getElementById('productPrice').readOnly = false;
+    document.getElementById('productPrice').disabled = false;
+
+    document.getElementById('deliveryDate').readOnly = false;
+    document.getElementById('deliveryDate').disabled = false;
+  
+    document.getElementById('ordersQuantity').style.backgroundColor = "#ffffff";
+    document.getElementById('productPrice').style.backgroundColor = "#ffffff";
+    document.getElementById('deliveryDate').style.backgroundColor = "#ffffff";
+
+    // 버튼을 수정 상태로 전환
     button.innerText = "완료";
     button.removeEventListener('click', editOrders);
     button.addEventListener('click', function() {

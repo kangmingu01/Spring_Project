@@ -171,7 +171,7 @@ public class OrdersController {
         // 발주 정보 수정 처리
         ordersService.modifyOrders(orders);
 
-        // 페이징 및 검색 정보를 유지하면서 목록으로 리다이렉트
+     // 페이징 및 검색 정보를 유지하면서 목록으로 리다이렉트
         String pageNum = (String) map.get("pageNum");
         String pageSize = (String) map.get("pageSize");
         String ordersId = (String) map.get("ordersId");

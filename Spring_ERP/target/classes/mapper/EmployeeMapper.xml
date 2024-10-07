@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<maaper namesapce="mapper.EmployeeMapper">
+	<select id="selectEmployeeList" resultmap="Employee">
+		select employee_id, userid, org_id, created_date, sicktime, vacationhours, 
+		overtimes, salary, bonus , salary_date from employee
+	</select>
+	
+	<select id="selectEmployeeById" resultmap="Employee">
+		select employee_id, userid, org_id, created_date, sicktime, vacationhours, 
+		overtimes, salary, bonus , salary_date from employee where employee_id=#{employee_id}
+	</select>
+	
+	
+</maaper>

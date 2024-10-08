@@ -31,6 +31,11 @@ public class WarehouseDAOImpl implements WarehouseDAO {
 	}
 
 	@Override
+	public Warehouse selectWarehouseUpdate(int warehouseId) {
+		return sqlSession.getMapper(WarehouseMapper.class).selectWarehouseUpdate(warehouseId);
+	}
+	
+	@Override
 	public List<Warehouse> selectWarehouseAll() {
 		return sqlSession.getMapper(WarehouseMapper.class).selectWarehouseAll();
 	}
@@ -43,6 +48,6 @@ public class WarehouseDAOImpl implements WarehouseDAO {
 	@Override
 	public List<Warehouse> selectWarehouseKeyList(Map<String, Object> map) {
 		return sqlSession.getMapper(WarehouseMapper.class).selectWarehouseKeyList(map);
-	}
+	}	
 
 }

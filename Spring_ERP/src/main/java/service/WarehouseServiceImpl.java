@@ -38,6 +38,12 @@ public class WarehouseServiceImpl implements WarehouseService{
 	
 	@Transactional
 	@Override
+	public Warehouse getselectWarehouseUpdate(int warehouseId) {
+		return warehouseDAO.selectWarehouseUpdate(warehouseId);
+	}
+	
+	@Transactional
+	@Override
 	public List<Warehouse> getWarehouseListAll() {
 		return warehouseDAO.selectWarehouseAll();
 	}

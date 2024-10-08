@@ -21,6 +21,12 @@
 		select * from warehouse
 	</select>
 	
+	<select id="selectWarehouseUpdate">
+		select warehouse_id ,warehouse_name,warehouse_location,warehouse_capacity from warehouse where warehouse_id=#{warehouseId}
+	</select>
+	
+	
+	
 	<select  id="selcetWarehouseCount" resultType="int">
 		select count(*) from warehouse
 		<if test="keyword != null and keyword != '' " >

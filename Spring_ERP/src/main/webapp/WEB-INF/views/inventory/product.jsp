@@ -1,11 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="_csrf" content="${_csrf.token}" />
+  <meta name="_csrf_header" content="${_csrf.headerName}" />
   <link href="<c:url value="/css/reset.css"/>" type="text/css" rel="stylesheet">
   <link href="<c:url value="/css/product.css"/>" type="text/css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -243,7 +246,47 @@
 	    </div>
 	  </div>
 	</div>
+	
+	
+	<!-- Button trigger modal -->
+	<!-- Modal -->
+	<div class="modal fade" id="customModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="customModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="customModalLabel">창고수정</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<input type="hidden" class="warehouseUpdateId">
+	      	<div>
+	      		<label>창고번호</label>
+	        	<input type="text" class="warehouseUpdateCode" >
+	      	</div>
+	      	<div>
+	      		<label>창고위치</label>
+	        	<input type="text" class="warehouseUpdateLocation" >
+	      	</div>
+	      	<div>
+	      		<label>창고용량</label>
+	        	<input type="text" class="warehouseUpdateCapacity" >
+	      	</div>
+	      	<div></div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+	        <button type="button" class="btn btn-primary" id="warehouseUpdate_btn">수정완료</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+		
+	
+	
+	
   <script> 
+  	var csrfToken = $('meta[name="_csrf"]').attr('content');
+  	var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
   	productDisplay();
   	
 	
@@ -456,7 +499,7 @@
 					html+="<td>"+this.warehouseLocation+"</td>";
 					html+="<td>"+this.warehouseCapacity+"</td>";
 					html+="<td>";
-					html+="<button>수정</button>"
+					html+='<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customModal" onclick="modifyhouse('+this.warehouseId+');">수정</button>'
 					html+="<button type='button' onclick='remove("+this.warehouseId+");'>삭제</button>"
 					html+="</td>"
 					html+="</tr>";
@@ -479,6 +522,119 @@
     	warehouseDisplay();
     });
 
+    //창고정보 선택 함수(update 전)
+    function modifyhouse(warehouseId) {
+    	$.ajax({
+    		type:"get",
+    		url:"<c:url value="/inventory/warehouse_modify_view"/>/"+warehouseId,
+    		dataType:"json",
+    		success:function(result){    			
+    			console.log(result);
+    			$(".warehouseUpdateId").val(result.warehouseId);
+    			$(".warehouseUpdateCode").val(result.warehouseName);
+				$(".warehouseUpdateLocation").val(result.warehouseLocation);
+				$(".warehouseUpdateCapacity").val(result.warehouseCapacity);
+    		},
+    		error:function(xhr){
+    			alert("검색된 정보가 없습니다.")
+    		}
+    	});
+    }
+    
+    //창고모달 변수 초기화
+  	function modalwarehouseinit(){
+  		$(".warehouseUpdateId").val("");
+		$(".warehouseUpdateCode").val("");
+		$(".warehouseUpdateLocation").val("");
+		$(".warehouseUpdateCapacity").val("");
+    }
+    
+    
+    //창고정보 update 버튼 클릭이벤트
+    $("#warehouseUpdate_btn").click(function() {
+	    var warehouseId = $(".warehouseUpdateId").val();
+	    var warehouseCode = $(".warehouseUpdateCode").val();
+	    var warehouseLocation = $(".warehouseUpdateLocation").val();
+	    var warehouseCapacity = $(".warehouseUpdateCapacity").val();
+
+	    $.ajax({
+	        type: "PUT",
+	        url: "<c:url value='/inventory/warehouse_modify'/>", // 적절한 URL로 수정
+	        contentType: "application/json",
+	        data: JSON.stringify({
+	            "warehouseId": warehouseId,
+	            "warehouseCode": warehouseCode,
+	            "warehouseLocation": warehouseLocation,
+	            "warehouseCapacity": warehouseCapacity
+	        }),
+	        dataType: "text",
+	        beforeSend: function(xhr) {
+	            // CSRF 토큰 추가
+	            xhr.setRequestHeader(csrfHeader, csrfToken);
+	        },
+	        success: function(result) {
+	            if (result === "success") {
+	                // 모달 닫기
+	                var myModalEl = document.getElementById('customModal');
+	                var modal = bootstrap.Modal.getInstance(myModalEl);
+	                modal.hide();
+	
+	                // 수정 완료 알림
+	                alert("창고 정보가 수정되었습니다.");
+	                // 추가적인 업데이트 함수 호출
+	                warehouseDisplay(); // 창고 정보를 새로고침하는 함수
+	            } else {
+	                alert("수정 실패: " + result);
+	            }
+	        },
+	        error: function(xhr) {
+	            alert("창고 정보를 수정하지 못했습니다.");
+	        }
+	    });
+	});
+    
+    
+    /*
+    $("#warehouseUpdate_btn").click(function(){
+    	
+    	var warehouseId=$(".warehouseUpdateId").val();
+		var warehouseName=$(".warehouseUpdateCode").val();
+		var warehouseLocation=$(".warehouseUpdateLocation").val();
+		var warehouseCapacity=$(".warehouseUpdateCapacity").val();
+		
+		$.ajax({
+			type:"put",
+			url:"<c:url value="/inventory/warehouse_modify"/>",
+			contentType: "application/json",
+			data: JSON.stringify({"warehouseId":warehouseId, "warehouseName":warehouseName,"warehouseLocation":warehouseLocation, "warehouseCapacity":warehouseCapacity}),
+			dataType: "text",
+			beforeSend: function(xhr) {
+                // CSRF 토큰을 HTTP 요청 헤더에 추가
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+			success:function(result){
+				if(result == "success") {
+					modalwarehouseinit();
+					var myModalEl = document.getElementById('customModal');
+				    var modal = bootstrap.Modal.getInstance(myModalEl); // 모달 인스턴스 가져오기
+				    modal.hide(); // 모달 닫기
+					warehouseDisplay();
+					// 모달 창 닫기
+					alert("수정이 완료 되었습니다.");
+				}
+			},
+			error:function(xhr){
+				alert("상품정보가 수정되지 않았습니다.");
+			}
+		});
+    	
+    });
+    */
+    
+    
+    
+    
+    
     //창고 리스트 삭제 함수
     function remove(warehouseId){
     	if(confirm("삭제 하시겠습니까?")){
@@ -663,6 +819,10 @@
 			contentType: "application/json",
 			data: JSON.stringify({"productId":productId, "productCategory":productCategory, "productName":productName, "productPrice":productPrice, "deliveryPrice":deliveryPrice}),
 			dataType: "text",
+			beforeSend: function(xhr) {
+	            // CSRF 토큰 추가
+	            xhr.setRequestHeader(csrfHeader, csrfToken);
+	        },
 			success:function(result){
 				if(result == "success") {
 					modalinit();

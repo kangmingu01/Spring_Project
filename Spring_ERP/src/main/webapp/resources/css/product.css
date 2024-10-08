@@ -211,25 +211,37 @@
 .file_btn{
     padding: 0px 10px;
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
     font-size: 15px;
     margin-top: 5px;
     height: 35px;
 }
 .file_btn > div {
-    margin-left: 5px;
-    padding: 10px;
     display: flex;
-    align-items: center;
-    border-radius: 10px;
     /* width: 50px; */
     color: white;
     font-size: 12px;
-    background-color: #6571ff;
-    cursor: pointer;
 }
-.excel_btn:hover, .upload_btn:hover{
+.file_btn > div > div {
+	display:flex;	
+    align-items: center;
+    padding: 10px;
+	height:100%;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #6571ff;
+}
+.product_btn{
+	margin-right: 5px;
+}
+.excel_btn{
+	margin-left: 5px;
+}
+.excel_btn:hover, .upload_btn:hover , .product_btn:hover, .warehouse_btn:hover {
     background-color: #7782f8;
+}
+.warehouse_btn{
+	
 }
 .content_body_list{
     overflow: auto;
@@ -237,7 +249,6 @@
     /* height: 500px; */
     border-radius: 10px;
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -247,24 +258,45 @@ th {
     font-weight: 600;
     background-color: #f4f4f4;
     padding: 10px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
 }
 /* 테이블 바디 스타일 */
 td {
     padding: 10px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid #ddd;
 }
 /* 테이블의 홀수/짝수 행 색상 구분 */
 tr:nth-child(even) {
     background-color: #f9f9f9;
 }
-
+tr > th{
+    text-align: center;
+}
 tr:nth-child(odd) {
     background-color: #fff;
+}
+tr > th:nth-child(1) , tr > td:nth-child(1){
+	width: 70px;
+	font-weight: 600;
+	
+}
+tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
+	width: 150px;	
+
+}
+.sty button {
+	font-size: 12px;
+    width: 55px;
+    height: 30px;
+	margin-right: 5px;
 }
 .sty tr:hover{
     background-color: #6571ff;
     cursor: pointer;
+}
+.pageNumDiv{
+	display: flex;
+    justify-content: center;
 }

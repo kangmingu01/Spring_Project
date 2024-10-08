@@ -54,7 +54,8 @@
                     </ul>
                 </div>
             </li>
-            <%-- 구매팀 부분 --%>
+            <%--
+            <%-- 구매팀 부분 
             <li class="nav-item">
                 <a
                         class="nav-link"
@@ -81,6 +82,7 @@
                     </ul>
                 </div>
             </li>
+            --%>
             <%-- 재고팀 부분 --%>
             <li class="nav-item">
                 <a

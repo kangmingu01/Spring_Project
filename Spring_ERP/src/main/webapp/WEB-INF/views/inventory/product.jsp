@@ -260,7 +260,7 @@
 	      <div class="modal-body">
 	      	<input type="hidden" class="warehouseUpdateId">
 	      	<div>
-	      		<label>창고번호</label>
+	      		<label>창고이름</label>
 	        	<input type="text" class="warehouseUpdateCode" >
 	      	</div>
 	      	<div>
@@ -403,6 +403,10 @@
 	    		contentType : "application/json",
 	    		data: JSON.stringify({"productCategory":productCategory,"productName":productName,"productPrice":productPrice,"deliveryPrice":deliveryPrice }),
 	    		dataType:"text",
+	    		beforeSend: function(xhr) {
+	                // CSRF 토큰을 HTTP 요청 헤더에 추가
+	                xhr.setRequestHeader(csrfHeader, csrfToken);
+	            },
 	    		success: function(){
 	    			init();
 	    			$(".content_body_list").empty();
@@ -551,52 +555,7 @@
     
     
     //창고정보 update 버튼 클릭이벤트
-    $("#warehouseUpdate_btn").click(function() {
-	    var warehouseId = $(".warehouseUpdateId").val();
-	    var warehouseCode = $(".warehouseUpdateCode").val();
-	    var warehouseLocation = $(".warehouseUpdateLocation").val();
-	    var warehouseCapacity = $(".warehouseUpdateCapacity").val();
-
-	    $.ajax({
-	        type: "PUT",
-	        url: "<c:url value='/inventory/warehouse_modify'/>", // 적절한 URL로 수정
-	        contentType: "application/json",
-	        data: JSON.stringify({
-	            "warehouseId": warehouseId,
-	            "warehouseCode": warehouseCode,
-	            "warehouseLocation": warehouseLocation,
-	            "warehouseCapacity": warehouseCapacity
-	        }),
-	        dataType: "text",
-	        beforeSend: function(xhr) {
-	            // CSRF 토큰 추가
-	            xhr.setRequestHeader(csrfHeader, csrfToken);
-	        },
-	        success: function(result) {
-	            if (result === "success") {
-	                // 모달 닫기
-	                var myModalEl = document.getElementById('customModal');
-	                var modal = bootstrap.Modal.getInstance(myModalEl);
-	                modal.hide();
-	
-	                // 수정 완료 알림
-	                alert("창고 정보가 수정되었습니다.");
-	                // 추가적인 업데이트 함수 호출
-	                warehouseDisplay(); // 창고 정보를 새로고침하는 함수
-	            } else {
-	                alert("수정 실패: " + result);
-	            }
-	        },
-	        error: function(xhr) {
-	            alert("창고 정보를 수정하지 못했습니다.");
-	        }
-	    });
-	});
-    
-    
-    /*
-    $("#warehouseUpdate_btn").click(function(){
-    	
+    $("#warehouseUpdate_btn").click(function(){ 	
     	var warehouseId=$(".warehouseUpdateId").val();
 		var warehouseName=$(".warehouseUpdateCode").val();
 		var warehouseLocation=$(".warehouseUpdateLocation").val();
@@ -629,11 +588,6 @@
 		});
     	
     });
-    */
-    
-    
-    
-    
     
     //창고 리스트 삭제 함수
     function remove(warehouseId){
@@ -642,6 +596,10 @@
     			type:"delete",
     			url: "<c:url value="/inventory/warehouse_remove"/>/"+warehouseId,
     			dataType: "text",
+    			beforeSend: function(xhr) {
+                    // CSRF 토큰을 HTTP 요청 헤더에 추가
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
     			success: function(result){
     				if(result=="success"){
     					init();
@@ -744,7 +702,7 @@
 
     // 이전 페이지 링크
     if (pager.startPage > pager.blockSize) {
-        html += "<a href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>[이전]</a>";
+        html += "<a  href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>[이전]</a>";
     } else {
         html += "[이전]";
     }
@@ -820,6 +778,10 @@
 			data: JSON.stringify({"productId":productId, "productCategory":productCategory, "productName":productName, "productPrice":productPrice, "deliveryPrice":deliveryPrice}),
 			dataType: "text",
 			beforeSend: function(xhr) {
+                // CSRF 토큰을 HTTP 요청 헤더에 추가
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+			beforeSend: function(xhr) {
 	            // CSRF 토큰 추가
 	            xhr.setRequestHeader(csrfHeader, csrfToken);
 	        },
@@ -848,6 +810,10 @@
     			type:"delete",
     			url: "<c:url value="/inventory/product_remove"/>/"+productId,
     			dataType: "text",
+    			beforeSend: function(xhr) {
+                    // CSRF 토큰을 HTTP 요청 헤더에 추가
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
     			success: function(result){
     				if(result=="success"){
     					init();

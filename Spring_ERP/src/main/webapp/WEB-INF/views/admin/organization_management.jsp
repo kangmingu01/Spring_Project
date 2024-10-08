@@ -249,16 +249,27 @@
                                 <fmt:formatDate value="${organization.created}" pattern="yyyy-MM-dd"/>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-secondary"
-                                        data-bs-toggle="modal" data-bs-target="#editOrgModal"
-                                        data-orgId="${organization.orgId}"
-                                        data-orgName="${organization.orgName}"
-                                        data-orgType="${organization.orgType}"
-                                        data-address="${organization.address}"
-                                        data-phoneNumber="${organization.phoneNumber}"
-                                        data-created="${organization.created}">
-                                    수정
-                                </button>
+                                <c:choose>
+                                    <c:when test="${}">
+                                        <button type="button" class="btn btn-secondary"
+                                                data-bs-toggle="modal" data-bs-target="#editOrgModal"
+                                                data-orgId="${organization.orgId}"
+                                                data-orgName="${organization.orgName}"
+                                                data-orgType="${organization.orgType}"
+                                                data-address="${organization.address}"
+                                                data-phoneNumber="${organization.phoneNumber}"
+                                                data-created="${organization.created}">
+                                            수정
+                                        </button>
+                                    </c:when>
+
+
+                                <c:otherwise>
+                                    <button type="submit" class="btn btn-danger disabled">
+                                        삭제
+                                    </button>
+                                </c:otherwise>
+                                </c:choose>
                             </td>
                             <td>
                                 <form action="<c:url value="/admin/deleteOrg"/>" method="post">

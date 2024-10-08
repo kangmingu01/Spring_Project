@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.WarehouseMapper">
+	<insert id="insertWarehouse">
+		<selectKey resultType="int" keyProperty="warehouseId" order="BEFORE">
+			select warehouse_seq.nextval from dual
+		</selectKey>
+		insert into warehouse values(#{warehouseId},#{warehouseName},#{warehouseLocation},#{warehouseCapacity} )
+	</insert>
+	
+	<update id="updateWarehouse">
+		update warehouse set warehouse_name=#{warehouseName},warehouse_location=#{warehouseLocation},warehouse_capacity=#{warehouseCapacity}
+		where warehouse_id=#{warehouseId}
+	</update>
+	
+	<delete id="deleteWarehouse">
+		delete from warehouse where warehouse_Id=#{warehouseId}
+	</delete>
+	
+	<select id="selectWarehouseAll">
+		select * from warehouse
+	</select>
+	
+	<select  id="selcetWarehouseCount" resultType="int">
+		select count(*) from warehouse
+		<if test="keyword != null and keyword != '' " >
+			<bind name="word" value="'%' + keyword + '%'"/>
+			where ${search} like #{word}
+		</if>
+	</select>
+	
+	<select id="selectWarehouseKeyList"  resultType="Warehouse">
+		select * from (select rownum rn, warehouse.* from (select warehouse_id, warehouse_name,warehouse_location,warehouse_capacity
+		from warehouse
+		<if test="keyword != null and keyword != ''">
+			<bind name="word" value="'%' + keyword + '%'"/>
+			where ${search} like #{word}
+		</if>
+		 order by warehouse_id desc) warehouse) where rn between #{startRow} and #{endRow}
+	</select>
+	
+	
+</mapper>

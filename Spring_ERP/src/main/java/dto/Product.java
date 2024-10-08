@@ -4,11 +4,11 @@ import lombok.Data;
 
 /*
 CREATE TABLE product (
-    product_id NUMBER PRIMARY KEY, -- °íÀ¯ ½Äº°ÀÚ(½ÃÄö½º)
-    product_category VARCHAR2(100), -- »óÇ° Ä«Å×°í¸®(»ý»ó,»çÀÌÁî µî Á¶ÇÕÄÚµå)
-    product_name VARCHAR2(100), -- »óÇ° ÀÌ¸§
-    product_price NUMBER,  -- ÀÔ°í °¡°Ý 
-    delivery_price NUMBER,  -- Ãâ°í °¡°Ý
+    product_id NUMBER PRIMARY KEY, -- ï¿½ï¿½ï¿½ï¿½ ï¿½Äºï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+    product_category VARCHAR2(100), -- ï¿½ï¿½Ç° Ä«ï¿½×°ï¿½(ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½)
+    product_name VARCHAR2(100), -- ï¿½ï¿½Ç° ï¿½Ì¸ï¿½
+    product_price NUMBER,  -- ï¿½Ô°ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+    delivery_price NUMBER,  -- ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     product_img varchar2(500),
     CONSTRAINT unique_category_name UNIQUE (product_category, product_name)
 );
@@ -23,4 +23,5 @@ public class Product {
 	private int productPrice;
 	private int deliveryPrice;
 	private String productImg;
+	private ProductCategory productCategoryDetails;
 }

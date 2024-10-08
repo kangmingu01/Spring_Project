@@ -1,6 +1,7 @@
 package repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -30,8 +31,23 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 
 	@Override
-	public List<Product> selectProductListAll() {
+	public Product selectProductUpdate(int productId) {
+		return sqlSession.getMapper(ProductMapper.class).selectProductUpdate(productId);
+	}
+	
+	@Override
+	public List<Product> selectProductAll() {
 		return sqlSession.getMapper(ProductMapper.class).selectProductAll();	
+	}
+
+	@Override
+	public List<Product> selectProductKeyList(Map<String, Object> map) {
+		return sqlSession.getMapper(ProductMapper.class).selectProductKeyList(map);	
+	}
+
+	@Override
+	public int selcetProductCount(Map<String, Object> map) {
+		return sqlSession.getMapper(ProductMapper.class).selcetProductCount(map);	
 	}
 
 }

@@ -8,48 +8,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dto.Product;
+import dto.Warehouse;
 import lombok.RequiredArgsConstructor;
-import repository.ProductDAO;
+import repository.WarehouseDAO;
 import util.Pager;
 
 @Service
 @RequiredArgsConstructor
-public class ProductServiceImpl  implements ProductService{
-	private final ProductDAO productDAO;
+public class WarehouseServiceImpl implements WarehouseService{
+	private final WarehouseDAO warehouseDAO;
 	
 	@Transactional
 	@Override
-	public void addProduct(Product product) {
-		productDAO.insertProduct(product);
-	}
-	
-	@Transactional
-	@Override
-	public void modifyProduct(Product product) {
-		productDAO.updateProduct(product);
+	public void addWarehouse(Warehouse warehouse) {
+		warehouseDAO.insertWarehouse(warehouse);
 	}
 	
 	@Transactional
 	@Override
-	public void removeProduct(int productId) {
-		productDAO.deleteProduct(productId);
+	public void modifyWarehouse(Warehouse warehouse) {
+		warehouseDAO.updateWarehouse(warehouse);
 	}
 	
 	@Transactional
 	@Override
-	public Product getProductUpdate(int productId) {
-		return productDAO.selectProductUpdate(productId);
+	public void removeWarehouse(int warehouseId) {
+		warehouseDAO.deleteWarehouse(warehouseId);
 	}
 	
+	@Transactional
 	@Override
-	public List<Product> getProductListAll() {
-		return productDAO.selectProductAll();
+	public List<Warehouse> getWarehouseListAll() {
+		return warehouseDAO.selectWarehouseAll();
 	}
-
+	
 	@Transactional
 	@Override
 	public Map<String, Object> getselectProductKeyList(Map<String, Object> map) {
-		
 		int pageNum=1;
 		if(map.get("pageNum") != null && !map.get("pageNum").equals("")) {
 			pageNum=Integer.parseInt((String)map.get("pageNum"));
@@ -60,7 +55,7 @@ public class ProductServiceImpl  implements ProductService{
 			pageSize=Integer.parseInt((String)map.get("pageSize"));
 		}
 		
-		int totalBoard=productDAO.selcetProductCount(map);
+		int totalBoard=warehouseDAO.selcetWarehouseCount(map);
 		
 		int blockSize=5;
 		
@@ -68,13 +63,14 @@ public class ProductServiceImpl  implements ProductService{
 		
 		map.put("startRow", pager.getStartRow());
 		map.put("endRow", pager.getEndRow());
-		List<Product> productList=productDAO.selectProductKeyList(map);
+		List<Warehouse> warehouseList=warehouseDAO.selectWarehouseKeyList(map);
 		System.out.println("Map Contents: " + map);
-		System.out.println("Map Contents: " + productList);
+		System.out.println("Map Contents: " + warehouseList);
 		Map<String, Object> result=new HashMap<String, Object>();
 		result.put("pager", pager);
-		result.put("productList", productList);
+		result.put("warehouseList", warehouseList);
 		
 		return result;
 	}
+	
 }

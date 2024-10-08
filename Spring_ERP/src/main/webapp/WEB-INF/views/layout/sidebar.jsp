@@ -52,6 +52,35 @@
                     </ul>
                 </div>
             </li>
+            <%-- 관리자 부분 --%>
+            <li class="nav-item">
+                <a
+                        class="nav-link"
+                        data-bs-toggle="collapse"
+                        href="#orderingSidebar"
+                        role="button"
+                        aria-expanded="false"
+                        aria-controls="orderingSidebar"
+                >
+                    <i class="fa-solid fa-shield-halved link-icon" style="color: #000000;"></i>
+                    <span class="link-title">구매팀</span>
+                    <i class="link-arrow" data-feather="chevron-down"></i>
+                </a>
+                <div class="collapse" data-bs-parent="#sidebarNav" id="orderingSidebar">
+                    <ul class="nav sub-menu">
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/supplier/manage"/>" class="nav-link">공급업체</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/orders/register"/>" class="nav-link">발주 등록</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/orders/list"/>" class="nav-link">발주 조회</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
             <li class="nav-item">
                 <a
                         class="nav-link"

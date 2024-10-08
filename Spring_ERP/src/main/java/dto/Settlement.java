@@ -8,7 +8,7 @@ CREATE TABLE settlement (
     settlement_date DATE DEFAULT SYSDATE,         -- 구매정산 날짜 (기본값: 현재 날짜)
     userid VARCHAR2(100),                         -- 구매정산을 처리한 사용자 (FK)
     receiving_id NUMBER,                          -- 연관된 입고의 ID (FK)
-    settlement_status NUMBER(1) DEFAULT 5,        -- 구매정산 상태 (5: 대기, 6: 완료)
+    settlement_status NUMBER(1) DEFAULT 5,        -- 구매정산 상태 (4: 대기, 6: 완료)
     auth NUMBER,                                  -- Authorization level (used for bank transaction link)
     CONSTRAINT settlement_userid_fk FOREIGN KEY (userid) REFERENCES erp_user(userid),
     CONSTRAINT settlement_receiving_fk FOREIGN KEY (receiving_id) REFERENCES receiving(receiving_id),

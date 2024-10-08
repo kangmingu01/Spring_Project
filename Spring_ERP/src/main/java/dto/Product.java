@@ -23,4 +23,6 @@ public class Product {
     private int productPrice;
     private int deliveryPrice;
     private String productImg;
+    private ProductCategory productCategoryDetails;  // 추가된 필드
+    
 }

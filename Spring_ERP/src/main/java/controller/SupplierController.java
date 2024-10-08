@@ -27,7 +27,7 @@ public class SupplierController {
     private final SupplierService supplierService;
 
     // 공급업체 관리 페이지 - 기본 전체 목록 조회
-    @PreAuthorize("isAuthenticated()")
+    /*@PreAuthorize("isAuthenticated()")*/
     @RequestMapping("/manage")
     public String manage(@RequestParam Map<String, Object> map, Model model) {
         if (map.isEmpty()) {
@@ -41,7 +41,7 @@ public class SupplierController {
     }
 
     // 공급업체 등록 - 모든 로그인 사용자 가능
-    @PreAuthorize("isAuthenticated()")
+    /*@PreAuthorize("isAuthenticated()")*/
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<Supplier> register(@RequestBody Supplier supplier) {
         try {
@@ -62,7 +62,7 @@ public class SupplierController {
     }
 
     // 공급업체 정보 수정 - 모든 로그인 사용자 가능
-    @PreAuthorize("isAuthenticated()")
+    /*@PreAuthorize("isAuthenticated()")*/
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public ResponseEntity<String> modify(@ModelAttribute Supplier supplier, 
                                          @RequestParam Map<String, Object> map,

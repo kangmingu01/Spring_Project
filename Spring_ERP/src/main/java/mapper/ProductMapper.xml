@@ -10,14 +10,39 @@
 	
 	<update id="updateProduct">
 		update product set product_category=#{productCategory},product_name=#{productName},product_price=#{productPrice},delivery_price=#{deliveryPrice}
+		where product_id=#{productId}
 	</update>
 	
 	<delete id="deleteProduct">
 		delete from product where product_id=#{productId}
 	</delete>
 	
+	<select id="selectProductUpdate">
+		select product_id ,product_category,product_name,product_price,delivery_price from product where product_id=#{productId}
+	</select>
+	
 	<select id="selectProductAll">
 		select * from product
+	</select>
+	
+	
+	<select  id="selcetProductCount" resultType="int">
+		select count(*) from product
+		<if test="keyword != null and keyword != '' " >
+			<bind name="word" value="'%' + keyword + '%'"/>
+			where ${search} like #{word}
+		</if>
+	</select>
+	
+	
+	<select id="selectProductKeyList"  resultType="Product">
+		select * from (select rownum rn, product.* from (select product_id, product_category,product_name,product_price,delivery_price
+		from product
+		<if test="keyword != null and keyword != ''">
+			<bind name="word" value="'%' + keyword + '%'"/>
+			where ${search} like #{word}
+		</if>
+		 order by product_id desc) product) where rn between #{startRow} and #{endRow}
 	</select>
 	
 </mapper>

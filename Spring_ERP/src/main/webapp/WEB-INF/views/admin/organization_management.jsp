@@ -250,7 +250,7 @@
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${}">
+                                    <c:when test="${organization.orgType == 0 || organization.orgType == 1}">
                                         <button type="button" class="btn btn-secondary"
                                                 data-bs-toggle="modal" data-bs-target="#editOrgModal"
                                                 data-orgId="${organization.orgId}"
@@ -265,8 +265,8 @@
 
 
                                 <c:otherwise>
-                                    <button type="submit" class="btn btn-danger disabled">
-                                        삭제
+                                    <button type="submit" class="btn btn-secondary disabled">
+                                        수정
                                     </button>
                                 </c:otherwise>
                                 </c:choose>
@@ -310,7 +310,7 @@
                     <h5 class="modal-title" id="editOrgModalLabel">조직 정보 수정</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="editOrgForm" action="<c:url value="/admin/updateUser"/>" method="post">
+                <form id="editOrgForm" action="<c:url value="/admin/updateOrg"/>" method="post">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="orgName_modal" class="form-label">조직 이름</label>
@@ -395,7 +395,6 @@
 </section>
 <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
 <script>
-
     function resetForm() {
         document.getElementById("orgForm").reset();
 
@@ -527,6 +526,15 @@
 
         });
     });
+
+
+
+    function submitEditForm() {
+        $("#orgId_modal").prop("disabled", false);
+        /*$("#orgType_modal").prop("disabled", false);
+        $("#phoneNumber_modal").prop("disabled", false);*/
+        $("#editOrgModal").submit();
+    }
 
 </script>
 </body>

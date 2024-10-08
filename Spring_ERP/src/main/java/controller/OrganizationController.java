@@ -77,4 +77,14 @@ public class OrganizationController {
 
         return "redirect:/admin/organization";
     }
+
+    /* 조직 정보 수정 */
+    @RequestMapping(value = "/updateOrg", method = RequestMethod.POST)
+    public String updateOrg(@ModelAttribute Organization organization) {
+        organization.setOrgName(organization.getOrgName());
+        organization.setAddress(organization.getAddress());
+
+        organizationService.updateOrganization(organization);
+        return "redirect:/admin/organization";
+    }
 }

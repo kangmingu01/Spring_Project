@@ -47,7 +47,7 @@
                             <a href="<c:url value="/admin/html"/>" class="nav-link">권한 관리</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<c:url value="/admin/organization"/>" class="nav-link">조직 관리</a>
+                            <a href="<c:url value="/admin/organization"/>" class="nav-link">부서 권한</a>
                         </li>
                     </ul>
                 </div>

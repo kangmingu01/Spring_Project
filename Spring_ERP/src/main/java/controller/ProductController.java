@@ -46,7 +46,7 @@ public class ProductController {
 	public Map<String, Object> getproductKeyList(@RequestParam Map<String, Object> map) {
 		return productService.getselectProductKeyList(map);
 	}
-	
+	 
 	@PostMapping("/product_add")
 	public String productAdd(@RequestBody Product product) {
 		productService.addProduct(product);
@@ -57,7 +57,7 @@ public class ProductController {
 	public Product productModifyView(@PathVariable int productId) {
 		return productService.getProductUpdate(productId);
 	}
-	
+	 
 	@PutMapping("/product_modify")
 	public String productModify(@RequestBody Product product) {
 		productService.modifyProduct(product);

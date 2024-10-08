@@ -46,7 +46,7 @@ public class ProductController {
 	public Map<String, Object> getproductKeyList(@RequestParam Map<String, Object> map) {
 		return productService.getselectProductKeyList(map);
 	}
-	
+	 
 	@PostMapping("/product_add")
 	public String productAdd(@RequestBody Product product) {
 		productService.addProduct(product);

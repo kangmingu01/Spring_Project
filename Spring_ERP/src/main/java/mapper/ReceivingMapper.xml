@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper>
+	
+	<!-- 입고 정보 등록 -->
+	<insert id="insertReceiving">
+	    <selectKey resultType="int" keyProperty="receivingId" order="BEFORE">
+	        select receiving_seq.nextval from dual
+	    </selectKey>
+	    insert into receiving values (#{receivingId}, sysdate, #{userid}, #{ordersId}, #{warehouseId}, #{quantity}, 1)
+	</insert>
+	
+	<!-- 발주 목록 개수 조회 (페이징 처리 시 필요) -->
+	<select id="selectOrdersCount" resultType="int">
+	    select count(*) from orders o
+	    join product p on o.product_id = p.product_id
+	    join supplier s on o.supplier_id = s.supplier_id
+	    <where>
+	        o.orders_status = 2 <!-- 발주 상태가 2인 항목만 필터링 -->
+	        <!-- 제품명 검색 조건 -->
+	        <if test="productName != null and productName != ''">
+	            and product_name like '%' || #{productName} || '%'
+	        </if>
+	        <!-- 공급업체 검색 조건 -->
+	        <if test="supplierName != null and supplierName != ''">
+	            and supplier_name like '%' || #{supplierName} || '%'
+	        </if>
+	    </where>
+	</select>
+	
+	<!-- 발주 목록 조회 (페이징 처리 및 검색 기능 포함) -->
+	<select id="selectOrdersList" resultType="Orders">
+	    select * from (select rownum rn, o.orders_id, o.orders_date, o.userid, s.supplier_name, p.product_name
+	    	, o.orders_quantity, o.product_price, o.delivery_date from orders o
+	        join product p on o.product_id = p.product_id
+	        join supplier s on o.supplier_id = s.supplier_id
+	        <where>
+	            o.orders_status = 2 <!-- 발주 상태가 2인 항목만 필터링 -->
+	            <!-- 제품명 검색 조건 -->
+	            <if test="productName != null and productName != ''">
+	                and p.product_name like '%' || #{productName} || '%'
+	            </if>
+	            <!-- 공급업체 검색 조건 -->
+	            <if test="supplierName != null and supplierName != ''">
+	                and s.supplier_name like '%' || #{supplierName} || '%'
+	            </if>
+	        </where>
+	        order by o.orders_date desc) 
+	    where rn between #{startRow} and #{endRow} 
+	</select>
+	
+	<!-- 창고 목록 조회 -->
+    <select id="selectWarehouseList" resultType="Warehouse">
+        select warehouse_id, warehouse_name from warehouse order by warehouse_name
+    </select>
+	
+	<!-- 특정 입고 정보 조회 (입고 ID 기준) -->
+	<select id="selectReceivingById" parameterType="int" resultType="Receiving">
+	    select r.receiving_id, r.receiving_date, r.orders_id, r.userid, o.product_id, p.product_name
+	    	, o.supplier_id, s.supplier_name, o.orders_quantity, r.quantity, o.product_price
+	    	, o.delivery_date, r.warehouse_id, w.warehouse_name, r.receiving_status
+	    from receiving r 
+	    join orders o on r.orders_id = o.orders_id
+	    join product p on o.product_id = p.product_id
+	    join supplier s on o.supplier_id = s.supplier_id
+	    join warehouse w on r.warehouse_id = w.warehouse_id
+	    where r.receiving_id = #{receivingId}
+	</select>
+
+</mapper>

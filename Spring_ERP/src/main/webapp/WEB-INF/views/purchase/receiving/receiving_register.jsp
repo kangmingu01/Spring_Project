@@ -27,7 +27,7 @@
     <div class="content_header">
       <div class="content_header_title">입고 등록</div>
       <div class="content_header_btn">
-        <div class="content_header_search_btn" onclick="searchOrder()">
+        <div class="content_header_search_btn" onclick="searchOrders()">
           <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
           </svg></div>
@@ -173,7 +173,7 @@
 		                    <td>${newReceiving.supplierName}</td>
 		                    <td>${newReceiving.ordersQuantity}</td>
 		                    <td>${newReceiving.productPrice}</td>
-		                    <td>${newReceiving.ordersQuantity * newOrder.productPrice}</td>
+		                    <td>${newReceiving.quantity * newReceiving.productPrice}</td>
 		                    <td>${fn:substring(newReceiving.deliveryDate, 0, 10)}</td>
 		                    <td>${newReceiving.warehouseName}</td>
 		                    <td>${newReceiving.quantity}</td>
@@ -186,18 +186,18 @@
   </div>
 
   <!-- 발주 목록 모달 -->
-  <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal fade" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="orderModalLabel">발주 목록</h5>
+          <h5 class="modal-title" id="ordersModalLabel">발주 목록</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
                  <!-- 검색 필드 통합 -->
                  <div class="input-group mb-3">
                      <input type="text" class="form-control" id="ordersSearch" placeholder="제품명 또는 공급업체 검색" aria-label="검색">
-                     <button type="button" onclick="filterProducts()">검색</button>
+                     <button type="button" onclick="filterOrders()">검색</button>
                  </div>
                  <table class="table" id="productTable">
                      <thead>
@@ -231,7 +231,7 @@
 			        <td>${orders.productPrice}</td>
 			        <td>${orders.deliveryDate}</td>
 			        <td>
-			            <button type="button" onclick="selectProduct('${orders.productId}', '${orders.productName}',
+			            <button type="button" onclick="selectOrders'${orders.productId}', '${orders.productName}',
 			             '${orders.productCategoryDetails.brand}', '${orders.productCategoryDetails.type}', '${orders.productCategoryDetails.color}', 
 			             '${orders.productCategoryDetails.size}', '${orders.productCategoryDetails.gender}'
 			             , '${orders.supplierName}', '${orders.ordersQuantity}', '${orders.productPrice}')
@@ -319,7 +319,7 @@
 	}
 
 	// 발주 조회 버튼 클릭 시 발주 목록 모달 열기
-	function searchOrder() {
+	function searchOrders() {
 		openOrdersModal();
 	}
 
@@ -341,9 +341,8 @@
 	    }
 	}
 
-	// 발주 선택 함수
-	function selectOrder(code, name, brand, type, color, size, gender, supplierName, ordersQuantity, productPrice, deliveryDate) {
-	    document.getElementById("productId").value = code;   // 제품번호 필드에 값 설정
+	function selectOrders(code, name, brand, type, color, size, gender, supplierName, ordersQuantity, productPrice, deliveryDate) {
+	    document.getElementById("productId").value = code;
 	    document.getElementById("productName").value = name;
 	    document.getElementById("brand").value = brand;
 	    document.getElementById("type").value = type;
@@ -354,14 +353,14 @@
 	    document.getElementById("ordersQuantity").value = ordersQuantity;
 	    document.getElementById("productPrice").value = productPrice;
 	    document.getElementById("deliveryDate").value = deliveryDate;
-
 	    // 모달 닫기
 	    var ordersModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('ordersModal'));
 	    ordersModal.hide();
 
-	    // 필드가 채워짐에 따라 등록 버튼 상태 확인
 	    checkFields();
 	}
+
+	  
 
 	// 폼 제출 함수
 	function submitForm(formId) {
@@ -376,8 +375,8 @@
 	    const today = new Date().toISOString().split('T')[0];
 	    receivingDateInput.value = today;
 
-	    const orderTable = document.getElementById("receivingTable");
-	    orderTable.innerHTML = '';
+	    const ordersTable = document.getElementById("receivingTable");
+	    ordersTable.innerHTML = '';
 	    checkFields(); 
 	}
 	

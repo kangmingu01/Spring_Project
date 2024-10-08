@@ -57,7 +57,7 @@ public class ProductController {
 	public Product productModifyView(@PathVariable int productId) {
 		return productService.getProductUpdate(productId);
 	}
-	
+	 
 	@PutMapping("/product_modify")
 	public String productModify(@RequestBody Product product) {
 		productService.modifyProduct(product);

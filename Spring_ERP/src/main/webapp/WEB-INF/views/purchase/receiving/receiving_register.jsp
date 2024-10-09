@@ -238,23 +238,23 @@
 			        <td>${orders.productId}</td>			        
 			        <td>${orders.productName}</td>
 			        <td>
-			            <!-- 카테고리 출력 부분 -->
-			            <c:if test="${not empty orders.productCategoryDetails.brand}">
-			                ${fn:substring(orders.productCategoryDetails.brand, 0, 2)}
-			            </c:if>
-			            <c:if test="${not empty orders.productCategoryDetails.type}">-
-			                ${fn:substring(orders.productCategoryDetails.type, 0, 2)}
-			            </c:if>
-			            <c:if test="${not empty orders.productCategoryDetails.color}">-
-			                ${fn:substring(orders.productCategoryDetails.color, 0, 2)}
-			            </c:if>
-			            <c:if test="${not empty orders.productCategoryDetails.size}">-
-			                ${orders.productCategoryDetails.size}
-			            </c:if>
-			            <c:if test="${not empty orders.productCategoryDetails.gender}">-
-			                ${fn:substring(orders.productCategoryDetails.gender, 0, 1)}
-			            </c:if>
-			        </td>
+					    <!-- 카테고리 출력 부분 -->
+					    <c:if test="${not empty orders.productCategoryDetails.brand}">
+					        ${fn:substring(orders.productCategoryDetails.brand, 0, 2)}
+					    </c:if>
+					    <c:if test="${not empty orders.productCategoryDetails.type}">
+					        ${fn:substring(orders.productCategoryDetails.type, 0, 2)}
+					    </c:if>
+					    <c:if test="${not empty orders.productCategoryDetails.color}">
+					        ${fn:substring(orders.productCategoryDetails.color, 0, 2)}
+					    </c:if>
+					    <c:if test="${not empty orders.productCategoryDetails.size}">
+					        ${orders.productCategoryDetails.size}
+					    </c:if>
+					    <c:if test="${not empty orders.productCategoryDetails.gender}">
+					        ${fn:substring(orders.productCategoryDetails.gender, 0, 1)}
+					    </c:if>
+					</td>
 			        <td>${orders.productCategoryDetails.brand}</td>
 			        <td>${orders.productCategoryDetails.type}</td>
 			        <td>${orders.productCategoryDetails.color}</td>
@@ -402,16 +402,16 @@
 	        shortCategory += order.productCategoryDetails.brand.substring(0, 2);
 	    }
 	    if (order.productCategoryDetails.type) {
-	        shortCategory += '-' + order.productCategoryDetails.type.substring(0, 2);
+	        shortCategory += order.productCategoryDetails.type.substring(0, 2);
 	    }
 	    if (order.productCategoryDetails.color) {
-	        shortCategory += '-' + order.productCategoryDetails.color.substring(0, 2);
+	        shortCategory += order.productCategoryDetails.color.substring(0, 2);
 	    }
 	    if (order.productCategoryDetails.size) {
-	        shortCategory += '-' + order.productCategoryDetails.size;
+	        shortCategory += order.productCategoryDetails.size;
 	    }
 	    if (order.productCategoryDetails.gender) {
-	        shortCategory += '-' + order.productCategoryDetails.gender.substring(0, 1);
+	        shortCategory += order.productCategoryDetails.gender.substring(0, 1);
 	    }
 	    
 	    document.getElementById("productCategoryDetails").value = shortCategory;
@@ -434,6 +434,7 @@
 
 	    checkFields(); // 필드 체크
 	}
+
 
 	// 폼 제출 함수
 	function submitForm(formId) {

@@ -128,7 +128,6 @@
          
      </form>
 
-     <!-- 발주 목록 테이블 -->
 		<!-- 발주 목록 테이블 -->
 		<div class="content_body_list">
 		    <table>

@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dto.Orders;
+import dto.Product;
+import dto.ProductCategory;
 import dto.Receiving;
 import dto.Warehouse;
 import lombok.RequiredArgsConstructor;
 import repository.ReceivingDAO;
 import util.Pager;
+import util.ProductCategoryParser;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +57,15 @@ public class ReceivingServiceImpl implements ReceivingService {
         map.put("startRow", pager.getStartRow());
         map.put("endRow", pager.getEndRow());
         List<Orders> ordersList = receivingDAO.selectOrdersList(map);
+        
+        // 각 발주의 제품 카테고리 정보를 파싱하여 ProductCategory를 설정
+        for (Orders order : ordersList) {
+            String productCategoryCode = order.getProductCategory();
+            if (productCategoryCode != null) {
+                ProductCategory category = ProductCategoryParser.parseCategoryCode(productCategoryCode);
+                order.setProductCategoryDetails(category);  // 파싱한 결과를 설정
+            }
+        }
 
         // 결과 맵 생성
         Map<String, Object> result = new HashMap<>();
@@ -72,6 +84,17 @@ public class ReceivingServiceImpl implements ReceivingService {
     // 특정 입고 정보 조회
     @Override
     public Receiving getReceivingById(int receivingId) {
-        return receivingDAO.selectReceivingById(receivingId);
+        Receiving receiving = receivingDAO.selectReceivingById(receivingId);
+
+        // 해당 입고 정보에 제품 카테고리 정보 설정
+        if (receiving != null) {
+            String productCategoryCode = receiving.getProductCategory(); // productCategory 필드를 가져옴
+            if (productCategoryCode != null) {
+                ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);
+                receiving.setProductCategoryDetails(productCategoryDetails);  // 파싱한 결과를 설정
+            }
+        }
+        
+        return receiving;
     }
 }

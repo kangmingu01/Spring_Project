@@ -15,7 +15,6 @@
           crossorigin="anonymous">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
  	<title>입고 등록</title>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>  
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -68,19 +67,28 @@
             <input type="date" id="receivingDate" name="receivingDate" readonly class="read-only-field" />
           </div>
           <div>
+            <label>발주번호</label>
+            <input type="text" name="ordersId" class="result" id="ordersId" readonly style="background-color: #e9e9e9;" />           
+          </div>
+          
+          <div>
             <label>제품번호</label>
             <input type="text" name="productId" class="result" id="productId" readonly style="background-color: #e9e9e9;" />           
-          </div>         
+          </div>  
           <div>
             <label>제품명</label>
             <input type="text" id="productName" name="productName" readonly class="read-only-field" />
           </div>
+         </div>
+         <div>          
+           <div>
+            <label>제품코드</label>
+            <input type="text" id="productCategoryDetails" name="productCategoryDetails" readonly class="read-only-field" />
+          </div> 
           <div>
             <label>브랜드</label>
             <input type="text" id="brand" name="brand" readonly class="read-only-field"/>
           </div>   
-          </div>
-          <div>     
           <div>
             <label>종류</label>
             <input type="text" id="type" name="type" readonly class="read-only-field"/>
@@ -88,7 +96,9 @@
           <div>
             <label>색상</label>
              <input type="text" id="color" name="color" readonly class="read-only-field"/>
-          </div>          
+          </div>
+          </div>
+          <div>          
           <div>
             <label>사이즈</label>
              <input type="text" id="size" name="size" readonly class="read-only-field"/>
@@ -97,9 +107,7 @@
             <label>성별</label>
            <input type="text" id="gender" name="gender" readonly class="read-only-field"/>
           </div>
-        </div> 
-        <div>
-            <div>
+             <div>
               <label>공급업체</label>
               <input type="text" id="supplier" name="supplier" readonly class="read-only-field" />
             </div>
@@ -107,6 +115,8 @@
               <label>발주수량</label>
               <input type="number" id="ordersQuantity" name="ordersQuantity" readonly class="read-only-field" />
             </div>
+            </div>
+            <div>
             <div>
               <label>단가</label>
               <input type="number" id=productPrice name="productPrice" readonly class="read-only-field" />
@@ -118,7 +128,6 @@
           </div>         
       </div>
       
-      <!-- 추가 가격 태그 -->
       <div class="content_body_search_price">
         <div>
           <div>
@@ -144,27 +153,31 @@
         <table>
           <thead>
             <tr>
-              <th>제품번호</th>
+              <th>발주번호</th>
+              <th>제품번호</th>              
               <th>제품명</th>
+              <th>제품코드</th>
               <th>브랜드</th>
               <th>종류</th>
               <th>색상</th>
               <th>사이즈</th>
               <th>성별</th>
               <th>공급업체</th>
-              <th style="color: red;">발주수량</th>
+              <th>발주수량</th>
+              <th style="color: red;">통과수량</th>                        
               <th style="color: red;">단가</th>
               <th style="color: red;">총액</th> 
               <th style="color: red;">납기일</th>   
               <th>창고</th> 
-              <th style="color: red;">통과수량</th>                        
             </tr>
           </thead>
           <tbody id="receivingTable" class="sty">
              <c:if test="${not empty newReceiving}">
 		                <tr>
-		                    <td>${newReceiving.productId}</td>
+		                    <td>${newReceiving.ordersId}</td>
+		                    <td>${newReceiving.productId}</td>		                   
 		                    <td>${newReceiving.productName}</td>
+		                    <td>${newReceiving.productCategoryDetails}</td>
 		                    <td>${newReceiving.productCategoryDetails.brand}</td>
 		                    <td>${newReceiving.productCategoryDetails.type}</td>
 		                    <td>${newReceiving.productCategoryDetails.color}</td>
@@ -172,11 +185,11 @@
 		                    <td>${newReceiving.productCategoryDetails.gender}</td>
 		                    <td>${newReceiving.supplierName}</td>
 		                    <td>${newReceiving.ordersQuantity}</td>
+		                    <td>${newReceiving.quantity}</td>
 		                    <td>${newReceiving.productPrice}</td>
 		                    <td>${newReceiving.quantity * newReceiving.productPrice}</td>
 		                    <td>${fn:substring(newReceiving.deliveryDate, 0, 10)}</td>
 		                    <td>${newReceiving.warehouseName}</td>
-		                    <td>${newReceiving.quantity}</td>
 		                </tr>
 		            </c:if>
           </tbody>
@@ -202,8 +215,10 @@
                  <table class="table" id="productTable">
                      <thead>
               <tr>
+                <th>발주번호</th>                
                 <th>제품번호</th>
                 <th>제품명</th>
+                <th>제품코드</th>
                 <th>브랜드</th>
                 <th>종류</th>
                 <th>색상</th>
@@ -217,10 +232,12 @@
               </tr>
             </thead>
             <tbody>
-			   <c:forEach var="orders" items="${ordersList}">
+			   <c:forEach var="orders" items="${ordersResult}">
 			    <tr>
-			        <td>${orders.productId}</td>
+			        <td>${orders.ordersId}</td>			        
+			        <td>${orders.productId}</td>			        
 			        <td>${orders.productName}</td>
+			        <td>${orders.productCategoryDetails}</td>
 			        <td>${orders.productCategoryDetails.brand}</td>
 			        <td>${orders.productCategoryDetails.type}</td>
 			        <td>${orders.productCategoryDetails.color}</td>
@@ -229,13 +246,14 @@
 			        <td>${orders.supplierName}</td>
 			        <td>${orders.ordersQuantity}</td>
 			        <td>${orders.productPrice}</td>
-			        <td>${orders.deliveryDate}</td>
+			        <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
 			        <td>
-			            <button type="button" onclick="selectOrders'${orders.productId}', '${orders.productName}',
-			             '${orders.productCategoryDetails.brand}', '${orders.productCategoryDetails.type}', '${orders.productCategoryDetails.color}', 
-			             '${orders.productCategoryDetails.size}', '${orders.productCategoryDetails.gender}'
-			             , '${orders.supplierName}', '${orders.ordersQuantity}', '${orders.productPrice}')
-			             , '${orders.deliveryDate}')">선택</button>
+			            <button type="button" onclick="selectOrders('${orders.ordersId}', '${orders.productId}'
+			            , '${orders.productName}', '${orders.productCategoryDetails}'
+			            , '${orders.productCategoryDetails.brand}', '${orders.productCategoryDetails.type}'
+			            , '${orders.productCategoryDetails.color}', '${orders.productCategoryDetails.size}'
+			            , '${orders.productCategoryDetails.gender}', '${orders.supplierName}', '${orders.ordersQuantity}'
+			            , '${orders.productPrice}', '${orders.deliveryDate}')">선택</button>
 			        </td>
 			    </tr>
 					</c:forEach>
@@ -285,14 +303,13 @@
 	    const today = new Date().toISOString().split('T')[0];
 	    receivingDateInput.value = today;
 
-	    // 모든 필드가 입력되었는지 확인하는 함수
 	    function checkFields() {
-	        const productId = document.getElementById("productId").value;
+	        const ordersId = document.getElementById("ordersId").value;
 	        const quantity = document.getElementById("quantity").value;
 	        const warehouse = document.getElementById("warehouse").value;
 
 	        // 필수 입력 값 확인 후 등록 버튼 활성화
-	        if (productId && quantity && warehouse) {
+	        if (ordersId && quantity && warehouse) {
 	            document.querySelector(".content_header_registers_btn").classList.remove("disabled");
 	            document.querySelector(".content_header_registers_btn").onclick = function() {
 	                submitForm('registerForm');
@@ -306,7 +323,7 @@
 	    // 입력 필드에 이벤트 리스너 추가
 	    document.getElementById("quantity").addEventListener("input", checkFields);
 	    document.getElementById("warehouse").addEventListener("change", checkFields);
-	    document.getElementById("productId").addEventListener("input", checkFields);
+	    document.getElementById("ordersId").addEventListener("input", checkFields);
 
 	    // 초기 상태에서 버튼 비활성화
 	    checkFields();
@@ -320,7 +337,7 @@
 
 	// 발주 조회 버튼 클릭 시 발주 목록 모달 열기
 	function searchOrders() {
-		openOrdersModal();
+	    openOrdersModal();
 	}
 
 	// 발주 목록 검색 필터 함수 (하나의 검색 필드에서 제품명과 공급업체 검색)
@@ -330,8 +347,8 @@
 	    const rows = ordersTable.getElementsByTagName("tr");
 
 	    for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 제외
-	        const productName = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase();
-	        const supplierName = rows[i].getElementsByTagName("td")[7].textContent.toLowerCase();
+	        const productName = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
+	        const supplierName = rows[i].getElementsByTagName("td")[8].textContent.toLowerCase();
 
 	        if (productName.includes(searchQuery) || supplierName.includes(searchQuery) || searchQuery === "") {
 	            rows[i].style.display = ""; // 검색 조건에 맞으면 표시
@@ -341,9 +358,12 @@
 	    }
 	}
 
-	function selectOrders(code, name, brand, type, color, size, gender, supplierName, ordersQuantity, productPrice, deliveryDate) {
-	    document.getElementById("productId").value = code;
-	    document.getElementById("productName").value = name;
+	// 발주 목록에서 제품 선택 시 값 설정
+	function selectOrders(ordersId, productId, productName, productCategoryCode, brand, type, color, size, gender, supplierName, ordersQuantity, productPrice, deliveryDate) {
+	    document.getElementById("ordersId").value = ordersId;
+	    document.getElementById("productId").value = productId;
+	    document.getElementById("productName").value = productName;
+	    document.getElementById("productCategoryDetails").value = productCategoryCode;
 	    document.getElementById("brand").value = brand;
 	    document.getElementById("type").value = type;
 	    document.getElementById("color").value = color;
@@ -352,15 +372,17 @@
 	    document.getElementById("supplier").value = supplierName;
 	    document.getElementById("ordersQuantity").value = ordersQuantity;
 	    document.getElementById("productPrice").value = productPrice;
-	    document.getElementById("deliveryDate").value = deliveryDate;
+
+	    // deliveryDate에서 날짜 부분만 추출해서 설정
+	    var formattedDeliveryDate = deliveryDate.substring(0, 10);
+	    document.getElementById("deliveryDate").value = formattedDeliveryDate;
+
 	    // 모달 닫기
 	    var ordersModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('ordersModal'));
 	    ordersModal.hide();
 
-	    checkFields();
+	    checkFields(); // 필드 체크
 	}
-
-	  
 
 	// 폼 제출 함수
 	function submitForm(formId) {
@@ -379,6 +401,7 @@
 	    ordersTable.innerHTML = '';
 	    checkFields(); 
 	}
+
 	
 	</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

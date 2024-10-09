@@ -10,10 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import dto.ProductCategory;
 import dto.Receiving;
 import dto.Warehouse;
 import lombok.RequiredArgsConstructor;
 import service.ReceivingService;
+import util.ProductCategoryParser;
 
 @Controller
 @RequestMapping("/purchase/receiving")
@@ -34,7 +36,9 @@ public class ReceivingController {
         ordersMap.put("pageSize", "10");
 
         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
+        System.out.println(ordersResult); 
         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+        System.out.println(ordersResult.get("ordersList"));
 
 
         // 로그인한 사용자의 아이디 추가
@@ -58,6 +62,18 @@ public class ReceivingController {
         // 등록된 입고 정보 다시 조회하여 모델에 추가
         Receiving newReceiving = receivingService.getReceivingById(receiving.getReceivingId());
         model.addAttribute("newReceiving", newReceiving);
+        
+        if (newReceiving != null) {
+            String productCategoryCode = newReceiving.getProductCategory();
+            System.out.println("Product Category Code: " + productCategoryCode); // 로그 추가
+            if (productCategoryCode != null) {
+                ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);
+                newReceiving.setProductCategoryDetails(productCategoryDetails);
+            }
+        }
+        
+       
+        
         // 창고 목록도 다시 조회
         List<Warehouse> warehouseList = receivingService.getWarehouseList();
         model.addAttribute("warehouseList", warehouseList);

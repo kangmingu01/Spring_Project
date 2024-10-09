@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import dto.ProductCategory;
@@ -15,6 +16,7 @@ import dto.Receiving;
 import dto.Warehouse;
 import lombok.RequiredArgsConstructor;
 import service.ReceivingService;
+import util.ProductCategoryEditor;
 import util.ProductCategoryParser;
 
 @Controller
@@ -22,6 +24,11 @@ import util.ProductCategoryParser;
 @RequiredArgsConstructor
 public class ReceivingController {
     private final ReceivingService receivingService;
+    
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(ProductCategory.class, new ProductCategoryEditor());
+    }
 
     // 입고 등록 페이지 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
@@ -48,10 +55,13 @@ public class ReceivingController {
         return "purchase/receiving/receiving_register"; // 입고 등록 페이지로 이동
     }
 
-    // 입고 등록 처리 - 구매팀 ROLE만 접근 가능
+ // 입고 등록 처리 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@ModelAttribute Receiving receiving, Principal principal, Model model) {
+        // 로그로 productCategoryDetails 확인
+        System.out.println("Received Product Category Details: " + receiving.getProductCategoryDetails());
+        
         // 로그인한 사용자의 아이디를 입고 정보에 추가
         String userId = principal.getName();
         receiving.setUserid(userId);
@@ -62,18 +72,18 @@ public class ReceivingController {
         // 등록된 입고 정보 다시 조회하여 모델에 추가
         Receiving newReceiving = receivingService.getReceivingById(receiving.getReceivingId());
         model.addAttribute("newReceiving", newReceiving);
-        
+
+        // 여기서 ProductCategory 설정 확인
         if (newReceiving != null) {
             String productCategoryCode = newReceiving.getProductCategory();
             System.out.println("Product Category Code: " + productCategoryCode); // 로그 추가
+
             if (productCategoryCode != null) {
                 ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);
                 newReceiving.setProductCategoryDetails(productCategoryDetails);
             }
         }
-        
-       
-        
+
         // 창고 목록도 다시 조회
         List<Warehouse> warehouseList = receivingService.getWarehouseList();
         model.addAttribute("warehouseList", warehouseList);

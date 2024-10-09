@@ -9,6 +9,8 @@ import java.util.Map;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,15 +18,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import dto.Orders;
+import dto.ProductCategory;
 import dto.Supplier;
 import lombok.RequiredArgsConstructor;
 import service.OrdersService;
+import util.ProductCategoryEditor;
 
 @Controller
 @RequestMapping("/purchase/orders")
 @RequiredArgsConstructor
 public class OrdersController {
     private final OrdersService ordersService;
+    
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(ProductCategory.class, new ProductCategoryEditor());
+    }
 
     // 발주 등록 페이지 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")

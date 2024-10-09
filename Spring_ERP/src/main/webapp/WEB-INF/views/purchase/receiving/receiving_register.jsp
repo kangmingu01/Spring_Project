@@ -200,8 +200,8 @@
 
   <!-- 발주 목록 모달 -->
   <div class="modal fade" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+    <div class="modal-dialog" style="max-width: 61%;">
+          <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="ordersModalLabel">발주 목록</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -237,7 +237,24 @@
 			        <td>${orders.ordersId}</td>			        
 			        <td>${orders.productId}</td>			        
 			        <td>${orders.productName}</td>
-			        <td>${orders.productCategoryDetails}</td>
+			        <td>
+			            <!-- 카테고리 출력 부분 -->
+			            <c:if test="${not empty orders.productCategoryDetails.brand}">
+			                ${fn:substring(orders.productCategoryDetails.brand, 0, 2)}
+			            </c:if>
+			            <c:if test="${not empty orders.productCategoryDetails.type}">-
+			                ${fn:substring(orders.productCategoryDetails.type, 0, 2)}
+			            </c:if>
+			            <c:if test="${not empty orders.productCategoryDetails.color}">-
+			                ${fn:substring(orders.productCategoryDetails.color, 0, 2)}
+			            </c:if>
+			            <c:if test="${not empty orders.productCategoryDetails.size}">-
+			                ${orders.productCategoryDetails.size}
+			            </c:if>
+			            <c:if test="${not empty orders.productCategoryDetails.gender}">-
+			                ${fn:substring(orders.productCategoryDetails.gender, 0, 1)}
+			            </c:if>
+			        </td>
 			        <td>${orders.productCategoryDetails.brand}</td>
 			        <td>${orders.productCategoryDetails.type}</td>
 			        <td>${orders.productCategoryDetails.color}</td>
@@ -248,13 +265,28 @@
 			        <td>${orders.productPrice}</td>
 			        <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
 			        <td>
-			            <button type="button" onclick="selectOrders('${orders.ordersId}', '${orders.productId}'
-			            , '${orders.productName}', '${orders.productCategoryDetails}'
-			            , '${orders.productCategoryDetails.brand}', '${orders.productCategoryDetails.type}'
-			            , '${orders.productCategoryDetails.color}', '${orders.productCategoryDetails.size}'
-			            , '${orders.productCategoryDetails.gender}', '${orders.supplierName}', '${orders.ordersQuantity}'
-			            , '${orders.productPrice}', '${orders.deliveryDate}')">선택</button>
-			        </td>
+				    <button type="button" 
+				    onclick="selectOrders({
+				        ordersId: '${fn:escapeXml(orders.ordersId)}', 
+				        productId: '${fn:escapeXml(orders.productId)}', 
+				        productName: '${fn:escapeXml(orders.productName)}', 
+				        productCategoryDetails: {
+				            brand: '${fn:escapeXml(orders.productCategoryDetails.brand)}',
+				            type: '${fn:escapeXml(orders.productCategoryDetails.type)}',
+				            color: '${fn:escapeXml(orders.productCategoryDetails.color)}',
+				            size: '${fn:escapeXml(orders.productCategoryDetails.size)}',
+				            gender: '${fn:escapeXml(orders.productCategoryDetails.gender)}'
+				        },
+				        supplierName: '${fn:escapeXml(orders.supplierName)}', 
+				        ordersQuantity: '${fn:escapeXml(orders.ordersQuantity)}', 
+				        productPrice: '${fn:escapeXml(orders.productPrice)}', 
+				        deliveryDate: '${fn:substring(orders.deliveryDate, 0, 10)}'
+				    })">
+				    선택
+				</button>
+
+
+				</td>
 			    </tr>
 					</c:forEach>
 					</tbody>
@@ -303,6 +335,7 @@
 	    const today = new Date().toISOString().split('T')[0];
 	    receivingDateInput.value = today;
 
+	    // 필수 입력 필드 확인 후 등록 버튼 활성화
 	    function checkFields() {
 	        const ordersId = document.getElementById("ordersId").value;
 	        const quantity = document.getElementById("quantity").value;
@@ -311,7 +344,7 @@
 	        // 필수 입력 값 확인 후 등록 버튼 활성화
 	        if (ordersId && quantity && warehouse) {
 	            document.querySelector(".content_header_registers_btn").classList.remove("disabled");
-	            document.querySelector(".content_header_registers_btn").onclick = function() {
+	            document.querySelector(".content_header_registers_btn").onclick = function () {
 	                submitForm('registerForm');
 	            };
 	        } else {
@@ -340,15 +373,15 @@
 	    openOrdersModal();
 	}
 
-	// 발주 목록 검색 필터 함수 (하나의 검색 필드에서 제품명과 공급업체 검색)
+	// 발주 목록 검색 필터 함수 (제품명과 공급업체로 검색 가능)
 	function filterOrders() {
 	    const searchQuery = document.getElementById("ordersSearch").value.toLowerCase();
 	    const ordersTable = document.getElementById("productTable");
 	    const rows = ordersTable.getElementsByTagName("tr");
 
 	    for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 제외
-	        const productName = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
-	        const supplierName = rows[i].getElementsByTagName("td")[8].textContent.toLowerCase();
+	        const productName = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase(); // 제품명
+	        const supplierName = rows[i].getElementsByTagName("td")[9].textContent.toLowerCase(); // 공급업체명
 
 	        if (productName.includes(searchQuery) || supplierName.includes(searchQuery) || searchQuery === "") {
 	            rows[i].style.display = ""; // 검색 조건에 맞으면 표시
@@ -358,23 +391,41 @@
 	    }
 	}
 
-	// 발주 목록에서 제품 선택 시 값 설정
-	function selectOrders(ordersId, productId, productName, productCategoryCode, brand, type, color, size, gender, supplierName, ordersQuantity, productPrice, deliveryDate) {
-	    document.getElementById("ordersId").value = ordersId;
-	    document.getElementById("productId").value = productId;
-	    document.getElementById("productName").value = productName;
-	    document.getElementById("productCategoryDetails").value = productCategoryCode;
-	    document.getElementById("brand").value = brand;
-	    document.getElementById("type").value = type;
-	    document.getElementById("color").value = color;
-	    document.getElementById("size").value = size;
-	    document.getElementById("gender").value = gender;
-	    document.getElementById("supplier").value = supplierName;
-	    document.getElementById("ordersQuantity").value = ordersQuantity;
-	    document.getElementById("productPrice").value = productPrice;
+	function selectOrders(order) {
+	    document.getElementById("ordersId").value = order.ordersId;
+	    document.getElementById("productId").value = order.productId;
+	    document.getElementById("productName").value = order.productName;
+
+	    // 카테고리 코드 부분 축약 (브랜드, 종류, 색상, 사이즈, 성별)
+	    var shortCategory = '';
+	    if (order.productCategoryDetails.brand) {
+	        shortCategory += order.productCategoryDetails.brand.substring(0, 2);
+	    }
+	    if (order.productCategoryDetails.type) {
+	        shortCategory += '-' + order.productCategoryDetails.type.substring(0, 2);
+	    }
+	    if (order.productCategoryDetails.color) {
+	        shortCategory += '-' + order.productCategoryDetails.color.substring(0, 2);
+	    }
+	    if (order.productCategoryDetails.size) {
+	        shortCategory += '-' + order.productCategoryDetails.size;
+	    }
+	    if (order.productCategoryDetails.gender) {
+	        shortCategory += '-' + order.productCategoryDetails.gender.substring(0, 1);
+	    }
+	    
+	    document.getElementById("productCategoryDetails").value = shortCategory;
+	    document.getElementById("brand").value = order.productCategoryDetails.brand;
+	    document.getElementById("type").value = order.productCategoryDetails.type;
+	    document.getElementById("color").value = order.productCategoryDetails.color;
+	    document.getElementById("size").value = order.productCategoryDetails.size;
+	    document.getElementById("gender").value = order.productCategoryDetails.gender;
+	    document.getElementById("supplier").value = order.supplierName;
+	    document.getElementById("ordersQuantity").value = order.ordersQuantity;
+	    document.getElementById("productPrice").value = order.productPrice;
 
 	    // deliveryDate에서 날짜 부분만 추출해서 설정
-	    var formattedDeliveryDate = deliveryDate.substring(0, 10);
+	    var formattedDeliveryDate = order.deliveryDate.substring(0, 10);
 	    document.getElementById("deliveryDate").value = formattedDeliveryDate;
 
 	    // 모달 닫기
@@ -386,23 +437,42 @@
 
 	// 폼 제출 함수
 	function submitForm(formId) {
-	    document.getElementById(formId).submit(); 
+	    document.getElementById(formId).submit();
 	}
 
 	// 폼 초기화 함수
 	function resetForm() {
 	    document.getElementById('registerForm').reset();
-	    
+
 	    const receivingDateInput = document.getElementById("receivingDate");
 	    const today = new Date().toISOString().split('T')[0];
 	    receivingDateInput.value = today;
 
 	    const ordersTable = document.getElementById("receivingTable");
 	    ordersTable.innerHTML = '';
-	    checkFields(); 
+	    checkFields(); // 필드 초기화 후 다시 필드 체크
+	}
+	
+	// 필수 입력 필드 확인 후 등록 버튼 활성화
+	function checkFields() {
+	    const ordersId = document.getElementById("ordersId").value;
+	    const quantity = document.getElementById("quantity").value;
+	    const warehouse = document.getElementById("warehouse").value;
+
+	    // 필수 입력 값 확인 후 등록 버튼 활성화
+	    if (ordersId && quantity && warehouse) {
+	        document.querySelector(".content_header_registers_btn").classList.remove("disabled");
+	        document.querySelector(".content_header_registers_btn").onclick = function () {
+	            submitForm('registerForm');
+	        };
+	    } else {
+	        document.querySelector(".content_header_registers_btn").classList.add("disabled");
+	        document.querySelector(".content_header_registers_btn").onclick = null;
+	    }
 	}
 
 	
+
 	</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

@@ -98,7 +98,7 @@
   </div>
   <div style="overflow-x: auto">
     <%-- 값 넘어오는지 테스트 --%>
-    <%--<c:out value="${resultMap.organizationList}"/>--%>
+    <c:out value="${resultMap.erpAuthList}"/>
     <%-- 유저 정보를 볼 수 있는 테이블 --%>
     <table class="table table-striped table-hover">
       <thead>
@@ -106,61 +106,34 @@
         <th scope="col" class="text-center fs-6">조직 ID</th>
         <th scope="col" class="text-center fs-6">조직 이름</th>
         <th scope="col" class="text-center fs-6">조직 유형</th>
-        <th scope="col" class="text-center fs-6">주소</th>
-        <th scope="col" class="text-center fs-6">전화번호</th>
-        <th scope="col" class="text-center fs-6">생성일</th>
+
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
       </thead>
       <c:choose>
-        <c:when test="${empty resultMap.organizationList}">
+        <c:when test="${empty resultMap.erpAuthList}">
           <tr>
             <td colspan="12" class="text-center">검색된 게시글이 없습니다</td>
           </tr>
         </c:when>
         <c:otherwise>
-          <c:forEach var="organization" items="${resultMap.organizationList}">
+          <c:forEach var="erpAuth" items="${resultMap.erpAuthList}">
             <tr>
-              <td class="align-middle text-center">${organization.orgId}</td>
-              <td class="align-middle text-center">${organization.orgName}</td>
-              <td class="align-middle text-center">
+              <td class="align-middle text-center">${erpAuth.userid}</td>
+              <td class="align-middle text-center">${erpAuth.auth}</td>
+              <td class="align-middle text-center">${erpAuth.orgId}</td>
+              <%--<td>
                 <c:choose>
-                  <c:when test="${organization.orgType == 0}">
-                    <span class="text-primary">본사</span>
-                  </c:when>
-                  <c:when test="${organization.orgType == 1}">
-                    <span class="text-warning">매장</span>
-                  </c:when>
-                  <c:when test="${organization.orgType == 9}">
-                    <c:choose>
-                      <c:when test="${isDepartment}">
-                        <span class="text-danger">부서 폐지</span>
-                      </c:when>
-                      <c:otherwise>
-                        <span class="text-danger">매장 폐업</span>
-                      </c:otherwise>
-                    </c:choose>
-                  </c:when>
-                </c:choose>
-              </td>
-              <td class="align-middle text-center">${organization.address}</td>
-              <td class="align-middle text-center">${organization.phoneNumber}</td>
-              <td class="align-middle text-center">
-                  <%-- JSTL fmt를 이용해 날짜 자름 --%>
-                <fmt:formatDate value="${organization.created}" pattern="yyyy-MM-dd"/>
-              </td>
-              <td>
-                <c:choose>
-                  <c:when test="${organization.orgType == 0 || organization.orgType == 1}">
+                  <c:when test="${erpAuth.orgType == 0 || erpAuth.orgType == 1}">
                     <button type="button" class="btn btn-secondary"
                             data-bs-toggle="modal" data-bs-target="#editOrgModal"
-                            data-orgId="${organization.orgId}"
-                            data-orgName="${organization.orgName}"
-                            data-orgType="${organization.orgType}"
-                            data-address="${organization.address}"
-                            data-phoneNumber="${organization.phoneNumber}"
-                            data-created="${organization.created}">
+                            data-orgId="${erpAuth.orgId}"
+                            data-orgName="${erpAuth.orgName}"
+                            data-orgType="${erpAuth.orgType}"
+                            data-address="${erpAuth.address}"
+                            data-phoneNumber="${erpAuth.phoneNumber}"
+                            data-created="${erpAuth.created}">
                       수정
                     </button>
                   </c:when>
@@ -175,17 +148,17 @@
               </td>
               <td>
                 <form action="<c:url value="/admin/deleteOrg"/>" method="post">
-                  <input type="hidden" name="orgId" value="${organization.orgId}">
+                  <input type="hidden" name="orgId" value="${erpAuth.orgId}">
 
                   <c:choose>
-                    <c:when test="${organization.orgType == 0}">
+                    <c:when test="${erpAuth.orgType == 0}">
                       <button type="submit" class="btn btn-danger"
-                              onclick="return confirm('해당 부서[${organization.orgName}]를 정말 삭제하시겠습니까?')">삭제
+                              onclick="return confirm('해당 부서[${erpAuth.orgName}]를 정말 삭제하시겠습니까?')">삭제
                       </button>
                     </c:when>
-                    <c:when test="${organization.orgType == 1}">
+                    <c:when test="${erpAuth.orgType == 1}">
                       <button type="submit" class="btn btn-danger"
-                              onclick="return confirm('해당 매장[${organization.orgName}]를 폐업 처리 하시겠습니까?')">삭제
+                              onclick="return confirm('해당 매장[${erpAuth.orgName}]를 폐업 처리 하시겠습니까?')">삭제
                       </button>
                     </c:when>
                     <c:otherwise>
@@ -197,7 +170,7 @@
 
                   <sec:csrfInput/>
                 </form>
-              </td>
+              </td>--%>
             </tr>
           </c:forEach>
         </c:otherwise>

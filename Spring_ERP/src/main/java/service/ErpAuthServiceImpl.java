@@ -40,6 +40,7 @@ public class ErpAuthServiceImpl implements ErpAuthService {
 
         int totalAuthList = erpAuthDAO.selectAuthCount(map);
 
+
         int blockSize = 5;
 
         Pager pager = new Pager(pageNum, pageSize, totalAuthList, blockSize);

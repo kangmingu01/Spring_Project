@@ -3,6 +3,7 @@ package repository;
 import dto.ErpAuth;
 import lombok.RequiredArgsConstructor;
 import mapper.ErpAuthMapper;
+import mapper.ErpUserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 

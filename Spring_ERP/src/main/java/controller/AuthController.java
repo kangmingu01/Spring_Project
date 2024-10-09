@@ -4,20 +4,23 @@ import dto.ErpAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import service.ErpAuthService;
+
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AuthController {
+    private final ErpAuthService erpAuthService;
 
     /* 탭으로 조절 가능하게 */
     /* 일단 auth 페이지에서 만들고 쪼개기 */
     @GetMapping("/auth")
-    public String authGet() {
+    public String authGet(@RequestParam Map<String, Object> map, Model model) {
+        model.addAttribute("resultMap", erpAuthService.getErpAuthList(map));
+        model.addAttribute("searchMap", map);
         return "/admin/auth_management";
     }
 

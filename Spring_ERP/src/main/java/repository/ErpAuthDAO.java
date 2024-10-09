@@ -1,11 +1,11 @@
-package mapper;
+package repository;
 
 import dto.ErpAuth;
 
 import java.util.List;
 import java.util.Map;
 
-public interface ErpAuthMapper {
+public interface ErpAuthDAO {
     int insertErpAuth(ErpAuth erpAuth);
     int deleteAuth(String id);
 

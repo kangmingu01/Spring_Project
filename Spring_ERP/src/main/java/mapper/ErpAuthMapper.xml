@@ -26,10 +26,29 @@
             <if test="orgId != null">
                 and orgId = #{orgId}
             </if>
-            <if test="auth != null">
-                and auth = #{auth}
-            </if>
         </where>
     </delete>
 
+    <select id="selectAuthCount" resultType="int">
+        select count(*) from erp_auth
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%'+keyword+'%'"/>
+            where ${column} like #{word}
+        </if>
+    </select>
+
+    <select id="selectAuthList" resultType="ErpAuth">
+        select * from (
+        select rownum rn, erp_auth.* from (
+        select userid, auth, orgid
+        from erp_auth
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%' + keyword + '%'"/>
+            ${column} like #{word}
+        </if>
+        order by userid desc
+        ) erp_auth order by rn desc
+        )
+        where rn between #{startRow} and #{endRow}
+    </select>
 </mapper>

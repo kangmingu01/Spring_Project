@@ -51,7 +51,7 @@
 	                and s.supplier_name like '%' || #{supplierName} || '%'
 	            </if>
 	        </where>
-	        order by o.orders_date desc
+	        order by o.orders_id desc
 	    )
 	    where rn between #{startRow} and #{endRow}
 	</select>

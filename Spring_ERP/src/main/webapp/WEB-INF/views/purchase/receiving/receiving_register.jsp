@@ -302,41 +302,42 @@
 					</c:forEach>
 					</tbody>
                  </table>
-                 <div class="pagination">
-				    <!-- 이전 페이지 링크 -->
-				    <c:choose>
-				        <c:when test="${pager != null && pager.startPage > 1}">
-				            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
-				        </c:when>
-				        <c:otherwise>
-				            [이전]
-				        </c:otherwise>
-				    </c:choose>
-				
-				    <!-- 페이지 번호 링크 -->
-				    <c:if test="${pager != null}">
-				        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-				            <c:choose>
-				                <c:when test="${pager.pageNum != i}">
-				                    <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
-				                </c:when>
-				                <c:otherwise>
-				                    [${i}]
-				                </c:otherwise>
-				            </c:choose>
-				        </c:forEach>
-				    </c:if>
-				
-				    <!-- 다음 페이지 링크 -->
-				    <c:choose>
-				        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-				            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
-				        </c:when>
-				        <c:otherwise>
-				            [다음]
-				        </c:otherwise>
-				    </c:choose>
-				</div>
+              <div style="text-align: center;">
+    <!-- 이전 페이지 링크 -->
+    <c:choose>
+        <c:when test="${pager != null && pager.startPage > 1}">
+            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
+        </c:when>
+        <c:otherwise>
+            [이전]
+        </c:otherwise>
+    </c:choose>
+    
+    <!-- 페이지 번호 링크 -->
+     <c:if test="${pager != null}">
+    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+        <c:choose>
+            <c:when test="${pager.pageNum != i}">
+                <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
+            </c:when>
+            <c:otherwise>
+                [${i}]
+            </c:otherwise>
+        </c:choose>
+    </c:forEach>
+    </c:if> 
+    <!-- 다음 페이지 링크 -->
+    <c:choose>
+        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
+        </c:when>
+        <c:otherwise>
+            [다음]
+        </c:otherwise>
+    </c:choose>
+</div>
+
+
              </div>
          </div>
      </div>

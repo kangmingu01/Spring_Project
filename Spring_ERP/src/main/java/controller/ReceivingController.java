@@ -22,6 +22,7 @@ import dto.Receiving;
 import dto.Warehouse;
 import lombok.RequiredArgsConstructor;
 import service.ReceivingService;
+import util.Pager;
 import util.ProductCategoryEditor;
 import util.ProductCategoryParser;
 
@@ -49,7 +50,7 @@ public class ReceivingController {
        
         Map<String, Object> ordersMap = new HashMap<>();
         ordersMap.put("pageNum", "1");
-        ordersMap.put("pageSize", "50");
+        ordersMap.put("pageSize", "10");
 
         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
         System.out.println(ordersResult);         
@@ -112,7 +113,7 @@ public class ReceivingController {
 
         Map<String, Object> ordersMap = new HashMap<>();
         ordersMap.put("pageNum", "1");
-        ordersMap.put("pageSize", "50");
+        ordersMap.put("pageSize", "10");
         
         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
@@ -120,7 +121,7 @@ public class ReceivingController {
         return "purchase/receiving/receiving_register"; // 입고 등록 페이지로 다시 이동
     }
 
-    // 발주 목록 조회 (페이징 및 검색 처리)
+ // 발주 목록 조회 (페이징 및 검색 처리)
     @RequestMapping(value = "/ordersList", method = RequestMethod.GET)
     public String getOrdersList(@RequestParam Map<String, Object> map, Model model) {
         // 페이지 번호와 페이지 크기 기본 설정
@@ -128,11 +129,17 @@ public class ReceivingController {
             map.put("pageNum", "1");
         }
         if (!map.containsKey("pageSize")) {
-            map.put("pageSize", "50");
+            map.put("pageSize", "10");
         }
+
+
 
         // 발주 리스트와 페이징 정보 조회
         Map<String, Object> resultMap = receivingService.getOrdersList(map);
+
+        // 디버그 로그로 Pager 정보 확인
+        Pager pager = (Pager) resultMap.get("pager");
+        System.out.println("Pager Info: " + pager);
 
         // 페이징 정보와 발주 리스트를 모델에 추가
         model.addAttribute("pager", resultMap.get("pager"));

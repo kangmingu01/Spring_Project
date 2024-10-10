@@ -14,7 +14,6 @@
           crossorigin="anonymous">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <title>발주 등록</title>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>  
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -255,8 +254,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     // 발주일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
     const ordersDateInput = document.getElementById("ordersDate");
-    const today = new Date().toISOString().split('T')[0];
-    ordersDateInput.value = today;
+    const today = new Date().toISOString().split('T')[0]; 
+    ordersDateInput.value = today; // 발주일자 필드에 현재 날짜 설정
 
     // 납기일 필드의 최소값을 현재 날짜로 설정
     const deliveryDateInput = document.getElementById("deliveryDate");
@@ -264,86 +263,93 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 모든 필드가 입력되었는지 확인하는 함수
     function checkFields() {
-        const productId = document.getElementById("productId").value;
-        const ordersQuantity = document.getElementById("ordersQuantity").value;
-        const productPrice = document.getElementById("productPrice").value;
+        const productId = document.getElementById("productId").value; 
+        const ordersQuantity = document.getElementById("ordersQuantity").value; 
+        const productPrice = document.getElementById("productPrice").value; 
         const supplier = document.getElementById("supplier").value;
-        const deliveryDate = document.getElementById("deliveryDate").value;
+        const deliveryDate = document.getElementById("deliveryDate").value; 
 
         // 모든 필드가 비어있지 않으면 등록 버튼 활성화
         if (productId && ordersQuantity && productPrice && supplier && deliveryDate) {
-            document.querySelector(".content_header_registers_btn").classList.remove("disabled");
+            document.querySelector(".content_header_registers_btn").classList.remove("disabled"); 
             document.querySelector(".content_header_registers_btn").onclick = function() {
-                submitForm('registerForm');
+                submitForm('registerForm'); 
             };
         } else {
-            document.querySelector(".content_header_registers_btn").classList.add("disabled");
+            document.querySelector(".content_header_registers_btn").classList.add("disabled"); 
             document.querySelector(".content_header_registers_btn").onclick = null;
         }
     }
 
-    // 입력 필드에 이벤트 리스너 추가
-    document.getElementById("ordersQuantity").addEventListener("input", checkFields);
-    document.getElementById("productPrice").addEventListener("input", checkFields);
-    document.getElementById("supplier").addEventListener("change", checkFields);
-    document.getElementById("deliveryDate").addEventListener("input", checkFields);
-    document.getElementById("productId").addEventListener("input", checkFields);
+    // 제품 선택 함수 - 선택한 제품 정보를 폼에 채우고, 등록 버튼 활성화 확인
+    function selectProduct(code, name, brand, type, color, size, gender) {
+        document.getElementById("productId").value = code;   
+        document.getElementById("productName").value = name; 
+        document.getElementById("brand").value = brand;      
+        document.getElementById("type").value = type;       
+        document.getElementById("color").value = color;     
+        document.getElementById("size").value = size;        
+        document.getElementById("gender").value = gender;    
 
-    // 초기 상태에서 버튼 비활성화
+        // 모달 닫기
+        var productModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('productModal'));
+        productModal.hide();
+
+        // 필드가 채워진 후 등록 버튼 상태 확인
+        checkFields();
+    }
+
+    // 입력 필드에 이벤트 리스너 추가 (필드 값이 변경될 때마다 등록 버튼 상태 확인)
+    document.getElementById("ordersQuantity").addEventListener("input", checkFields); 
+    document.getElementById("productPrice").addEventListener("input", checkFields); 
+    document.getElementById("supplier").addEventListener("change", checkFields); 
+    document.getElementById("deliveryDate").addEventListener("input", checkFields); 
+    document.getElementById("productId").addEventListener("input", checkFields); 
+
+    // 제품 조회 모달에서 제품 선택을 할 수 있도록 selectProduct 함수를 전역으로 노출
+    window.selectProduct = selectProduct;
+
+    // 초기 상태에서 등록 버튼 비활성화
     checkFields();
 });
 
-// 제품 목록 모달 열기
+// 제품 목록 모달 열기 함수
 function openProductModal() {
     var productModal = new bootstrap.Modal(document.getElementById('productModal'));
-    productModal.show();
+    productModal.show(); 
 }
 
 // 검색 버튼 클릭 시 제품 목록 모달 열기
 function searchOrder() {
-    openProductModal();
+    openProductModal(); 
 }
 
-// 제품 목록 검색 필터 함수 (하나의 검색 필드에서 제품명과 브랜드 검색)
+// 제품 목록에서 검색 필터링 함수 (제품명이나 브랜드로 필터링)
 function filterProducts() {
-    const searchQuery = document.getElementById("productSearch").value.toLowerCase();
+    const searchQuery = document.getElementById("productSearch").value.toLowerCase(); 
     const productTable = document.getElementById("productTable");
     const rows = productTable.getElementsByTagName("tr");
 
+    // 각 행을 검색어와 비교하여 필터링
     for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 제외
-        const productName = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase();
+        const productName = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase(); 
         const productBrand = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
 
+        // 제품명이나 브랜드가 검색어를 포함하면 표시, 그렇지 않으면 숨기기
         if (productName.includes(searchQuery) || productBrand.includes(searchQuery) || searchQuery === "") {
-            rows[i].style.display = ""; // 검색 조건에 맞으면 표시
+            rows[i].style.display = ""; // 조건에 맞으면 표시
         } else {
-            rows[i].style.display = "none"; // 검색 조건에 맞지 않으면 숨기기
+            rows[i].style.display = "none"; // 조건에 맞지 않으면 숨기기
         }
     }
 }
 
-//제품 선택 함수
-function selectProduct(code, name, brand, type, color, size, gender) {
-    document.getElementById("productId").value = code;   // 제품번호 필드에 ID 수정
-    document.getElementById("productName").value = name;
-    document.getElementById("brand").value = brand;
-    document.getElementById("type").value = type;
-    document.getElementById("color").value = color;
-    document.getElementById("size").value = size;
-    document.getElementById("gender").value = gender;
-
-    // 모달 닫기
-    var productModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('productModal'));
-    productModal.hide();
-
-    // 필드 채워짐에 따라 등록 버튼 상태 확인
-    checkFields();
-}
-
+// 폼 제출 함수
 function submitForm(formId) {
-    document.getElementById(formId).submit(); 
+    document.getElementById(formId).submit(); // 해당 폼 제출
 }
 
+// 폼 초기화 함수
 function resetForm() {
     // 폼 필드 초기화
     document.getElementById('registerForm').reset();
@@ -365,8 +371,7 @@ function resetForm() {
 }
 </script>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>

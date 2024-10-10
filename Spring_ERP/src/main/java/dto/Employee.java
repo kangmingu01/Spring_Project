@@ -27,7 +27,6 @@ public class Employee {
 	private int employeeId;
 	private String userid;
 	private String orgId;
-	private String createdDate;
 	private int sickTime;
 	private int vacationHours;
 	private int overTimes;

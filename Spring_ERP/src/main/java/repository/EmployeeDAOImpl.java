@@ -16,7 +16,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 	private final SqlSession sqlSession;
 	
 	@Override
-	public Employee selectEmployeeById(String employeeId) {
+	public Employee selectEmployeeById(int employeeId) {
 		return sqlSession.getMapper(EmployeeMapper.class).selectEmployeeById(employeeId);
 	}
 

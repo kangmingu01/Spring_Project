@@ -183,11 +183,13 @@
 			<artifactId>mybatis</artifactId>
 			<version>3.5.16</version>
 		</dependency>
-
+		
 		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
+		    <groupId>org.mybatis</groupId>
+		    <artifactId>mybatis-spring</artifactId>
 			<version>2.1.2</version>
+			<!-- 버전 변경함 -->
+		    <!-- <version>3.0.4</version> -->
 		</dependency>
 
 		<dependency>
@@ -260,6 +262,14 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
@@ -296,5 +306,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
+	</build> 
 </project>

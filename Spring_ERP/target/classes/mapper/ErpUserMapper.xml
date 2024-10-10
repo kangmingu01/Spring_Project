@@ -74,10 +74,6 @@
         FROM erp_user WHERE userid = #{userid}
     </select>
 
-    <!-- 사용자 권한 추가 -->
-    <insert id="insertErpAuth">
-        insert into erp_auth values(#{userid}, #{auth})
-    </insert>
 
     <!-- 유저 테이블의 리스트 전체 갯수를 가져오는 SQL -->
     <!-- 조건을 걸어 검색필드에 값이 있다면 해당 조건과 키워드에 맞게 갯수를 반환 -->
@@ -107,5 +103,4 @@
         )
         where rn between #{startRow} and #{endRow}
     </select>
-
 </mapper>

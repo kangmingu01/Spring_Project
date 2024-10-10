@@ -1,6 +1,7 @@
 package repository;
 
 import dto.ErpAuth;
+import dto.ErpUser;
 import lombok.RequiredArgsConstructor;
 import mapper.ErpAuthMapper;
 import mapper.ErpUserMapper;
@@ -33,5 +34,10 @@ public class ErpAuthDAOImpl implements ErpAuthDAO {
     @Override
     public List<ErpAuth> selectAuthList(Map<String, Object> map) {
         return sqlSession.getMapper(ErpAuthMapper.class).selectAuthList(map);
+    }
+
+    @Override
+    public List<ErpUser> selectErpAuthById(Map<String, Object> map) {
+        return sqlSession.getMapper(ErpAuthMapper.class).selectErpAuthById(map);
     }
 }

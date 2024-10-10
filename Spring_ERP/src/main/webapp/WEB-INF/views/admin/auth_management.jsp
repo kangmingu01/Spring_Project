@@ -62,20 +62,82 @@
   </style>
 </head>
 <body>
+<main class="bg-light pb-1px">
+  <div class="content d-flex justify-content-between pt-2 pb-2 ps-4 pe-4 align-items-center">
+    <div class="title fw-bold">
+      권한 추가
+    </div>
+    <div class="d-flex">
+      <div class="btn text-white" onclick="resetForm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+             class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+          <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+        </svg>
+        <span>초기화</span>
+      </div>
+    </div>
+  </div>
 
+  <div class="">
+    <div class="m-1 p-2 border rounded bg-white">
+      <form action="<c:url value="/admin/addOrganization"/>" id="authForm" method="post">
+        <div class="row mb-3">
+          <!-- 조직 ID -->
+          <div class="col-md-4">
+            <label for="selectAuth" class="form-label">권한 대상</label>
+            <select class="form-select" id="selectAuth" name="selectAuth" onchange="setOrgType()">
+              <option value="userid">유저</option>
+              <option value="orgId">부서</option>
+              <option value="orgId">매장</option>
+            </select>
+          </div>
+
+          <%-- 대상 ID --%>
+          <div class="col-md-4">
+            <label for="searchId" class="form-label">대상 ID</label>
+            <div class="d-flex">
+              <input type="text" class="form-control" id="searchId" name="searchId">
+              <button type="button" id="idCheck" class="btn btn-secondary btn-sm text-nowrap">검색
+              </button>
+            </div>
+          </div>
+
+
+          <!-- 권한 -->
+          <div class="col-md-4">
+            <label for="orgName" class="form-label">권한명<strong> [ROLE_] </strong>뒤에 추가로 입력</label>
+            <div class="d-flex form-control-position">
+              <input type="text" class="form-control text-uppercase" id="orgName" name="orgName" value="ROLE_">
+            </div>
+            <div id="orgMsg" class="error">조직 이름 입력해주세요</div>
+            <div id="orgRegMsg" class="error">조직 이름은 한글로만 가능합니다.</div>
+          </div>
+          <%-- 조직 타입: 조직 이름 선택시 자동으로 값 들어감 --%>
+          <input type="hidden" name="orgType" id="orgType" value="0">
+          </div>
+
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary">조직 생성</button>
+        </div>
+        <sec:csrfInput/>
+      </form>
+    </div>
+  </div>
+</main>
 <section>
   <div class="content d-md-flex justify-content-between pt-2 pb-2 ps-4 pe-4 align-items-center">
     <div class="title fw-bold">
-      조직(부서/매장) 관리 테이블
+      권한 관리
     </div>
 
     <form action="<c:url value='/admin/organization'/>" method="post">
       <div class="row g-2 align-items-center">
         <div class="col-4">
           <select name="column" class="form-select">
-            <option value="org_name" selected>조직 이름</option>
-            <option value="org_id">조직 ID</option>
-            <option value="address">주소</option>
+            <option value="userid" selected>유저 ID</option>
+            <option value="orgId">부서 ID</option>
+            <option value="auth">권한</option>
 
           </select>
         </div>
@@ -98,16 +160,15 @@
   </div>
   <div style="overflow-x: auto">
     <%-- 값 넘어오는지 테스트 --%>
-    <c:out value="${resultMap.erpAuthList}"/>
+    <%--<c:out value="${resultMap.erpAuthList}"/>--%>
     <%-- 유저 정보를 볼 수 있는 테이블 --%>
     <table class="table table-striped table-hover">
       <thead>
       <tr>
+        <th scope="col" class="text-center fs-6">유저 ID</th>
+        <th scope="col" class="text-center fs-6">권한</th>
         <th scope="col" class="text-center fs-6">조직 ID</th>
-        <th scope="col" class="text-center fs-6">조직 이름</th>
-        <th scope="col" class="text-center fs-6">조직 유형</th>
 
-        <th scope="col"></th>
         <th scope="col"></th>
       </tr>
       </thead>
@@ -123,6 +184,10 @@
               <td class="align-middle text-center">${erpAuth.userid}</td>
               <td class="align-middle text-center">${erpAuth.auth}</td>
               <td class="align-middle text-center">${erpAuth.orgId}</td>
+              <td>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('삭제?')">삭제
+                </button>
+              </td>
               <%--<td>
                 <c:choose>
                   <c:when test="${erpAuth.orgType == 0 || erpAuth.orgType == 1}">
@@ -270,7 +335,38 @@
 </section>
 <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
 <script>
+  /* 중복 검사 */
+  $("#idCheck").click(function () {
+    $("#idMsg").css("display", "none").css("visibility", "hidden");
+    $("#idRegMsg").css("display", "none").css("visibility", "hidden");
+    $("#idCheckMsg").css("display", "none").css("visibility", "hidden");
 
+    if ($("#userid").val() == "") {
+      $("#idMsg").css("display", "block").css("visibility", "visible");
+      $("#userid").addClass("is-invalid");
+      return;
+    } else if (!idReg.test($("#userid").val())) {
+      $("#idRegMsg").css("display", "block").css("visibility", "visible");
+      $("#userid").addClass("is-invalid");
+      return;
+    }
+    $("#userid").removeClass("is-invalid");
+
+    // 화면 크기 및 브라우저 창 크기 계산
+    var screenWidth = window.screen.width;
+    var screenHeight = window.screen.height;
+
+    var popupWidth = 500;
+    var popupHeight = 300;
+
+    // 창을 화면 가운데에 위치시키기 위한 좌표 계산
+    var left = (screenWidth / 2) - (popupWidth / 2);
+    var top = (screenHeight / 2) - (popupHeight / 2);
+
+    // 새 창 열기
+    window.open('<c:url value="/admin/searchId"/>?searchType=' + $("#selectAuth").val()+'&searchId=', 'idCheck', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top);
+
+  });
 </script>
 
 </body>

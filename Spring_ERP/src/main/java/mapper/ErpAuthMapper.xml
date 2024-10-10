@@ -51,4 +51,43 @@
         )
         where rn between #{startRow} and #{endRow}
     </select>
+
+
+    <!-- 대상의 아이디값을 가져오는 쿼리 -->
+    <select id="selectErpAuthById" resultType="ErpUser">
+        SELECT userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id
+        FROM erp_user
+        WHERE 1=1
+        <choose>
+            <when test="selectAuth == 'userid'">
+                AND userid = #{value}
+            </when>
+            <when test="selectAuth == 'orgId'">
+                AND org_id = #{value}
+            </when>
+        </choose>
+    </select>
+
+    <select id="selectUserIdCount" resultType="int">
+        select count(*) from erp_user
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%'+keyword+'%'"/>
+            where ${column} like #{word}
+        </if>
+    </select>
+
+    <select id="selectUserIdList" resultType="ErpUser">
+        select * from (
+        select rownum rn, erp_auth.* from (
+        select userid, auth, orgId
+        from erp_auth
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%' + keyword + '%'"/>
+            ${column} like #{word}
+        </if>
+        order by userid desc
+        ) erp_auth order by rn desc
+        )
+        where rn between #{startRow} and #{endRow}
+    </select>
 </mapper>

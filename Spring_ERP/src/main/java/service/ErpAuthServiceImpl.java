@@ -5,6 +5,7 @@ import dto.ErpUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import repository.ErpAuthDAO;
+import repository.ErpUserDAO;
 import util.Pager;
 
 import java.util.HashMap;
@@ -54,5 +55,10 @@ public class ErpAuthServiceImpl implements ErpAuthService {
         result.put("erpAuthList", erpAuthList);
 
         return result;
+    }
+
+    @Override
+    public List<ErpUser> getErpAuthById(Map<String, Object> map) {
+        return erpAuthDAO.selectErpAuthById(map);
     }
 }

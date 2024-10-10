@@ -184,10 +184,11 @@
 		                    <td>${newReceiving.productName}</td>
 		                    <td>${productCode}</td>
 		                    <td>${productCategory.brand}</td>
-		                    <td>${productCategory.color}</td>
-		                    <td>${productCategory.type}</td>
-		                    <td>${productCategory.size}</td>
-		                    <td>${productCategory.gender}</td>
+                            <%-- ㅇ --%>
+                            <td>${productCategory.type}</td>
+                            <td>${productCategory.color}</td>
+                            <td>${productCategory.size}</td>
+                            <td>${productCategory.gender}</td>
 		                    <td>${newReceiving.supplierName}</td>
 		                    <td>${newReceiving.ordersQuantity}</td>
 		                    <td>${newReceiving.quantity}</td>

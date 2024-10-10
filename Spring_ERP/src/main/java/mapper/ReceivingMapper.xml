@@ -7,7 +7,7 @@
 	    <selectKey resultType="int" keyProperty="receivingId" order="BEFORE">
 	        select receiving_seq.nextval from dual
 	    </selectKey>
-	    insert into receiving(receivingId,receivingDate,userid,ordersId,warehouseId,quantity,receivingStatus, productCategoryDetails) values (#{receivingId}, sysdate, #{userid}, #{ordersId}, #{warehouseId}, #{quantity}, 4, #{productCategoryDetails})
+	    insert into receiving(receivingId,receivingDate,userid,ordersId,warehouseId,quantity,receivingStatus) values (#{receivingId}, sysdate, #{userid}, #{ordersId}, #{warehouseId}, #{quantity}, 4)
 	</insert>
 	
 	<!-- 발주 목록 개수 조회 (페이징 처리 시 필요) -->

@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.env.Environment;
 
 import dto.ProductCategory;
 import dto.Receiving;
@@ -22,8 +24,11 @@ import util.ProductCategoryParser;
 @Controller
 @RequestMapping("/purchase/receiving")
 @RequiredArgsConstructor
+@PropertySource("classpath:colors.properties")
 public class ReceivingController {
     private final ReceivingService receivingService;
+
+    private final Environment env; // Environment 객체 주입
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -69,11 +74,17 @@ public class ReceivingController {
         // 입고 등록 서비스 호출
         receivingService.addReceiving(receiving);
 
+        String colorCode = productCategory.getColor();
+        String propertyKey = "color." + productCategory.getColor();
+        String propertyValue = env.getProperty(propertyKey);
+
+        productCategory.setColor(propertyValue);
+
         // 등록된 입고 정보 다시 조회하여 모델에 추가
         Receiving newReceiving = receivingService.getReceivingById(receiving.getReceivingId());
         model.addAttribute("newReceiving", newReceiving);
         model.addAttribute( "productCategory",productCategory);
-        String productCode = "" + productCategory.getBrand() + " " + productCategory.getType() + " " + productCategory.getColor() + " " + productCategory.getSize() + " " + productCategory.getGender();
+        String productCode = "" + productCategory.getBrand() + " " + colorCode + " " + productCategory.getColor() + " " + productCategory.getSize() + " " + productCategory.getGender();
         System.out.println(productCode);
         model.addAttribute("productCode", productCode);
 

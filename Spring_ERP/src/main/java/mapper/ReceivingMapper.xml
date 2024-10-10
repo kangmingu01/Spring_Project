@@ -7,7 +7,7 @@
 	    <selectKey resultType="int" keyProperty="receivingId" order="BEFORE">
 	        select receiving_seq.nextval from dual
 	    </selectKey>
-	    insert into receiving(receivingId,receivingDate,userid,ordersId,warehouseId,quantity,receivingStatus) values (#{receivingId}, sysdate, #{userid}, #{ordersId}, #{warehouseId}, #{quantity}, 4)
+	    insert into receiving values (#{receivingId}, sysdate, #{userid}, #{ordersId}, #{warehouseId}, #{quantity}, 4)
 	</insert>
 	
 	<!-- 발주 목록 개수 조회 (페이징 처리 시 필요) -->
@@ -15,8 +15,10 @@
 	    select count(*) from orders o
 	    join product p on o.product_id = p.product_id
 	    join supplier s on o.supplier_id = s.supplier_id
+	    left join receiving r on o.orders_id = r.orders_id  <!-- receiving 테이블과 조인 -->
 	    <where>
 	        o.orders_status = 2 <!-- 발주 상태가 2인 항목만 필터링 -->
+	        and (r.receiving_status is null or r.receiving_status != 4)  <!-- 입고 등록 완료 항목 제외 -->
 	        <!-- 제품명 검색 조건 -->
 	        <if test="productName != null and productName != ''">
 	            and product_name like '%' || #{productName} || '%'
@@ -38,8 +40,10 @@
 	        join product p on o.product_id = p.product_id
 	        join supplier s on o.supplier_id = s.supplier_id
 	        join erp_user u on o.userid = u.userid
+	        left join receiving r on o.orders_id = r.orders_id  <!-- receiving 테이블과 조인 -->
 	        <where>
 	            o.orders_status = 2
+	             and (r.receiving_status is null or r.receiving_status != 4)  <!-- 입고 등록 완료 항목 제외 -->
 	            <if test="productName != null and productName != ''">
 	                and p.product_name like '%' || #{productName} || '%'
 	            </if>

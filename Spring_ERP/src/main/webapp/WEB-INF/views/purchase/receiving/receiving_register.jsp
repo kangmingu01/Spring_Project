@@ -149,7 +149,14 @@
             <input type="number" id="quantity" name="quantity" required/>
           </div>
         </div>
+        <div>
         <div></div>
+        <c:if test="${not empty errorMessage}">
+		    <div style="color: red;">
+		        ${errorMessage}
+		    </div>
+		</c:if>
+        </div>
       </div>
        </form>
 
@@ -183,8 +190,7 @@
 		                    <td>${newReceiving.productId}</td>
 		                    <td>${newReceiving.productName}</td>
 		                    <td>${productCode}</td>
-		                    <td>${productCategory.brand}</td>
-                            <%-- ㅇ --%>
+		                    <td>${productCategory.brand}</td>                            
                             <td>${productCategory.type}</td>
                             <td>${productCategory.color}</td>
                             <td>${productCategory.size}</td>
@@ -205,6 +211,7 @@
   </div>
 
   <!-- 발주 목록 모달 -->
+  
   <div class="modal fade" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="max-width: 61%;">
           <div class="modal-content">
@@ -298,37 +305,40 @@
 					</tbody>
                  </table>
                  <div class="pagination">
-                <div style="text-align: center;">
-                    <c:choose>
-                        <c:when test="${pager.startPage > pager.blockSize}">
-                            <button type="button" onclick="loadProductPage(${pager.prevPage})" class="btn btn-link">[이전]</button>
-                        </c:when>
-                        <c:otherwise>
-                            <span>[이전]</span>
-                        </c:otherwise>
-                    </c:choose>
-
-                    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-                        <c:choose>
-                            <c:when test="${pager.pageNum != i}">
-                                <button type="button" onclick="loadProductPage(${i})" class="btn btn-link">[${i}]</button>
-                            </c:when>
-                            <c:otherwise>
-                                <span>[${i}]</span>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-
-                    <c:choose>
-                        <c:when test="${pager.endPage != pager.totalPage}">
-                            <button type="button" onclick="loadProductPage(${pager.nextPage})" class="btn btn-link">[다음]</button>
-                        </c:when>
-                        <c:otherwise>
-                            <span>[다음]</span>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-                </div>
+				    <!-- 이전 페이지 링크 -->
+				    <c:choose>
+				        <c:when test="${pager != null && pager.startPage > 1}">
+				            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
+				        </c:when>
+				        <c:otherwise>
+				            [이전]
+				        </c:otherwise>
+				    </c:choose>
+				
+				    <!-- 페이지 번호 링크 -->
+				    <c:if test="${pager != null}">
+				        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+				            <c:choose>
+				                <c:when test="${pager.pageNum != i}">
+				                    <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
+				                </c:when>
+				                <c:otherwise>
+				                    [${i}]
+				                </c:otherwise>
+				            </c:choose>
+				        </c:forEach>
+				    </c:if>
+				
+				    <!-- 다음 페이지 링크 -->
+				    <c:choose>
+				        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+				            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
+				        </c:when>
+				        <c:otherwise>
+				            [다음]
+				        </c:otherwise>
+				    </c:choose>
+				</div>
              </div>
          </div>
      </div>
@@ -477,8 +487,11 @@
 	        document.querySelector(".content_header_registers_btn").onclick = null;
 	    }
 	}
-
-
+	
+	function loadProductPage(pageNumber) {
+	    const url = `/purchase/receiving/ordersList?pageNum=${pageNumber}&pageSize=10`;
+	    window.location.href = url;
+	}
 
 	</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

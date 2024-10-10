@@ -403,6 +403,10 @@
 	    		contentType : "application/json",
 	    		data: JSON.stringify({"productCategory":productCategory,"productName":productName,"productPrice":productPrice,"deliveryPrice":deliveryPrice }),
 	    		dataType:"text",
+	    		beforeSend: function(xhr) {
+		            // CSRF 토큰 추가
+		            xhr.setRequestHeader(csrfHeader, csrfToken);
+		        },
 	    		success: function(){
 	    			init();
 	    			$(".content_body_list").empty();
@@ -444,6 +448,10 @@
 	    		contentType : "application/json",
 	    		data: JSON.stringify({"warehouseName":warehouseName,"warehouseLocation":warehouseLocation,"warehouseCapacity":warehouseCapacity }),
 	    		dataType:"text",
+	    		beforeSend: function(xhr) {
+		            // CSRF 토큰 추가
+		            xhr.setRequestHeader(csrfHeader, csrfToken);
+		        },
 	    		success: function(){
 	    			init();
 	    			$(".content_body_list").empty();

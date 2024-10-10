@@ -54,7 +54,8 @@
                     </ul>
                 </div>
             </li>
-            <%-- 구매팀 부분 --%>
+            <%--
+            <%-- 구매팀 부분 --%> 
             <li class="nav-item">
                 <a
                         class="nav-link"
@@ -78,9 +79,13 @@
                         <li class="nav-item">
                             <a href="<c:url value="/purchase/orders/list"/>" class="nav-link">발주 조회</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/receiving/register"/>" class="nav-link">입고 등록</a>
+                        </li>
                     </ul>
                 </div>
             </li>
+            
             <%-- 재고팀 부분 --%>
             <li class="nav-item">
                 <a

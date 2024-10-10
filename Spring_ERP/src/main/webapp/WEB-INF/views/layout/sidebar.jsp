@@ -71,7 +71,7 @@
                 <div class="collapse" data-bs-parent="#sidebarNav" id="orderingSidebar">
                     <ul class="nav sub-menu">
                         <li class="nav-item">
-                            <a href="<c:url value="/purchase/supplier/manage"/>" class="nav-link">공급업체</a>
+                            <a href="<c:url value="/purchase/supplier/manage"/>" class="nav-link">공급업체 관리</a>
                         </li>
                         <li class="nav-item">
                             <a href="<c:url value="/purchase/orders/register"/>" class="nav-link">발주 등록</a>
@@ -81,6 +81,12 @@
                         </li>
                         <li class="nav-item">
                             <a href="<c:url value="/purchase/receiving/register"/>" class="nav-link">입고 등록</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/receiving/list"/>" class="nav-link">입고 조회</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/settlement/list"/>" class="nav-link">구매정산 조회</a>
                         </li>
                     </ul>
                 </div>

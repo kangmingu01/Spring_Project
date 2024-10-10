@@ -80,6 +80,7 @@ public class OrdersController {
         Map<String, Object> productMap = new HashMap<>();
         productMap.put("pageNum", "1");
         productMap.put("pageSize", "10");
+        
         Map<String, Object> productResult = ordersService.getProductList(productMap);
         model.addAttribute("productList", productResult.get("productList"));
 

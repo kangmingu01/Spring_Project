@@ -146,16 +146,14 @@
           </div>
           <div>
             <label>통과수량</label>
-            <input type="number" id="quantity" name="quantity" required/>
+            <input type="number" id="quantity" name="quantity" required />
           </div>
         </div>
         <div>
         <div></div>
-        <c:if test="${not empty errorMessage}">
-		    <div style="color: red;">
-		        ${errorMessage}
-		    </div>
-		</c:if>
+        <div>
+        <span id="quantity-error" style="color:red; display:none; font-size: 12px">통과수량은 발주수량을 초과할 수 없습니다.</span>
+        </div>
         </div>
       </div>
        </form>
@@ -344,7 +342,7 @@
      </div>
  </div>
 
-  <script>
+<script>
   document.addEventListener("DOMContentLoaded", function () {
 	    // 입고일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
 	    const receivingDateInput = document.getElementById("receivingDate");
@@ -368,6 +366,21 @@
 	            document.querySelector(".content_header_registers_btn").onclick = null;
 	        }
 	    }
+
+	    // 통과 수량 검증 및 경고 메시지 처리
+	    document.getElementById("quantity").addEventListener("input", function() {
+	        const ordersQuantity = parseInt(document.getElementById("ordersQuantity").value); // 발주수량
+	        const quantity = parseInt(this.value); // 입력된 통과수량
+	        const errorSpan = document.getElementById("quantity-error"); // 에러 메시지 표시할 span
+
+	        // 통과수량이 발주수량을 초과하면 경고 메시지 표시
+	        if (quantity > ordersQuantity) {
+	            errorSpan.style.display = "inline";  // 에러 메시지 표시
+	            this.value = "";  // 잘못된 입력값 제거
+	        } else {
+	            errorSpan.style.display = "none";  // 에러 메시지 숨김
+	        }
+	    });
 
 	    // 입력 필드에 이벤트 리스너 추가
 	    document.getElementById("ordersId").addEventListener("input", checkFields);
@@ -454,6 +467,18 @@
 
 	// 폼 제출 함수
 	function submitForm(formId) {
+	    const ordersQuantity = parseInt(document.getElementById("ordersQuantity").value);
+	    const quantity = parseInt(document.getElementById("quantity").value);
+	    const errorSpan = document.getElementById("quantity-error");
+
+	    // 통과수량이 발주수량을 초과하는지 확인
+	    if (quantity > ordersQuantity) {
+	        errorSpan.style.display = "inline"; // 에러 메시지 표시
+	        return; // 폼 제출 중단
+	    } else {
+	        errorSpan.style.display = "none";  // 에러 메시지 숨김
+	    }
+
 	    document.getElementById(formId).submit();
 	}
 
@@ -492,8 +517,8 @@
 	    const url = `/purchase/receiving/ordersList?pageNum=${pageNumber}&pageSize=10`;
 	    window.location.href = url;
 	}
+</script>
 
-	</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

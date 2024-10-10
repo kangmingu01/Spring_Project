@@ -75,17 +75,17 @@ public class ReceivingController {
         String userId = principal.getName();
         receiving.setUserid(userId);
         
-        // 발주 정보를 조회하여 발주 수량을 가져옴
+        // 통과 수량이 발주 수량을 초과하는지 확인하는 부분
         Receiving existingOrder = receivingService.getReceivingById(receiving.getOrdersId());
         int ordersQuantity = existingOrder.getOrdersQuantity(); // 발주 수량
         int receivingQuantity = receiving.getQuantity(); // 입력된 입고 수량
 
-        // 입고 수량이 발주 수량을 초과하는지 확인
         if (receivingQuantity > ordersQuantity) {
-            // 발주 수량을 초과하는 경우 오류 메시지를 설정하고 다시 등록 페이지로 리다이렉트
+            // 통과 수량이 발주 수량을 초과하는 경우 오류 메시지 설정
             model.addAttribute("errorMessage", "통과수량은 발주수량을 초과할 수 없습니다.");
             return "purchase/receiving/receiving_register";
         }
+
 
         // 입고 등록 서비스 호출 (수량이 문제 없을 경우)
         receivingService.addReceiving(receiving);

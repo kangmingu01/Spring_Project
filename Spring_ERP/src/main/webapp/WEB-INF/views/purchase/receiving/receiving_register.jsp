@@ -370,9 +370,9 @@
 	    }
 
 	    // 입력 필드에 이벤트 리스너 추가
+	    document.getElementById("ordersId").addEventListener("input", checkFields);
 	    document.getElementById("quantity").addEventListener("input", checkFields);
 	    document.getElementById("warehouse").addEventListener("change", checkFields);
-	    document.getElementById("ordersId").addEventListener("input", checkFields);
 
 	    // 초기 상태에서 버튼 비활성화
 	    checkFields();

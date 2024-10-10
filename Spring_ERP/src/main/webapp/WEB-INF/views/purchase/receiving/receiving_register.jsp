@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%> 
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -8,7 +8,7 @@
 <head>
  <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reset.css' />">    
+    <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reset.css' />">
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/purchase.css' />">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
@@ -18,6 +18,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <style>
+        th, td {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,7 +42,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
               <path d="M8 4a.5.5 0 0 1 .5.5V7.5H11.5a.5.5 0 0 1 0 1H8.5V11.5a.5.5 0 0 1-1 0V8.5H4.5a.5.5 0 0 1 0-1H7.5V4.5A.5.5 0 0 1 8 4z"/>
               <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zM8 14A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
-            </svg>   
+            </svg>
           </div>
           <span>등록</span>
         </div>
@@ -53,7 +58,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- 바디부분 -->
     <div class="content_body">
       <!-- 입고 등록 폼 -->
@@ -62,33 +67,33 @@
       <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
       <input type="hidden" name="userId" value="${userId}" />
         <div>
-          <div> 
+          <div>
             <label>입고일자</label>
             <input type="date" id="receivingDate" name="receivingDate" readonly class="read-only-field" />
           </div>
           <div>
             <label>발주번호</label>
-            <input type="text" name="ordersId" class="result" id="ordersId" readonly style="background-color: #e9e9e9;" />           
+            <input type="text" name="ordersId" class="result" id="ordersId" readonly style="background-color: #e9e9e9;" />
           </div>
-          
+
           <div>
             <label>제품번호</label>
-            <input type="text" name="productId" class="result" id="productId" readonly style="background-color: #e9e9e9;" />           
-          </div>  
+            <input type="text" name="productId" class="result" id="productId" readonly style="background-color: #e9e9e9;" />
+          </div>
           <div>
             <label>제품명</label>
             <input type="text" id="productName" name="productName" readonly class="read-only-field" />
           </div>
          </div>
-         <div>          
+         <div>
            <div>
             <label>제품코드</label>
             <input type="text" id="productCategoryDetails" name="productCategoryDetails" readonly class="read-only-field" />
-          </div> 
+          </div>
           <div>
             <label>브랜드</label>
             <input type="text" id="brand" name="brand" readonly class="read-only-field"/>
-          </div>   
+          </div>
           <div>
             <label>종류</label>
             <input type="text" id="type" name="type" readonly class="read-only-field"/>
@@ -98,7 +103,7 @@
              <input type="text" id="color" name="color" readonly class="read-only-field"/>
           </div>
           </div>
-          <div>          
+          <div>
           <div>
             <label>사이즈</label>
              <input type="text" id="size" name="size" readonly class="read-only-field"/>
@@ -125,9 +130,9 @@
               <label>납기일</label>
                <input type="date" id="deliveryDate" name="deliveryDate" style="text-align: left;" readonly class="read-only-field" />
             </div>
-          </div>         
+          </div>
       </div>
-      
+
       <div class="content_body_search_price">
         <div>
           <div>
@@ -142,19 +147,19 @@
           <div>
             <label>통과수량</label>
             <input type="number" id="quantity" name="quantity" required/>
-          </div>          
+          </div>
         </div>
         <div></div>
       </div>
        </form>
-      
+
       <!-- 테이블 부분 -->
       <div class="content_body_list">
         <table>
           <thead>
             <tr>
               <th>발주번호</th>
-              <th>제품번호</th>              
+              <th>제품번호</th>
               <th>제품명</th>
               <th>제품코드</th>
               <th>브랜드</th>
@@ -164,25 +169,25 @@
               <th>성별</th>
               <th>공급업체</th>
               <th>발주수량</th>
-              <th style="color: red;">통과수량</th>                        
+              <th style="color: red;">통과수량</th>
               <th style="color: red;">단가</th>
-              <th style="color: red;">총액</th> 
-              <th style="color: red;">납기일</th>   
-              <th>창고</th> 
+              <th style="color: red;">총액</th>
+              <th style="color: red;">납기일</th>
+              <th>창고</th>
             </tr>
           </thead>
           <tbody id="receivingTable" class="sty">
              <c:if test="${not empty newReceiving}">
 		                <tr>
 		                    <td>${newReceiving.ordersId}</td>
-		                    <td>${newReceiving.productId}</td>		                   
+		                    <td>${newReceiving.productId}</td>
 		                    <td>${newReceiving.productName}</td>
-		                    <td>${newReceiving.productCategoryDetails}</td>
-		                    <td>${newReceiving.productCategoryDetails.brand}</td>
-		                    <td>${newReceiving.productCategoryDetails.type}</td>
-		                    <td>${newReceiving.productCategoryDetails.color}</td>
-		                    <td>${newReceiving.productCategoryDetails.size}</td>
-		                    <td>${newReceiving.productCategoryDetails.gender}</td>
+		                    <td>${productCode}</td>
+		                    <td>${productCategory.brand}</td>
+		                    <td>${productCategory.color}</td>
+		                    <td>${productCategory.type}</td>
+		                    <td>${productCategory.size}</td>
+		                    <td>${productCategory.gender}</td>
 		                    <td>${newReceiving.supplierName}</td>
 		                    <td>${newReceiving.ordersQuantity}</td>
 		                    <td>${newReceiving.quantity}</td>
@@ -215,7 +220,7 @@
                  <table class="table" id="productTable">
                      <thead>
               <tr>
-                <th>발주번호</th>                
+                <th>발주번호</th>
                 <th>제품번호</th>
                 <th>제품명</th>
                 <th>제품코드</th>
@@ -234,8 +239,8 @@
             <tbody>
 			   <c:forEach var="orders" items="${ordersResult}">
 			    <tr>
-			        <td>${orders.ordersId}</td>			        
-			        <td>${orders.productId}</td>			        
+			        <td>${orders.ordersId}</td>
+			        <td>${orders.productId}</td>
 			        <td>${orders.productName}</td>
 			        <td>
 					    <!-- 카테고리 출력 부분 -->
@@ -265,11 +270,11 @@
 			        <td>${orders.productPrice}</td>
 			        <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
 			        <td>
-				    <button type="button" 
+				    <button type="button"
 				    onclick="selectOrders({
-				        ordersId: '${fn:escapeXml(orders.ordersId)}', 
-				        productId: '${fn:escapeXml(orders.productId)}', 
-				        productName: '${fn:escapeXml(orders.productName)}', 
+				        ordersId: '${fn:escapeXml(orders.ordersId)}',
+				        productId: '${fn:escapeXml(orders.productId)}',
+				        productName: '${fn:escapeXml(orders.productName)}',
 				        productCategoryDetails: {
 				            brand: '${fn:escapeXml(orders.productCategoryDetails.brand)}',
 				            type: '${fn:escapeXml(orders.productCategoryDetails.type)}',
@@ -277,9 +282,9 @@
 				            size: '${fn:escapeXml(orders.productCategoryDetails.size)}',
 				            gender: '${fn:escapeXml(orders.productCategoryDetails.gender)}'
 				        },
-				        supplierName: '${fn:escapeXml(orders.supplierName)}', 
-				        ordersQuantity: '${fn:escapeXml(orders.ordersQuantity)}', 
-				        productPrice: '${fn:escapeXml(orders.productPrice)}', 
+				        supplierName: '${fn:escapeXml(orders.supplierName)}',
+				        ordersQuantity: '${fn:escapeXml(orders.ordersQuantity)}',
+				        productPrice: '${fn:escapeXml(orders.productPrice)}',
 				        deliveryDate: '${fn:substring(orders.deliveryDate, 0, 10)}'
 				    })">
 				    선택
@@ -291,7 +296,7 @@
 					</c:forEach>
 					</tbody>
                  </table>
-                 <div class="pagination">                   
+                 <div class="pagination">
                 <div style="text-align: center;">
                     <c:choose>
                         <c:when test="${pager.startPage > pager.blockSize}">
@@ -413,7 +418,7 @@
 	    if (order.productCategoryDetails.gender) {
 	        shortCategory += order.productCategoryDetails.gender.substring(0, 1);
 	    }
-	    
+
 	    document.getElementById("productCategoryDetails").value = shortCategory;
 	    document.getElementById("brand").value = order.productCategoryDetails.brand;
 	    document.getElementById("type").value = order.productCategoryDetails.type;
@@ -453,7 +458,7 @@
 	    ordersTable.innerHTML = '';
 	    checkFields(); // 필드 초기화 후 다시 필드 체크
 	}
-	
+
 	// 필수 입력 필드 확인 후 등록 버튼 활성화
 	function checkFields() {
 	    const ordersId = document.getElementById("ordersId").value;
@@ -472,7 +477,7 @@
 	    }
 	}
 
-	
+
 
 	</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

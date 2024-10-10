@@ -58,7 +58,7 @@ public class ReceivingController {
  // 입고 등록 처리 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute Receiving receiving, Principal principal, Model model) {
+    public String register(@ModelAttribute ProductCategory productCategory, @ModelAttribute Receiving receiving, Principal principal, Model model) {
         // 로그로 productCategoryDetails 확인
         System.out.println("Received Product Category Details: " + receiving.getProductCategoryDetails());
         
@@ -72,6 +72,10 @@ public class ReceivingController {
         // 등록된 입고 정보 다시 조회하여 모델에 추가
         Receiving newReceiving = receivingService.getReceivingById(receiving.getReceivingId());
         model.addAttribute("newReceiving", newReceiving);
+        model.addAttribute( "productCategory",productCategory);
+        String productCode = "" + productCategory.getBrand() + " " + productCategory.getType() + " " + productCategory.getColor() + " " + productCategory.getSize() + " " + productCategory.getGender();
+        System.out.println(productCode);
+        model.addAttribute("productCode", productCode);
 
         // 여기서 ProductCategory 설정 확인
         if (newReceiving != null) {

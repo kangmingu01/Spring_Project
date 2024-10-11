@@ -39,4 +39,6 @@ public class Receiving {
     private String supplierName;     
     private String warehouseName;    
     private String name;
+    
+    private int ordersStatus;
 }

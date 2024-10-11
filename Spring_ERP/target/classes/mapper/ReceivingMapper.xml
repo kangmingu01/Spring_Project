@@ -84,7 +84,10 @@
 	    left join erp_user u on r.userid = u.userid
 	    left join warehouse w on r.warehouse_id = w.warehouse_id
 	    <where>
-	        (o.orders_status = 2 or r.receiving_status = 4)  <!-- 발주 대기와 입고 완료 조건 -->
+	        (o.orders_status = 2 or r.receiving_status = 4)
+	        <if test="receivingStatus != null and receivingStatus != ''">
+                and r.receiving_status = #{receivingStatus}
+            </if>    
 	        <if test="receivingId != null and receivingId != ''">
 	            and r.receiving_id = #{receivingId}
 	        </if>
@@ -126,15 +129,18 @@
 	            select r.receiving_id, r.receiving_date, o.orders_id, r.userid, u.name,
 	                   o.supplier_id, o.product_id, o.orders_quantity, o.product_price,
 	                   o.delivery_date, r.receiving_status, p.product_name, p.product_category,
-	                   s.supplier_name, r.quantity, r.warehouse_id, w.warehouse_name
+	                   s.supplier_name, r.quantity, r.warehouse_id, w.warehouse_name, o.orders_status
 	            from orders o
-	            left join receiving r on r.orders_id = o.orders_id  <!-- LEFT JOIN 사용 -->
+	            left join receiving r on r.orders_id = o.orders_id  
 	            left join product p on o.product_id = p.product_id
 	            left join supplier s on o.supplier_id = s.supplier_id
 	            left join erp_user u on r.userid = u.userid
 	            left join warehouse w on r.warehouse_id = w.warehouse_id
 	            <where>
-	                (o.orders_status = 2 or r.receiving_status = 4)  <!-- 발주 대기와 입고 완료 상태 모두 가져오기 -->
+	                (o.orders_status = 2 or r.receiving_status = 4)
+	                <if test="receivingStatus != null and receivingStatus != ''">
+	                    and r.receiving_status = #{receivingStatus}
+	                </if>  
 	                <if test="receivingId != null and receivingId != ''">
 	                    and r.receiving_id = #{receivingId}
 	                </if>
@@ -166,10 +172,10 @@
 	                    and r.warehouse_id = #{wareHouseId}
 	                </if>                
 	            </where>
-	            order by r.receiving_id desc  <!-- 정렬 기준 -->
+	            order by r.receiving_id desc  
 	        ) receivingData
 	    )
-	    where rn between #{startRow} and #{endRow}  <!-- 페이징 처리 -->
+	    where rn between #{startRow} and #{endRow} 
 	</select>
 
 	<!-- 입고 정보 수정 (발주 대기 상태일 때) -->

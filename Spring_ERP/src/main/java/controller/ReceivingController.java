@@ -1,5 +1,7 @@
 package controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.HashMap;
@@ -146,7 +148,12 @@ public class ReceivingController {
     // 입고 목록 페이지 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String listReceiving(@RequestParam Map<String, Object> map, Model model, Principal principal) {
+    public String listReceiving( @RequestParam(required = false) String receivingStatus,@RequestParam Map<String, Object> map
+    		, Model model, Principal principal) {
+    	
+    	 // receivingStatus 값 확인 로그
+        System.out.println("receivingStatus: " + receivingStatus);
+        
         // 로그인한 사용자 아이디 추가
         String userId = principal.getName(); 
         model.addAttribute("userId", userId);
@@ -170,10 +177,9 @@ public class ReceivingController {
         map.putIfAbsent("supplierId", "");
         map.putIfAbsent("deliveryDate", "");
         map.putIfAbsent("wareHouseId", "");
-       
-        map.put("ordersStatus", "2");  // 발주 대기
-        map.put("receivingStatus", "4");  // 입고 완료
         
+        map.put("receivingStatus", receivingStatus != null ? receivingStatus : "");
+ 
         // 입고 목록 조회 (페이징 처리 및 검색 포함)
         Map<String, Object> resultMap = receivingService.getReceivingList(map);
 

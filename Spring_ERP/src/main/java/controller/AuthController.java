@@ -43,7 +43,6 @@ public class AuthController {
     /* 검색시 권한 대상의 ID를 반환할 수 있게 */
     @RequestMapping("/searchId")
     public String searchIdGet(@RequestParam Map<String, Object> map, @RequestParam("searchType") String searchType, Model model) {
-        System.out.println("GET:" + searchType);
         if(searchType.equals("userid")) {
             model.addAttribute("searchType", searchType);
             model.addAttribute("resultMap", erpUserService.getErpUserList(map));

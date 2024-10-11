@@ -295,49 +295,14 @@
 				    })">
 				    선택
 				</button>
-
-
 				</td>
 			    </tr>
 					</c:forEach>
 					</tbody>
                  </table>
-              <div style="text-align: center;">
-    <!-- 이전 페이지 링크 -->
-    <c:choose>
-        <c:when test="${pager != null && pager.startPage > 1}">
-            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
-        </c:when>
-        <c:otherwise>
-            [이전]
-        </c:otherwise>
-    </c:choose>
-    
-    <!-- 페이지 번호 링크 -->
-     <c:if test="${pager != null}">
-    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-        <c:choose>
-            <c:when test="${pager.pageNum != i}">
-                <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
-            </c:when>
-            <c:otherwise>
-                [${i}]
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
-    </c:if> 
-    <!-- 다음 페이지 링크 -->
-    <c:choose>
-        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
-        </c:when>
-        <c:otherwise>
-            [다음]
-        </c:otherwise>
-    </c:choose>
-</div>
-
-
+			              <div id="pagination" style="text-align:center;">
+			    <!-- Ajax로 페이징 번호가 동적으로 여기에 추가됩니다 -->
+			</div>
              </div>
          </div>
      </div>
@@ -514,10 +479,109 @@
 	    }
 	}
 	
-	function loadProductPage(pageNumber) {
-	    const url = `/purchase/receiving/ordersList?pageNum=${pageNumber}&pageSize=10`;
-	    window.location.href = url;
+	function loadOrdersPage(pageNum, searchQuery = '') {
+		var csrfToken = $('meta[name="_csrf"]').attr('content');
+	    var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+	    $.ajax({
+	    	url: '/purchase/receiving/ordersList', 
+	        type: 'GET',
+	        data: {
+	            pageNum: pageNum,
+	            pageSize: 10,
+	            productName: searchQuery
+	        },
+	        beforeSend: function(xhr) {
+	            // CSRF 토큰을 헤더에 추가
+	            xhr.setRequestHeader(csrfHeader, csrfToken);
+	        },
+	        success: function(response) {
+	            if (response.ordersList) {
+	                var ordersTableBody = $('#productTable tbody');
+	                ordersTableBody.empty();  // 기존 내용을 지우고
+
+	                $.each(response.ordersList, function(index, order) {
+	                    var newRow = `
+	                        <tr>
+	                            <td>${order.ordersId}</td>
+	                            <td>${order.productId}</td>
+	                            <td>${order.productName}</td>
+	                            <td>${order.productCategoryDetails.brand} ${order.productCategoryDetails.type} ${order.productCategoryDetails.color} ${order.productCategoryDetails.size} ${order.productCategoryDetails.gender}</td>
+	                            <td>${order.supplierName}</td>
+	                            <td>${order.ordersQuantity}</td>
+	                            <td>${order.productPrice}</td>
+	                            <td>${order.deliveryDate.substring(0, 10)}</td>
+	                            <td><button type="button" onclick="selectOrders(${order})">선택</button></td>
+	                        </tr>`;
+	                    ordersTableBody.append(newRow);
+	                });
+
+	                // 페이징 업데이트
+	                updatePagination(response.pager);
+	            }
+	        },
+
+	        error: function(xhr, status, error) {
+	            console.log("상태: " + status);
+	            console.log("오류: " + error);
+	            console.log("응답 텍스트: " + xhr.responseText);
+	        }
+	    });
 	}
+
+	function updatePagination(pager) {
+	    var pagination = $('#pagination');
+	    pagination.empty();  // 기존 페이지 링크 삭제
+
+	    // 이전 페이지 링크
+	    if (pager.startPage > 1) {
+	        pagination.append(`<a href="#" onclick="loadOrdersPage(${pager.prevPage})">[이전]</a>`);
+	    }
+
+	    // 페이지 번호 링크
+	    for (var i = pager.startPage; i <= pager.endPage; i++) {
+	        if (i === pager.pageNum) {
+	            pagination.append(`<span>[${i}]</span>`);
+	        } else {
+	            pagination.append(`<a href="#" onclick="loadOrdersPage(${i})">[${i}]</a>`);
+	        }
+	    }
+
+	    // 다음 페이지 링크
+	    if (pager.endPage < pager.totalPage) {
+	        pagination.append(`<a href="#" onclick="loadOrdersPage(${pager.nextPage})">[다음]</a>`);
+	    }
+	}
+
+
+
+	function updatePagination(pager) {
+	    var pagination = $('#pagination');
+	    pagination.empty();  // 기존 페이지 링크 삭제
+
+	    // 이전 페이지 링크
+	    if (pager.startPage > 1) {
+	        pagination.append(`<a href="#" onclick="loadOrdersPage(${pager.prevPage})">[이전]</a>`);
+	    }
+
+	    // 페이지 번호 링크
+	    for (var i = pager.startPage; i <= pager.endPage; i++) {
+	        if (i === pager.pageNum) {
+	            pagination.append(`<span>[${i}]</span>`);
+	        } else {
+	            pagination.append(`<a href="#" onclick="loadOrdersPage(${i})">[${i}]</a>`);
+	        }
+	    }
+
+	    // 다음 페이지 링크
+	    if (pager.endPage < pager.totalPage) {
+	        pagination.append(`<a href="#" onclick="loadOrdersPage(${pager.nextPage})">[다음]</a>`);
+	    }
+	}
+	$(document).ready(function() {
+	    loadOrdersPage(1);  // 첫 번째 페이지 로드
+	});
+
+
 </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

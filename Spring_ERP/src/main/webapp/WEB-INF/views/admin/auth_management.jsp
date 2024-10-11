@@ -131,7 +131,7 @@
       권한 관리
     </div>
 
-    <form action="<c:url value='/admin/auth'/>" method="post">
+    <form action="<c:url value='/admin/auth'/>" method="post" >
       <div class="row g-2 align-items-center">
         <div class="col-4">
           <select name="column" class="form-select">
@@ -355,8 +355,8 @@
     var screenWidth = window.screen.width;
     var screenHeight = window.screen.height;
 
-    var popupWidth = 500;
-    var popupHeight = 300;
+    var popupWidth = 700;
+    var popupHeight = 500;
 
     // 창을 화면 가운데에 위치시키기 위한 좌표 계산
     var left = (screenWidth / 2) - (popupWidth / 2);

@@ -69,67 +69,173 @@
 <body>
 <header class="content d-md-flex justify-content-between pt-2 pb-2 ps-4 pe-4 align-items-center">
     <div class="container title fw-bold">
-        아이디 중복체크
+        대상 검색 ${searchType}
     </div>
 </header>
-<section class="container mt-3">
+<section class="">
     <c:choose>
-        <c:when test="${check == 0}">
-            <p>입력된 [${userid}]는 사용 가능한 아이디입니다.</p>
-            <button type="button" onclick="selectId()">아이디 사용</button>
+        <c:when test="${searchType == 'userid'}">
+            <div class="content d-md-flex justify-content-center pt-2 pb-2 ps-4 pe-4 align-items-center">
+
+                <form action="<c:url value='/admin/searchId'/>" method="post">
+                    <input type="hidden" name="column" value="name">
+                    <input type="hidden" name="searchType" value="userid">
+                    <div class="row ">
+
+                        <div class="col-11">
+                            <input type="text" class="form-control" name="keyword" placeholder="유저 이름으로 입력하세요">
+                        </div>
+                        <div class="col-1 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary text-white d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                                     class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
+                                <span class="ms-2 text-nowrap">조회</span>
+                            </button>
+                        </div>
+                    </div>
+                    <sec:csrfInput/>
+                </form>
+            </div>
+            <main style="overflow-x: auto" class="flex-fill">
+                    <%-- 값 넘어오는지 테스트 --%>
+                <c:out value="${resultMap.erpAuthList}"/>
+                    <%-- 유저 정보를 볼 수 있는 테이블 --%>
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="text-center fs-6">유저 이름</th>
+                        <th scope="col" class="text-center fs-6">유저 ID</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <c:choose>
+                        <c:when test="${empty resultMap.erpUserList}">
+                            <tr>
+                                <td colspan="12" class="text-center">검색된 유저가 없습니다</td>
+                            </tr>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="erpUser" items="${resultMap.erpUserList}">
+                                <tr>
+                                    <td class="align-middle text-center">${erpUser.name}</td>
+                                    <td class="align-middle text-center">${erpUser.userid}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning" onclick="selectId('${erpUser.userid}')">선택</button>
+
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                </table>
+            </main>
         </c:when>
-        <c:otherwise>
-            <p>입력하신 아이디 <strong>[${userid}]</strong> 는 이미 사용 중입니다.</p>
-            <p>새로운 아이디를 입력한 후 <strong>[확인]</strong> 버튼을 눌러 주세요.</p>
+        <c:when test="${searchType == 'orgId'}">
+            <div class="content d-md-flex justify-content-center pt-2 pb-2 ps-4 pe-4 align-items-center">
 
-            <form action="<c:url value='/admin/idCheck'/>" method="post" id="id_check_form">
-                <div class="input-group mb-3">
-                    <!-- 아이디 입력 필드 -->
-                    <div class="form-floating flex-grow-1">
-                        <input type="text" class="form-control" name="userid" id="userid" placeholder="아이디를 입력하세요"autocomplete="off">
-                        <label for="userid">아이디 입력</label>
+                <form action="<c:url value='/admin/searchId'/>" method="post">
+                    <input type="hidden" name="column" value="org_name">
+                    <input type="hidden" name="searchType" value="orgId">
+                    <div class="row ">
+
+                        <div class="col-11">
+                            <input type="text" class="form-control" name="keyword" placeholder="조직 이름으로 입력하세요">
+                        </div>
+                        <div class="col-1 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary text-white d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                                     class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
+                                <span class="ms-2 text-nowrap">조회</span>
+                            </button>
+                        </div>
                     </div>
-                    <!-- 확인 버튼 -->
-                    <button type="submit" class="btn btn-primary">확인</button>
-                </div>
+                    <sec:csrfInput/>
+                </form>
+            </div>
+            <main style="overflow-x: auto" class="flex-fill">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="text-center fs-6">조직 이름</th>
+                        <th scope="col" class="text-center fs-6">조직 ID</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <c:choose>
+                        <c:when test="${empty resultMap.organizationList}">
+                            <tr>
+                                <td colspan="12" class="text-center">검색된 유저가 없습니다</td>
+                            </tr>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="organization" items="${resultMap.organizationList}">
+                                <tr>
+                                    <td class="align-middle text-center">${organization.orgName}</td>
+                                    <td class="align-middle text-center">${organization.orgId}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning" onclick="selectId('${organization.orgId}')">선택</button>
 
-                <!-- 오류 메시지 -->
-                <div class="mt-2">
-                    <div id="idMsg" class="text-danger" style="display: none;">아이디를 입력해주세요</div>
-                    <div id="idRegMsg" class="text-danger" style="display: none;">
-                        아이디는 영문자로 시작되는 영문자, 숫자의 범위 6~15 범위의 문자로만 작성 가능합니다
-                    </div>
-                </div>
-
-                <sec:csrfInput/>
-            </form>
-        </c:otherwise>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                </table>
+            </main>
+        </c:when>
     </c:choose>
+    <footer class="footer bg-light text-center py-3 position-sticky bottom-0 w-100">
+        <div class="pagination-container">
+            <c:choose>
+                <c:when test="${resultMap.pager.pageNum > 1}">
+                    <a class="btn btn-primary"
+                       href="<c:url value='/admin/searchId'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}&searchType=${searchType}">
+                        &laquo; 이전
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <span class="btn btn-secondary disabled">&laquo; 이전</span>
+                </c:otherwise>
+            </c:choose>
+
+            <c:forEach var="i" begin="${resultMap.pager.startPage}" end="${resultMap.pager.endPage}" step="1">
+                <c:choose>
+                    <c:when test="${resultMap.pager.pageNum == i}">
+                        <span class="btn btn-primary mx-1 active">${i}</span>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="btn btn-outline-primary mx-1"
+                           href="<c:url value='/admin/searchId'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}&searchType=${searchType}">
+                                ${i}
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+
+            <c:choose>
+                <c:when test="${resultMap.pager.pageNum < resultMap.pager.totalPage}">
+                    <a class="btn btn-primary"
+                       href="<c:url value='/admin/searchId'/>?pageNum=${resultMap.pager.pageNum + 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}&searchType=${searchType}">
+                        다음 &raquo;
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <span class="btn btn-secondary disabled">다음 &raquo;</span>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </footer>
 </section>
 <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
 <script>
-    function selectId() {
-        opener.userForm.userid.value = '${userid}';
-        opener.userForm.idCheckResult.value = "1";
+    function selectId(id) {
+        opener.document.getElementById("searchId").value = id;
         window.close();
     }
-
-    var idReg = /^[a-zA-Z]\w{5,19}$/;
-    $("#id_check_form").submit(function () {
-        var submitResult = true;
-
-        $(".error").css("display", "none").css("visibility", "hidden").removeClass("is-invalid");
-        if ($("#userid").val() == "") {
-            $("#idMsg").css("display", "block").css("visibility", "visible");
-            $("#userid").addClass("is-invalid");
-            submitResult = false;
-        } else if (!idReg.test($("#userid").val())) {
-            $("#idRegMsg").css("display", "block").css("visibility", "visible");
-            $("#userid").addClass("is-invalid");
-            submitResult = false;
-        }
-        return submitResult;
-    })
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

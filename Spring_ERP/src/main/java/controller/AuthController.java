@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import service.ErpAuthService;
+import service.ErpUserService;
+import service.OrganizationService;
 
 import java.util.Map;
 
@@ -15,6 +17,8 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AuthController {
     private final ErpAuthService erpAuthService;
+    private final ErpUserService erpUserService;
+    private final OrganizationService organizationService;
 
     /* 탭으로 조절 가능하게 */
     /* 일단 auth 페이지에서 만들고 쪼개기 */
@@ -38,7 +42,20 @@ public class AuthController {
 
     /* 검색시 권한 대상의 ID를 반환할 수 있게 */
     @RequestMapping("/searchId")
-    public String searchid(@RequestParam("searchType") String searchType, Model model) {
+    public String searchIdGet(@RequestParam Map<String, Object> map, @RequestParam("searchType") String searchType, Model model) {
+        System.out.println("GET:" + searchType);
+        if(searchType.equals("userid")) {
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("resultMap", erpUserService.getErpUserList(map));
+            model.addAttribute("searchMap", map);;
+        }
+
+        if(searchType.equals("orgId")) {
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("resultMap", organizationService.getOrganizationList(map));
+            model.addAttribute("searchMap", map);;
+        }
+
         /* 로직 구현 */
         /*
         1. 처음 검색 버튼을 누르면 검색 입력 필드 나옴.(url에는 searchType이 파라미터로 존재)

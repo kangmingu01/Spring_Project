@@ -25,6 +25,10 @@
 		<put-attribute name="footer" value="/WEB-INF/views/layout/footer_template.jsp"/>
 	</definition>
 
+	<definition name="searchId" extends="idCheck">
+		<put-attribute name="content" value="/WEB-INF/views/admin/search_id.jsp"/>
+	</definition>
+
 	<!--
 	<definition name="admin" extends="main">
 		<put-attribute name="header" value="/WEB-INF/views/layout/header_admin.jsp"/>

@@ -44,10 +44,11 @@
         from erp_auth
         <if test="keyword != null and keyword != ''">
             <bind name="word" value="'%' + keyword + '%'"/>
-            ${column} like #{word}
+            <where> ${column} like #{word} </where>
         </if>
         order by userid desc
-        ) erp_auth order by rn desc
+        ) erp_auth
+        order by rn desc
         )
         where rn between #{startRow} and #{endRow}
     </select>
@@ -66,28 +67,5 @@
                 AND org_id = #{value}
             </when>
         </choose>
-    </select>
-
-    <select id="selectUserIdCount" resultType="int">
-        select count(*) from erp_user
-        <if test="keyword != null and keyword != ''">
-            <bind name="word" value="'%'+keyword+'%'"/>
-            where ${column} like #{word}
-        </if>
-    </select>
-
-    <select id="selectUserIdList" resultType="ErpUser">
-        select * from (
-        select rownum rn, erp_auth.* from (
-        select userid, auth, orgId
-        from erp_auth
-        <if test="keyword != null and keyword != ''">
-            <bind name="word" value="'%' + keyword + '%'"/>
-            ${column} like #{word}
-        </if>
-        order by userid desc
-        ) erp_auth order by rn desc
-        )
-        where rn between #{startRow} and #{endRow}
     </select>
 </mapper>

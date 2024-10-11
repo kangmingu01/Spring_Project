@@ -131,14 +131,13 @@
       권한 관리
     </div>
 
-    <form action="<c:url value='/admin/organization'/>" method="post">
+    <form action="<c:url value='/admin/auth'/>" method="post">
       <div class="row g-2 align-items-center">
         <div class="col-4">
           <select name="column" class="form-select">
             <option value="userid" selected>유저 ID</option>
             <option value="orgId">부서 ID</option>
             <option value="auth">권한</option>
-
           </select>
         </div>
         <div class="col-5">
@@ -291,7 +290,7 @@
     <c:choose>
       <c:when test="${resultMap.pager.pageNum > 1}">
         <a class="btn btn-primary"
-           href="<c:url value='/admin/organization'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+           href="<c:url value='/admin/auth'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
           &laquo; 이전
         </a>
       </c:when>
@@ -311,7 +310,7 @@
         </c:when>
         <c:otherwise>
           <a class="btn btn-outline-primary mx-1"
-             href="<c:url value='/admin/organization'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+             href="<c:url value='/admin/auth'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
               ${i}
           </a>
         </c:otherwise>
@@ -321,7 +320,7 @@
     <c:choose>
       <c:when test="${resultMap.pager.pageNum < resultMap.pager.totalPage}">
         <a class="btn btn-primary"
-           href="<c:url value='/admin/organization'/>?pageNum=${resultMap.pager.pageNum + 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
+           href="<c:url value='/admin/auth'/>?pageNum=${resultMap.pager.pageNum + 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
           다음 &raquo;
         </a>
       </c:when>
@@ -337,7 +336,7 @@
 <script>
   /* 중복 검사 */
   $("#idCheck").click(function () {
-    $("#idMsg").css("display", "none").css("visibility", "hidden");
+    /*$("#idMsg").css("display", "none").css("visibility", "hidden");
     $("#idRegMsg").css("display", "none").css("visibility", "hidden");
     $("#idCheckMsg").css("display", "none").css("visibility", "hidden");
 
@@ -350,7 +349,7 @@
       $("#userid").addClass("is-invalid");
       return;
     }
-    $("#userid").removeClass("is-invalid");
+    $("#userid").removeClass("is-invalid");*/
 
     // 화면 크기 및 브라우저 창 크기 계산
     var screenWidth = window.screen.width;

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import dto.Orders;
 import dto.Receiving;
+import dto.Supplier;
 import dto.Warehouse;
 
 public interface ReceivingDAO {
@@ -16,4 +17,5 @@ public interface ReceivingDAO {
 	int selectReceivingCount(Map<String, Object> map);
 	List<Receiving> selectReceivingList(Map<String, Object> map);
 	int updateReceiving(Receiving receiving);
+	List<Supplier> selectSupplierList();
 }

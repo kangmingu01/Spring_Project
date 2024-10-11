@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import dto.Orders;
 import dto.ProductCategory;
 import dto.Receiving;
+import dto.Supplier;
 import dto.Warehouse;
 import lombok.RequiredArgsConstructor;
 import repository.ReceivingDAO;
@@ -146,5 +147,10 @@ public class ReceivingServiceImpl implements ReceivingService {
 	@Override
 	public void modifyReceiving(Receiving receiving) {
 		receivingDAO.updateReceiving(receiving);		
+	}
+
+	@Override
+	public List<Supplier> getSupplierList() {
+		return receivingDAO.selectSupplierList();
 	}
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dto.Orders;
-import dto.Product;
 import dto.ProductCategory;
 import dto.Receiving;
 import dto.Warehouse;
@@ -97,4 +96,55 @@ public class ReceivingServiceImpl implements ReceivingService {
         
         return receiving;
     }
+    // 전체 입고 목록 조회 (페이징 처리 및 검색 기능 포함)
+	@Override
+	public Map<String, Object> getReceivingList(Map<String, Object> map) {
+		// 페이지 번호 설정 (기본값: 1)
+        int pageNum = 1;
+        if (map.get("pageNum") != null && !map.get("pageNum").equals("")) {
+            pageNum = Integer.parseInt((String) map.get("pageNum"));
+        }
+
+        // 페이지 크기 설정 (기본값: 10)
+        int pageSize = 10;
+        if (map.get("pageSize") != null && !map.get("pageSize").equals("")) {
+            pageSize = Integer.parseInt((String) map.get("pageSize"));
+        }
+
+        // 전체 발주 개수 조회
+        int totalReceivingCount = receivingDAO.selectReceivingCount(map);
+
+        // 블록 크기 설정
+        int blockSize = 5;
+
+        // 페이지 정보 생성
+        Pager pager = new Pager(pageNum, pageSize, totalReceivingCount, blockSize);
+
+        // 페이징 정보를 이용하여 데이터 조회
+        map.put("startRow", pager.getStartRow());
+        map.put("endRow", pager.getEndRow());
+        List<Receiving> receivingList = receivingDAO.selectReceivingList(map);
+
+        // 각 입고의 제품 카테고리 정보를 설정
+        for (Receiving receiving : receivingList) {
+            String productCategoryCode = receiving.getProductCategory();
+            if (productCategoryCode != null) {
+                ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);
+                receiving.setProductCategoryDetails(productCategoryDetails);
+            }
+        }
+
+        // 결과 맵 생성
+        Map<String, Object> result = new HashMap<>();
+        result.put("pager", pager);
+        result.put("receivingList", receivingList);
+
+        return result;
+    }
+	
+	@Transactional
+	@Override
+	public void modifyReceiving(Receiving receiving) {
+		receivingDAO.updateReceiving(receiving);		
+	}
 }

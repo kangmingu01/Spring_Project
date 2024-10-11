@@ -13,4 +13,7 @@ public interface ReceivingDAO {
 	List<Orders> selectOrdersList(Map<String, Object> map);
 	List<Warehouse> selectWarehouseList();
 	Receiving selectReceivingById(int receivingId);
+	int selectReceivingCount(Map<String, Object> map);
+	List<Receiving> selectReceivingList(Map<String, Object> map);
+	int updateReceiving(Receiving receiving);
 }

@@ -11,4 +11,7 @@ public interface ReceivingService {
 	Map<String, Object> getOrdersList(Map<String, Object> map);
 	List<Warehouse> getWarehouseList();
 	Receiving getReceivingById(int receivingId);
+	Map<String, Object> getReceivingList(Map<String, Object> map);
+	void modifyReceiving(Receiving receiving);
+	
 }

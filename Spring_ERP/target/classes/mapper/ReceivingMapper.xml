@@ -74,4 +74,123 @@
 	    where r.receiving_id = #{receivingId}
 	</select>
 
+	<!-- 입고 목록 개수 조회 (페이징 처리를 위한 전체 개수) -->
+	<select id="selectReceivingCount" resultType="int">
+		select count(*)
+		from receiving r
+		join orders o on r.orders_id = o.orders_id
+		join product p on o.product_id = p.product_id
+		join supplier s on o.supplier_id = s.supplier_id
+		join erp_user u on r.userid = u.userid
+		join warehouse w on r.warehouse_id = w.warehouse_id
+		<where>
+		    <if test="receivingId != null and receivingId != ''">
+		        r.receiving_id = #{receivingId}
+		    </if>
+		    <if test="receivingDate != null and receivingDate != ''">
+		        and to_char(r.receiving_date, 'YYYY-MM-DD') = #{receivingDate}
+		    </if>
+		    <if test="ordersId != null and ordersId != ''">
+		        o.orders_id = #{ordersId}
+		    </if>
+		    <if test="name != null and name != ''">
+		        and u.name = #{name} 
+		    </if>
+		    <if test="productId != null and productId != ''">
+		        and o.product_id = #{productId}
+		    </if>
+		    <if test="productName != null and productName != ''">
+		        and p.product_name like '%' || #{productName} || '%'
+		    </if>
+		    <if test="brand != null and brand != ''">
+		        and SUBSTR(p.product_category, 1, 2) = #{brand}
+		    </if>
+		    <if test="supplierId != null and supplierId != ''">
+		        and o.supplier_id = #{supplierId}
+		    </if>
+		    <if test="deliveryDate != null and deliveryDate != ''">
+		        and o.delivery_date = #{deliveryDate}
+		    </if>
+		    <if test="wareHouseId != null and wareHouseId != ''">
+		        and r.warehouse_id = #{wareHouseId}
+		    </if>
+		    <if test="receivingStatus != null and receivingStatus != ''">
+		        and r.receiving_status = #{receivingStatus}
+		    </if>
+		    <if test="quantity != null and quantity != ''">
+		        and r.quantity = #{quantity}
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 입고 목록 조회 (페이징 처리 및 검색 기능 포함) -->
+	<select id="selectReceivingList" resultType="Receiving">
+	    select * from (
+	        select rownum rn, receivingData.*
+	        from (
+	            select r.receiving_id, r.receiving_date, o.orders_id, r.userid, u.name,
+	                   o.supplier_id, o.product_id, o.orders_quantity, o.product_price,
+	                   o.delivery_date, r.receiving_status, p.product_name, p.product_category,
+	                   s.supplier_name, r.quantity, r.warehouse_id, w.warehouse_name
+	            from receiving r
+	            join orders o on r.orders_id = o.orders_id
+	            join product p on o.product_id = p.product_id
+	            join supplier s on o.supplier_id = s.supplier_id
+	            join erp_user u on r.userid = u.userid
+	            join warehouse w on r.warehouse_id = w.warehouse_id
+	            <where>
+	                <if test="receivingId != null and receivingId != ''">
+	                    r.receiving_id = #{receivingId}
+	                </if>
+	                <if test="receivingDate != null and receivingDate != ''">
+	                    and to_char(r.receiving_date, 'YYYY-MM-DD') = #{receivingDate}
+	                </if>
+	                <if test="ordersId != null and ordersId != ''">
+	                    o.orders_id = #{ordersId}
+	                </if>
+	                <if test="name != null and name != ''">
+	                    and u.name = #{name} 
+	                </if>
+	                <if test="productId != null and productId != ''">
+	                    and o.product_id = #{productId}
+	                </if>
+	                <if test="productName != null and productName != ''">
+	                    and p.product_name like '%' || #{productName} || '%'
+	                </if>
+	                <if test="brand != null and brand != ''">
+	                    and SUBSTR(p.product_category, 1, 2) = #{brand}
+	                </if>
+	                <if test="supplierId != null and supplierId != ''">
+	                    and o.supplier_id = #{supplierId}
+	                </if>
+	                <if test="deliveryDate != null and deliveryDate != ''">
+	                    and o.delivery_date = #{deliveryDate}
+	                </if>
+	                <if test="wareHouseId != null and wareHouseId != ''">
+	                    and r.warehouse_id = #{wareHouseId}
+	                </if>
+	                <if test="receivingStatus != null and receivingStatus != ''">
+	                    and r.receiving_status = #{receivingStatus}
+	                </if>
+	                <if test="quantity != null and quantity != ''">
+	                    and r.quantity = #{quantity}
+	                </if>
+	            </where>
+	            order by r.receiving_id desc  <!-- 정렬 기준 -->
+	        ) receivingData
+	    )
+	    where rn between #{startRow} and #{endRow}  <!-- 페이징 처리 -->
+	</select>
+
+	<!-- 입고 정보 수정 (발주 대기 상태일 때) -->
+	<update id="updateReceiving" parameterType="Receiving">
+		update receiving
+	    <set>
+	        <if test="quantity != null">
+	            quantity = #{quantity}
+	        </if>
+	    </set>
+	    where receiving_id = #{receivingId}
+	</update>
+	
 </mapper>

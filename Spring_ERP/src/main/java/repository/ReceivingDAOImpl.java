@@ -42,4 +42,19 @@ public class ReceivingDAOImpl implements ReceivingDAO {
 		return sqlSession.getMapper(ReceivingMapper.class).selectReceivingById(receivingId);
 	}
 
+	@Override
+	public int selectReceivingCount(Map<String, Object> map) {
+		return sqlSession.getMapper(ReceivingMapper.class).selectReceivingCount(map);
+	}
+
+	@Override
+	public List<Receiving> selectReceivingList(Map<String, Object> map) {
+		return sqlSession.getMapper(ReceivingMapper.class).selectReceivingList(map);
+	}
+
+	@Override
+	public int updateReceiving(Receiving receiving) {
+		return sqlSession.getMapper(ReceivingMapper.class).updateReceiving(receiving);
+	}
+
 }

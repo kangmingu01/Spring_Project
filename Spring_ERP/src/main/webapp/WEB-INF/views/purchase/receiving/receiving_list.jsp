@@ -106,17 +106,7 @@
                 </c:forEach>
               </select>
             </div>
-            <div>
-
-                         <label>상태</label>
-			  <select name="receivingStatus" id="receivingStatus">
-    <option value="" <c:if test="${empty searchMap.receivingStatus}">selected</c:if>>상태 선택</option>
-    <option value="2" <c:if test="${searchMap.receivingStatus == '2'}">selected</c:if>>입고 대기</option>
-    <option value="4" <c:if test="${searchMap.receivingStatus == '4'}">selected</c:if>>입고 완료</option>
-</select>
-
-
-			</div>
+           
 <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
         	<input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
             <div>
@@ -243,7 +233,23 @@
                 loadOrderDetails(ordersId);
             });
         });
+	
+     // 조회 버튼 클릭 이벤트 추가
+        $('.content_header_search_btn').on('click', function() {
+          searchOrder();
+        });
 
+        // 초기화 버튼 클릭 이벤트 추가
+        $('.content_header_reset_btn').on('click', function() {
+          resetForm();
+        });
+      
+      // 입고 조회 폼 제출
+      function searchOrder() {
+        $('#receivingForm').submit();
+      }
+
+        
         function loadOrderDetails(ordersId) {
             // 수정 로직 구현
         }

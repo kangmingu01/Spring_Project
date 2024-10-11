@@ -172,11 +172,11 @@
                 <td>${fn:substring(receiving.deliveryDate, 0, 10)}</td>
                 <td>${receiving.warehouseName}</td>
                 <td>
-                  <c:choose>
-                    <c:when test="${orders.ordersStatus == 2}">입고 대기</c:when>
-                    <c:when test="${receiving.receivingStatus == 4}">입고 완료</c:when>
-                  </c:choose>
-                </td>
+				  <c:choose>
+				    <c:when test="${orders.ordersStatus == 2}">입고 대기</c:when> 
+				    <c:when test="${receiving.receivingStatus == 4}">입고 완료</c:when> 
+				  </c:choose>
+				</td>
                 <!-- 수정 버튼 (입고 대기 상태일 때만 활성화) -->
                 <td>
                   <c:if test="${orders.ordersStatus == 2}">

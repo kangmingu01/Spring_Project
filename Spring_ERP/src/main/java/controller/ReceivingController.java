@@ -170,8 +170,10 @@ public class ReceivingController {
         map.putIfAbsent("supplierId", "");
         map.putIfAbsent("deliveryDate", "");
         map.putIfAbsent("wareHouseId", "");
-        map.putIfAbsent("receivingStatus", "");
-
+       
+        map.put("ordersStatus", "2");  // 발주 대기
+        map.put("receivingStatus", "4");  // 입고 완료
+        
         // 입고 목록 조회 (페이징 처리 및 검색 포함)
         Map<String, Object> resultMap = receivingService.getReceivingList(map);
 

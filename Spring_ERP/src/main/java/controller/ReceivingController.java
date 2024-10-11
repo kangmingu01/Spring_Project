@@ -122,8 +122,7 @@ public class ReceivingController {
         return "purchase/receiving/receiving_register"; // 입고 등록 페이지로 다시 이동
     }
 
-    // 발주 목록 조회 (페이징 및 검색 처리, 구매팀 ROLE만 접근 가능)
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    // 발주 목록 조회 (페이징 및 검색 처리)
     @RequestMapping(value = "/ordersList", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> getOrdersList(@RequestParam Map<String, Object> map) {

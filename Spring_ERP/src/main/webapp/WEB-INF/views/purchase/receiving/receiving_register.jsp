@@ -479,16 +479,17 @@
 	    }
 	}
 	
-	function loadOrdersPage(pageNum, searchQuery = '') {
-		var csrfToken = $('meta[name="_csrf"]').attr('content');
+	function loadOrdersPage(pageNum, productSearchQuery = '', supplierSearchQuery = '') {
+	    var csrfToken = $('meta[name="_csrf"]').attr('content');
 	    var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 	    $.ajax({
-	    	url: '/purchase/receiving/ordersList', 
+	        url: '/purchase/receiving/ordersList', 
 	        type: 'GET',
 	        data: {
 	            pageNum: pageNum,
 	            pageSize: 10,
-	            productName: searchQuery
+	            productName: productSearchQuery,  // 제품 검색어
+	            supplierName: supplierSearchQuery  // 공급업체 검색어
 	        },
 	        beforeSend: function(xhr) {
 	            // CSRF 토큰을 헤더에 추가
@@ -519,7 +520,6 @@
 	                updatePagination(response.pager);
 	            }
 	        },
-
 	        error: function(xhr, status, error) {
 	            console.log("상태: " + status);
 	            console.log("오류: " + error);
@@ -527,6 +527,7 @@
 	        }
 	    });
 	}
+
 
 	function updatePagination(pager) {
 	    var pagination = $('#pagination');

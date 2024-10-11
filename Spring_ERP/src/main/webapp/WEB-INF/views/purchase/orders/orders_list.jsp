@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reset.css'/>">
   <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/purchase.css'/>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title>발주 목록</title>
+  <title>발주 조회</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <meta name="_csrf" content="${_csrf.token}"/>
   <meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -21,7 +21,7 @@
   <div class="content">
     <!-- 헤더 부분 -->
     <div class="content_header">
-      <div class="content_header_title">발주 목록</div>
+      <div class="content_header_title">발주 조회</div>
       <div class="content_header_btn">
         <!-- 조회 버튼 -->
         <div class="content_header_search_btn" onclick="searchOrders()">

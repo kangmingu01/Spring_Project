@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.SettlementMapper">
+
+	<!-- 구매정산 목록 개수 조회 (페이징 처리를 위한 전체 개수) -->
+	<select id="selectSettlementCount" resultType="int">
+	    select count(*)
+	    from settlement t
+	    join receiving r on t.receiving_id = r.receiving_id
+	    join orders o on r.orders_id = o.orders_id
+	    join product p on o.product_id = p.product_id
+	    join supplier s on o.supplier_id = s.supplier_id
+	    join erp_user u on t.userid = u.userid
+	    <where>
+	        <if test="settlementId != null and settlementId != ''">
+	            t.settlement_id = #{settlementId}
+	        </if>
+	        <if test="settlementDate != null and settlementDate != ''">
+	            and to_char(t.settlement_date, 'YYYY-MM-DD') = #{settlementDate}
+	        </if>
+	        <if test="receivingId != null and receivingId != ''">
+	            and t.receiving_id = #{receivingId} 
+	        </if>
+	        <if test="name != null and name != ''">
+	            and u.name = #{name}
+	        </if>
+	        <if test="productId != null and productId != ''">
+	            and o.product_id = #{productId} 
+	        </if>
+	        <if test="productName != null and productName != ''">
+	            and p.product_name like '%' || #{productName} || '%'
+	        </if>
+	        <if test="supplierId != null and supplierId != ''">
+	            and o.supplier_id = #{supplierId}
+	        </if>
+	        <if test="settlementStatus != null and settlementStatus != ''">
+	            and t.settlement_status = #{settlementStatus}
+	        </if>
+	    </where>
+	</select>
+
+	
+	<!-- 구매정산 목록 조회 (페이징 처리 및 검색 기능 포함) -->
+	<select id="selectSettlementList" resultType="Settlement">
+	    select * from (
+	        select rownum rn, settlementData.*
+	        from (
+	            select t.settlement_id, t.settlement_date, t.receiving_id, t.userid, u.name,
+	                   o.product_id, p.product_name, s.supplier_name, r.quantity, o.product_price,
+	                   t.settlement_status, o.supplier_id
+	            from settlement t
+	            join receiving r on t.receiving_id = r.receiving_id
+	            join orders o on r.orders_id = o.orders_id
+	            join product p on o.product_id = p.product_id
+	            join supplier s on o.supplier_id = s.supplier_id
+	            join erp_user u on t.userid = u.userid
+	            <where>
+	                <if test="settlementId != null and settlementId != ''">
+	                    t.settlement_id = #{settlementId}
+	                </if>
+	                <if test="settlementDate != null and settlementDate != ''">
+	                    and to_char(t.settlement_date, 'YYYY-MM-DD') = #{settlementDate}
+	                </if>
+	                <if test="receivingId != null and receivingId != ''">
+	                    and t.receiving_id = #{receivingId}
+	                </if>
+	                <if test="name != null and name != ''">
+	                    and u.name = #{name}
+	                </if>
+	                <if test="productId != null and productId != ''">
+	                    and o.product_id = #{productId}
+	                </if>
+	                <if test="productName != null and productName != ''">
+	                    and p.product_name like '%' || #{productName} || '%'
+	                </if>
+	                <if test="supplierId != null and supplierId != ''">
+	                    and o.supplier_id = #{supplierId}
+	                </if>
+	                <if test="settlementStatus != null and settlementStatus != ''">
+	                    and t.settlement_status = #{settlementStatus}
+	                </if>
+	            </where>
+	            order by t.settlement_id desc
+	        ) settlementData
+	    )
+	    where rn between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 공급 업체 이름 목록 조회 -->
+    <select id="selectSupplierList" resultType="Supplier">
+        select supplier_id, supplier_name from supplier order by supplier_name
+    </select>
+    
+    <!-- 발주 상태 업데이트 (확정 버튼 눌렀을 때) -->
+	<update id="updateSettlement" parameterType="int">
+	    update settlement set settlement_status = 6 where settlement_id = #{settlementId}
+	    and exists (select 1 from receiving r where r.receiving_id = settlement.receiving_id 
+	        and r.receiving_status = 4)
+	</update>
+
+</mapper>

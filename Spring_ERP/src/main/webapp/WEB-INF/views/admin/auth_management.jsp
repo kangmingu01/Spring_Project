@@ -125,7 +125,7 @@
                     </c:if>
                 </div>
                 <div class="text-end">
-                    <button type="submit" class="btn btn-primary">조직 생성</button>
+                    <button type="submit" class="btn btn-primary">권한 생성</button>
                 </div>
                 <sec:csrfInput/>
             </form>
@@ -339,7 +339,6 @@
         }
     }
 
-    /* 중복 검사 */
     $("#idCheck").click(function () {
         // 화면 크기 및 브라우저 창 크기 계산
         var screenWidth = window.screen.width;
@@ -370,7 +369,6 @@
         $("#searchId").removeClass("is-invalid");
         $("#auth").removeClass("is-invalid");
 
-        $("#searchId").prop("disabled", false);
 
         if ($("#searchId").val() == "") {
             $("#searchMsg").css("display", "block").css("visibility", "visible");
@@ -392,11 +390,22 @@
             submitResult = false;
         }
 
-        console.log($("#searchId").val());
-        console.log($("#auth").val());
+        if (submitResult) {
+            $("#searchId").prop("disabled", false);
+        } else {
+            $("#searchId").prop("disabled", true);
+        }
 
         return submitResult;
     });
+    function resetForm() {
+        document.getElementById("authForm").reset();
+
+        /* 모든 에러 메세지 숨김 */
+        $(".error").css("display", "none").css("visibility", "hidden");
+        $("#searchId").removeClass("is-invalid");
+        $("#auth").removeClass("is-invalid");
+    }
 </script>
 
 </body>

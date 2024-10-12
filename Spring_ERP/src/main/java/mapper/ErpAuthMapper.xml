@@ -48,19 +48,24 @@
     <select id="selectAuthList" resultType="ErpAuth">
         select * from (
         select rownum rn, erp_auth.* from (
-        select userid, auth, orgId
+        select userid, auth, orgId, created
         from erp_auth
         <if test="keyword != null and keyword != ''">
             <bind name="word" value="'%' + keyword + '%'"/>
             <where> ${column} like #{word} </where>
         </if>
-        order by userid desc
+        order by
+        case
+        when userid is not null then 1 -- 사용자 ID는 다음에
+        when orgId like 'DEP%' then 2  -- 부서는 먼저 오도록
+        else 3  -- 그 외는 마지막
+        end,
+        created desc -- 모든 항목에 대해 타임스탬프 내림차순
         ) erp_auth
-        order by rn desc
+        order by rn
         )
         where rn between #{startRow} and #{endRow}
     </select>
-
 
     <!-- 대상의 아이디값을 가져오는 쿼리 -->
     <select id="selectErpAuthById" resultType="ErpUser">

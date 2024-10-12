@@ -88,8 +88,7 @@
                         <label for="selectAuth" class="form-label">권한 대상</label>
                         <select class="form-select" id="selectAuth" name="selectAuth" onchange="setInputName()">
                             <option value="userid">유저</option>
-                            <option value="orgId">부서</option>
-                            <option value="orgId">매장</option>
+                            <option value="orgId">부서/매장</option>
                         </select>
                     </div>
 

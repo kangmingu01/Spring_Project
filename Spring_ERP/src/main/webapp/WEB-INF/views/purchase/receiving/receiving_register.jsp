@@ -528,33 +528,6 @@
 	    });
 	}
 
-
-	function updatePagination(pager) {
-	    var pagination = $('#pagination');
-	    pagination.empty();  // 기존 페이지 링크 삭제
-
-	    // 이전 페이지 링크
-	    if (pager.startPage > 1) {
-	        pagination.append(`<a href="#" onclick="loadOrdersPage(${pager.prevPage})">[이전]</a>`);
-	    }
-
-	    // 페이지 번호 링크
-	    for (var i = pager.startPage; i <= pager.endPage; i++) {
-	        if (i === pager.pageNum) {
-	            pagination.append(`<span>[${i}]</span>`);
-	        } else {
-	            pagination.append(`<a href="#" onclick="loadOrdersPage(${i})">[${i}]</a>`);
-	        }
-	    }
-
-	    // 다음 페이지 링크
-	    if (pager.endPage < pager.totalPage) {
-	        pagination.append(`<a href="#" onclick="loadOrdersPage(${pager.nextPage})">[다음]</a>`);
-	    }
-	}
-
-
-
 	function updatePagination(pager) {
 	    var pagination = $('#pagination');
 	    pagination.empty();  // 기존 페이지 링크 삭제

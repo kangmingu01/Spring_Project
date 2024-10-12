@@ -17,7 +17,6 @@
   <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
 
-
 <body>
   <div class="content">
     <!-- 헤더 부분 -->
@@ -26,9 +25,12 @@
       <div class="content_header_btn">
         <!-- 조회 버튼 -->
         <div class="content_header_search_btn" onclick="searchOrder()">
-          <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg></div>
+          <div>
+           
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+          </div>
           <span>조회</span>
         </div>
         <!-- 초기화 버튼 -->
@@ -45,13 +47,13 @@
       </div>
     </div>
 
-        <!-- 바디 부분 -->
+    <!-- 바디 부분 -->
     <div class="content_body">
-      <!-- 발주 조회 폼 -->
+      <!-- 입고 조회 폼 -->
       <form id="receivingForm" action="<c:url value='/purchase/receiving/list' />" method="get">
         <div class="content_body_search">
+          <!-- 각종 검색 필드들 -->
           <div>
-            <!-- 입고 검색 필드 -->
             <div>
               <label>입고번호</label>
               <input type="text" name="receivingId" id="receivingId"/>
@@ -106,17 +108,23 @@
                 </c:forEach>
               </select>
             </div>
-			<input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
-        	<input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+            <!-- 발주수량을 숨겨진 필드로 저장 -->
+            <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
+            <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+            <input type="hidden" id="ordersQuantity" name="ordersQuantity" value="${receiving.ordersQuantity}" />
             <div>
               <label>통과수량</label>
               <input type="number" name="quantity" id="quantity" style="background-color: #f0f0f0" readonly/>
+            </div>
+            <div>
+              <!-- 에러 메시지 -->
+              <span id="quantity-error" style="color:red; display:none; font-size: 12px">통과수량은 발주수량을 초과할 수 없습니다.</span>
             </div>             
           </div>     
         </div>     
       </form>
 
- <!-- 테이블 부분 -->
+      <!-- 테이블 부분 -->
       <div class="content_body_list">
         <table>
           <thead>
@@ -164,27 +172,28 @@
                 <td>${receiving.quantity * receiving.productPrice}</td>
                 <td>${fn:substring(receiving.deliveryDate, 0, 10)}</td>
                 <td>${receiving.warehouseName}</td>
-				<td>
+                <td>
+                  <c:choose>
+                    <c:when test="${receiving.ordersStatus == 2 && receiving.receivingStatus != 4}">
+                      입고 대기
+                    </c:when>
+                    <c:when test="${receiving.receivingStatus == 4}">
+                      입고 완료
+                    </c:when>
+                  </c:choose>
+                </td>
+                <td>
+                  <!-- 입고 완료 상태일 경우 취소 버튼 활성화 -->
+                  <c:if test="${receiving.receivingStatus == 4}">
+                    <button class="cancelButton" data-receiving-id="${receiving.receivingId}">취소</button>
+                  </c:if>
+                </td>
+              </tr>
+            </c:forEach>
+          </tbody>
+        </table>
 
-                     <c:choose>
-                         <c:when test="${receiving.ordersStatus == 2 && receiving.receivingStatus != 4}">
-                             입고 대기
-                         </c:when>
-                         <c:when test="${receiving.receivingStatus == 4}">
-                             입고 완료
-                         </c:when>
-                     </c:choose>
-                 </td>
-                 <td>
-                    <c:if test="${receiving.receivingStatus == 4}">
-					    <button class="cancelButton" data-receiving-id="${receiving.receivingId}">취소</button>
-					</c:if>
-                 </td>
-           	</tr>
-           </c:forEach>
-       </tbody>
-   </table>
-           <!-- 페이징 부분 -->
+        <!-- 페이징 부분 -->
         <div style="text-align: center;">
           <!-- 이전 페이지 링크 -->
           <c:choose>
@@ -245,6 +254,27 @@ $(document).ready(function() {
     $('.content_header_reset_btn').on('click', function() {
         resetForm();
     });
+
+    // 통과수량이 발주수량을 초과하지 않도록 검증하는 로직 추가
+    $('#quantity').on('input', function() {
+        const ordersQuantity = parseInt($('#ordersQuantity').val());  // 숨겨진 발주수량 필드에서 가져옴
+        const quantity = $(this).val();  // 입력된 통과수량
+        const errorSpan = $('#quantity-error');  // 에러 메시지 표시할 span
+
+        // 빈 값이거나 NaN인 경우에는 에러 메시지를 숨김
+        if (quantity === '' || isNaN(quantity)) {
+            errorSpan.hide();  // 에러 메시지 숨김
+            return;
+        }
+
+        // 통과수량이 발주수량을 초과하면 경고 메시지 표시 및 저장 방지
+        if (parseInt(quantity) > ordersQuantity) {
+            errorSpan.show();  // 에러 메시지 표시
+            $(this).val('');  // 잘못된 입력값 제거
+        } else {
+            errorSpan.hide();  // 에러 메시지 숨김
+        }
+    });
 });
 
 // 입고 정보 로드 및 필드에 값 채우기
@@ -264,6 +294,7 @@ function loadReceivingDetails(receivingId) {
     $('#productId').val($.trim(row.children().eq(4).text()));
     $('#productName').val($.trim(row.children().eq(5).text()));
     $('#brand').val($.trim(row.children().eq(6).text()));
+    $('#ordersQuantity').val($.trim(row.children().eq(12).text())); // 발주수량 필드에 값 채움
     $('#quantity').val($.trim(row.children().eq(13).text()));
 
     // 공급업체 설정
@@ -299,7 +330,17 @@ function loadReceivingDetails(receivingId) {
     });
 }
 
+// 통과 수량 저장 로직
 function saveReceivingChanges(receivingId) {
+    const ordersQuantity = parseInt($('#ordersQuantity').val());
+    const quantity = parseInt($('#quantity').val());
+
+    // 수량 검증 - 통과수량이 발주수량을 초과하면 저장 중단
+    if (quantity > ordersQuantity || isNaN(quantity)) {
+        alert('통과 수량이 발주 수량을 초과할 수 없으며, 유효한 숫자를 입력해야 합니다.');
+        return;  // 저장하지 않음
+    }
+
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -308,8 +349,8 @@ function saveReceivingChanges(receivingId) {
         receivingId: receivingId,
         pageNum: $('#pageNum').val(),
         pageSize: $('#pageSize').val(),
-        quantity: $('#quantity').val(), // 통과 수량 수정 가능
-        receivingStatus: 4 // 입고 완료 상태로 업데이트
+        quantity: quantity,  // 통과 수량 수정 가능
+        receivingStatus: 4   // 입고 완료 상태로 업데이트
     };
 
     // 서버에 수정 요청 보내기
@@ -331,7 +372,6 @@ function saveReceivingChanges(receivingId) {
         }
     });
 }
-
 
 // 폼 초기화 및 첫 페이지로 이동
 function resetForm() {
@@ -370,9 +410,9 @@ function setAllFieldsReadOnly(readOnly) {
 function searchOrder() {
     $('#receivingForm').submit();
 }
+
 </script>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

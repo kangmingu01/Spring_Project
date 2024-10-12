@@ -146,7 +146,9 @@ public class ReceivingServiceImpl implements ReceivingService {
 	@Transactional
 	@Override
 	public void modifyReceiving(Receiving receiving) {
-		receivingDAO.updateReceiving(receiving);		
+		
+		receiving.setReceivingStatus(4); 
+	    receivingDAO.updateReceiving(receiving); 
 	}
 
 	@Override

@@ -1,8 +1,7 @@
 package controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -152,7 +151,7 @@ public class ReceivingController {
     		, Model model, Principal principal) {
     	
     	 // receivingStatus 값 확인 로그
-        System.out.println("receivingStatus: " + receivingStatus);
+        //System.out.println("receivingStatus: " + receivingStatus);
         
         // 로그인한 사용자 아이디 추가
         String userId = principal.getName(); 
@@ -199,31 +198,45 @@ public class ReceivingController {
         return "purchase/receiving/receiving_list"; // 입고 목록 페이지 뷰로 이동
     }
     
-    // 입고 수정 후 목록으로 이동 - 페이징 및 검색 조건 유지
+	// 입고 수정 후 목록으로 이동 - 페이징 및 검색 조건 유지
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public String modifyReceiving(@RequestBody Map<String, Object> map, Principal principal, Model model)
+    public String modifyReceiving(@RequestBody Map<String, Object> params, Principal principal, Model model) 
             throws UnsupportedEncodingException {
+
         // 로그인한 사용자 아이디 추가
         String userId = principal.getName();
         model.addAttribute("userId", userId);
 
-        // 필요한 필드만 추출하여 수정 처리
-        Receiving receiving = new Receiving();
+        // 요청에서 receivingId 추출
+        int receivingId = Integer.parseInt(params.get("receivingId").toString());
 
-        if (map.containsKey("receivingId")) {
-            receiving.setReceivingId(Integer.parseInt(map.get("receivingId").toString()));  // 입고 ID 설정
-        }
-        if (map.containsKey("quantity")) {
-            receiving.setQuantity(Integer.parseInt(map.get("quantity").toString()));  // 통과 수량 설정
-        }
-        // 발주 정보 수정 처리
+        // 요청에서 quantity 추출
+        int quantity = Integer.parseInt(params.get("quantity").toString());
+
+        // Receiving 객체 생성 후 receivingId, quantity, receivingStatus 설정
+        Receiving receiving = new Receiving();
+        receiving.setReceivingId(receivingId);
+        receiving.setQuantity(quantity);  // 수량 설정
+        receiving.setReceivingStatus(4);  // 입고 완료 상태로 설정
+
+        // 입고 정보 수정 서비스 호출
         receivingService.modifyReceiving(receiving);
 
-        // 페이징 정보를 유지하면서 목록으로 리다이렉트
-        String pageNum = map.get("pageNum") != null ? (String) map.get("pageNum") : "1";
-        String pageSize = map.get("pageSize") != null ? (String) map.get("pageSize") : "10";
+        // 페이징 정보와 검색 조건 유지
+        String pageNum = params.get("pageNum") != null ? params.get("pageNum").toString() : "1";
+        String pageSize = params.get("pageSize") != null ? params.get("pageSize").toString() : "10";
+        String searchKeyword = params.containsKey("searchKeyword") ? URLEncoder.encode(params.get("searchKeyword").toString(), "UTF-8") : "";
 
-        return "redirect:/purchase/receiving/list?pageNum=" + pageNum + "&pageSize=" + pageSize;
+        // 리다이렉트할 URL을 구성
+        String redirectUrl = "/purchase/receiving/list?pageNum=" + pageNum + "&pageSize=" + pageSize;
+        
+        if (!searchKeyword.isEmpty()) {
+            redirectUrl += "&searchKeyword=" + searchKeyword;
+        }
+
+        // 리다이렉트 처리
+        return "redirect:" + redirectUrl;
     }
+
 }

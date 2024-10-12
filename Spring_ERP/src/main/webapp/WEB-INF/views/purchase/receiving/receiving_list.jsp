@@ -106,8 +106,7 @@
                 </c:forEach>
               </select>
             </div>
-           
-<input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
+			<input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
         	<input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
             <div>
               <label>통과수량</label>
@@ -167,24 +166,24 @@
                 <td>${receiving.warehouseName}</td>
 				<td>
 
-                                    <c:choose>
-                                        <c:when test="${receiving.ordersStatus == 2 && receiving.receivingStatus != 4}">
-                                            입고 대기
-                                        </c:when>
-                                        <c:when test="${receiving.receivingStatus == 4}">
-                                            입고 완료
-                                        </c:when>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:if test="${receiving.ordersStatus == 2 && receiving.receivingStatus != 4}">
-                                        <button class="editButton" data-orders-id="${receiving.ordersId}">수정</button>
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
+                     <c:choose>
+                         <c:when test="${receiving.ordersStatus == 2 && receiving.receivingStatus != 4}">
+                             입고 대기
+                         </c:when>
+                         <c:when test="${receiving.receivingStatus == 4}">
+                             입고 완료
+                         </c:when>
+                     </c:choose>
+                 </td>
+                 <td>
+                    <c:if test="${receiving.receivingStatus == 4}">
+					    <button class="cancelButton" data-receiving-id="${receiving.receivingId}">취소</button>
+					</c:if>
+                 </td>
+           	</tr>
+           </c:forEach>
+       </tbody>
+   </table>
            <!-- 페이징 부분 -->
         <div style="text-align: center;">
           <!-- 이전 페이지 링크 -->
@@ -225,44 +224,154 @@
     </div>
   </div>
 
-    <script>
-        $(document).ready(function() {
-            // 수정 버튼 클릭 이벤트 추가
-            $('.editButton').on('click', function() {
-                const ordersId = $(this).data('orders-id');
-                loadOrderDetails(ordersId);
-            });
-        });
-	
-     // 조회 버튼 클릭 이벤트 추가
-        $('.content_header_search_btn').on('click', function() {
-          searchOrder();
-        });
+<script>
+$(document).ready(function() {
+    // 취소 버튼 클릭 이벤트 추가
+    $('.cancelButton').on('click', function() {
+        const receivingId = $(this).data('receiving-id');
+        loadReceivingDetails(receivingId);
 
-        // 초기화 버튼 클릭 이벤트 추가
-        $('.content_header_reset_btn').on('click', function() {
-          resetForm();
-        });
-      
-      // 입고 조회 폼 제출
-      function searchOrder() {
-        $('#receivingForm').submit();
-      }
+        // 다른 취소 버튼 비활성화
+        $('.cancelButton').prop('disabled', true);
+        $(this).prop('disabled', false); // 현재 선택된 버튼만 활성화
+    });
 
-        
-        function loadOrderDetails(ordersId) {
-            // 수정 로직 구현
+    // 조회 버튼 클릭 이벤트 추가
+    $('.content_header_search_btn').on('click', function() {
+        searchOrder();
+    });
+
+    // 초기화 버튼 클릭 이벤트 추가
+    $('.content_header_reset_btn').on('click', function() {
+        resetForm();
+    });
+});
+
+// 입고 정보 로드 및 필드에 값 채우기
+function loadReceivingDetails(receivingId) {
+    const row = $('tr').has('button[data-receiving-id="' + receivingId + '"]');
+
+    if (!row.length) {
+        alert('해당 입고 항목을 찾을 수 없습니다.');
+        return;
+    }
+
+    // 행의 데이터를 각 필드에 채우기
+    $('#receivingId').val($.trim(row.children().eq(0).text()));
+    $('#receivingDate').val($.trim(row.children().eq(1).text()));
+    $('#ordersId').val($.trim(row.children().eq(2).text()));
+    $('#name').val($.trim(row.children().eq(3).text()));
+    $('#productId').val($.trim(row.children().eq(4).text()));
+    $('#productName').val($.trim(row.children().eq(5).text()));
+    $('#brand').val($.trim(row.children().eq(6).text()));
+    $('#quantity').val($.trim(row.children().eq(13).text()));
+
+    // 공급업체 설정
+    const supplierName = $.trim(row.children().eq(11).text());
+    $('#supplier option').each(function() {
+        if ($(this).text() === supplierName) {
+            $(this).prop('selected', true);
         }
+    });
 
-        function searchOrder() {
-            $('#receivingForm').submit();
+    // 창고 설정
+    const warehouseName = $.trim(row.children().eq(17).text());
+    $('#wareHouse option').each(function() {
+        if ($(this).text() === warehouseName) {
+            $(this).prop('selected', true);
         }
+    });
 
-        function resetForm() {
-            $('#receivingForm')[0].reset();
-            $('#receivingForm').submit();
+    // 수량은 수정 가능하게 하고 나머지 필드는 비활성화
+    setAllFieldsReadOnly(true);
+    $('#quantity').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
+
+    // 완료 버튼으로 변경
+    $('.cancelButton').text('완료').off('click').on('click', function() {
+        saveReceivingChanges(receivingId);
+    });
+
+    // 다른 행의 취소 버튼 비활성화
+    $('button.cancelButton').each(function() {
+        if ($(this).data('receiving-id') !== receivingId) {
+            $(this).prop('disabled', true);
         }
-    </script>
+    });
+}
+
+function saveReceivingChanges(receivingId) {
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+
+    // 수정된 값 가져오기
+    const data = {
+        receivingId: receivingId,
+        pageNum: $('#pageNum').val(),
+        pageSize: $('#pageSize').val(),
+        quantity: $('#quantity').val(), // 통과 수량 수정 가능
+        receivingStatus: 4 // 입고 완료 상태로 업데이트
+    };
+
+    // 서버에 수정 요청 보내기
+    $.ajax({
+        url: '<c:url value="/purchase/receiving/modify"/>',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        success: function(response) {
+            alert('수정이 완료되었습니다.');
+            window.location.href = '<c:url value="/purchase/receiving/list"/>' + '?pageNum=' + data.pageNum + '&pageSize=' + data.pageSize;
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX 요청 중 오류:', xhr, status, error);
+            alert('수정 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+
+// 폼 초기화 및 첫 페이지로 이동
+function resetForm() {
+    $('#receivingForm')[0].reset();
+    window.location.href = '<c:url value="/purchase/receiving/list"/>';
+}
+
+// 모든 필드를 읽기 전용으로 설정하는 함수
+function setAllFieldsReadOnly(readOnly) {
+    const fields = [
+        '#receivingId', '#receivingDate', '#ordersId', 
+        '#name', '#productId', '#productName', '#brand', 
+        '#supplier', '#wareHouse', '#deliveryDate'
+    ];
+
+    fields.forEach(fieldId => {
+        const field = $(fieldId);
+
+        if (field.length) {
+            if (field.prop('tagName') === 'SELECT') {
+                field.prop('disabled', readOnly);
+            } else {
+                field.prop('readonly', readOnly);
+            }
+
+            if (readOnly) {
+                field.css('background-color', '#f0f0f0');
+            } else {
+                field.css('background-color', '');
+            }
+        }
+    });
+}
+
+// 입고 조회 폼 제출
+function searchOrder() {
+    $('#receivingForm').submit();
+}
+</script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

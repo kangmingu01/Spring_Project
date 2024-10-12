@@ -179,14 +179,8 @@
 	</select>
 
 	<!-- 입고 정보 수정 (발주 대기 상태일 때) -->
-	<update id="updateReceiving" parameterType="Receiving">
-		update receiving
-	    <set>
-	        <if test="quantity != null">
-	            quantity = #{quantity}
-	        </if>
-	    </set>
-	    where receiving_id = #{receivingId}
+	<update id="updateReceiving">
+   		update receiving set receiving_status = #{receivingStatus}, quantity = #{quantity} where receiving_id = #{receivingId}
 	</update>
 	
 	<!-- 공급 업체 이름 목록 조회 -->

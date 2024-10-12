@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import dto.Receiving;
 import dto.Settlement;
 import dto.Supplier;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,17 @@ public class SettlementDAOImpl implements SettlementDAO {
 	}
 
 	@Override
-	public int updateSettlement(int settlementId) {
-		return sqlSession.getMapper(SettlementMapper.class).updateSettlement(settlementId);
+	public Receiving selectReceivingById(int receivingId) {
+		return sqlSession.getMapper(SettlementMapper.class).selectReceivingById(receivingId);
 	}
 
+	@Override
+	public int insertSettlement(Settlement settlement) {
+		return sqlSession.getMapper(SettlementMapper.class).insertSettlement(settlement);
+	}
+
+	@Override
+	public int updateSettlement(Settlement settlement) {
+		return sqlSession.getMapper(SettlementMapper.class).updateSettlement(settlement);
+	}
 }

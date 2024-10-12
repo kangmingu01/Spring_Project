@@ -43,10 +43,10 @@ public class ErpUserServiceImpl implements ErpUserService {
     }
 
     /* 권한 정보 추가 */
-    @Override
+    /*@Override
     public void addErpAuth(ErpAuth erpAuth) {
         erpUserDAO.insertErpAuth(erpAuth);
-    }
+    }*/
 
 
     /* 리스트 페이징 */

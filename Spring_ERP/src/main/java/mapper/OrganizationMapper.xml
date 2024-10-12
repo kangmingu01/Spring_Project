@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.OrganizationMapper">
+    <insert id="insertOrganization">
+        INSERT INTO organization (org_id, org_name, org_type, address, phone_number)
+        VALUES (#{orgId}, #{orgName}, #{orgType}, #{address}, #{phoneNumber})
+    </insert>
+
+    <update id="updateOrganization">
+        update organization
+        <set>
+            <if test="orgName != null and orgName != ''">
+                org_name = #{orgName},
+            </if>
+            <if test="orgType != null">
+                org_type = #{orgType},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="phoneNumber != null and phoneNumber != ''">
+                phone_number = #{phoneNumber}
+            </if>
+        </set>
+        where org_id = #{orgId}
+    </update>
+
+    <update id="deleteOrganization">
+        update organization
+        <set>
+            org_type=9
+        </set>
+        where org_id = #{orgId}
+    </update>
+
+    <select id="selectOrganizationCount" resultType="int">
+        select count(*) from organization
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%'+keyword+'%'"/>
+            where ${column} like #{word}
+        </if>
+    </select>
+
+    <select id="selectOrganizationList" resultType="Organization">
+        select * from (
+        select rownum rn, organization.* from (
+        select org_id, org_name, org_type, address, phone_number, created
+        from organization
+        <where>
+            <if test="keyword != null and keyword != ''">
+                <bind name="word" value="'%' + keyword + '%'"/>
+                ${column} like #{word}
+            </if>
+            <if test="type == 'all'">
+                org_type in (0, 1)  <!-- 본사(0), 지점(1) 전체 조회 -->
+            </if>
+            <if test="type == 'headquarters'">
+                org_type = 0  <!-- 본사만 조회 -->
+            </if>
+            <if test="type == 'branch'">
+                org_type = 1  <!-- 지점만 조회 -->
+            </if>
+            <if test="type == 'closed'">
+                org_type = 9  <!-- 폐업된 조직만 조회 -->
+            </if>
+        </where>
+        order by org_id asc
+        ) organization
+        )
+        where rn between #{startRow} and #{endRow}
+    </select>
+
+    <!-- 가장 최근에 생성된 조직 ID를 조회 -->
+    <select id="selectLastOrgId" parameterType="String" resultType="String">
+        SELECT org_id FROM (
+            SELECT org_id FROM organization
+                WHERE org_id LIKE #{orgPrefix} || '%'
+            ORDER BY org_id DESC
+        ) WHERE ROWNUM = 1
+    </select>
+</mapper>

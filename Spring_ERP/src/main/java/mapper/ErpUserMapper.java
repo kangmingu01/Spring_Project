@@ -11,7 +11,7 @@ public interface ErpUserMapper {
     int updateErpUser(ErpUser erpUser);
     int deleteErpUser(String userid);
     ErpUser selectErpUserByUserid(String userid);
-    int insertErpAuth(ErpAuth erpAuth);
+    /*int insertErpAuth(ErpAuth erpAuth);*/
 
     /* 리스트 페이징 */
     int selectUserCount(Map<String, Object> map);

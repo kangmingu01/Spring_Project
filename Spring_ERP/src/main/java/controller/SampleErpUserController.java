@@ -21,7 +21,8 @@ public class SampleErpUserController {
     @RequestMapping(value = "/member/add", method = RequestMethod.GET)
     @ResponseBody
     public String add() {
-        /*
+/*
+
         // 첫 번째 임시 사용자
         LocalDate birthday1 = LocalDate.of(1990, 5, 20);
         LocalDate joindate1 = LocalDate.of(2020, 3, 1);
@@ -37,21 +38,25 @@ public class SampleErpUserController {
         LocalDate joindate3 = LocalDate.of(2021, 1, 15);
         ErpUser erpUser3 = new ErpUser("userid3",  passwordEncoder.encode("123456"), "김철수", "010-3456-7890", "인천광역시", "user3@example.com", 1, birthday3, joindate3, 1, null, null);
 
+        ErpUser erpUser4 = new ErpUser("userid4",  passwordEncoder.encode("123456"), "안성재", "010-3456-7890", "모수", "user4@example.com", 1, birthday3, joindate3, 1, null, null);
+
+
         erpUserService.addErpUser(erpUser1);
         erpUserService.addErpUser(erpUser2);
         erpUserService.addErpUser(erpUser3);
-        */
+        erpUserService.addErpUser(erpUser4);
 
         ErpAuth auth1 = new ErpAuth("userid1", "ROLE_SUPER_ADMINISTRATOR");
         ErpAuth auth2 = new ErpAuth("userid2", "ROLE_PURCHASING_TEAM");
         ErpAuth auth3 = new ErpAuth("userid2", "ROLE_INVENTORY_TEAM ");
         ErpAuth auth4 = new ErpAuth("userid3", "ROLE_SALES_TEAM");
 
+
         erpUserService.addErpAuth(auth1);
         erpUserService.addErpAuth(auth2);
         erpUserService.addErpAuth(auth3);
         erpUserService.addErpAuth(auth4);
-
+*/
         return "success";
     }
 }

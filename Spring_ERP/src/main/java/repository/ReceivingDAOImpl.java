@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import dto.Orders;
 import dto.Receiving;
+import dto.Supplier;
 import dto.Warehouse;
 import lombok.RequiredArgsConstructor;
 import mapper.ReceivingMapper;
@@ -40,6 +41,26 @@ public class ReceivingDAOImpl implements ReceivingDAO {
 	@Override
 	public Receiving selectReceivingById(int receivingId) {
 		return sqlSession.getMapper(ReceivingMapper.class).selectReceivingById(receivingId);
+	}
+
+	@Override
+	public int selectReceivingCount(Map<String, Object> map) {
+		return sqlSession.getMapper(ReceivingMapper.class).selectReceivingCount(map);
+	}
+
+	@Override
+	public List<Receiving> selectReceivingList(Map<String, Object> map) {
+		return sqlSession.getMapper(ReceivingMapper.class).selectReceivingList(map);
+	}
+
+	@Override
+	public int updateReceiving(Receiving receiving) {
+		return sqlSession.getMapper(ReceivingMapper.class).updateReceiving(receiving);
+	}
+
+	@Override
+	public List<Supplier> selectSupplierList() {
+		return sqlSession.getMapper(ReceivingMapper.class).selectSupplierList();
 	}
 
 }

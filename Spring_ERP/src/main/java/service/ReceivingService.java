@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import dto.Receiving;
+import dto.Supplier;
 import dto.Warehouse;
 
 public interface ReceivingService {
@@ -11,4 +12,7 @@ public interface ReceivingService {
 	Map<String, Object> getOrdersList(Map<String, Object> map);
 	List<Warehouse> getWarehouseList();
 	Receiving getReceivingById(int receivingId);
+	Map<String, Object> getReceivingList(Map<String, Object> map);
+	void modifyReceiving(Receiving receiving);
+	List<Supplier> getSupplierList();
 }

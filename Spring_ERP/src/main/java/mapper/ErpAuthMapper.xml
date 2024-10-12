@@ -47,8 +47,12 @@
 
     <select id="selectAuthList" resultType="ErpAuth">
         select * from (
-        select rownum rn, erp_auth.* from (
-        select userid, auth, orgId, created
+        select rownum rn, inner_query.* from (
+        select userid, auth, orgId, created,
+        row_number() over (
+        partition by nvl(userid, orgId)
+        order by created desc
+        ) as rownum_in_group
         from erp_auth
         <if test="keyword != null and keyword != ''">
             <bind name="word" value="'%' + keyword + '%'"/>
@@ -56,12 +60,12 @@
         </if>
         order by
         case
-        when userid is not null then 1 -- 사용자 ID는 다음에
-        when orgId like 'DEP%' then 2  -- 부서는 먼저 오도록
-        else 3  -- 그 외는 마지막
+        when userid is not null then 1
+        when orgId like 'DEP%' then 2
+        else 3
         end,
-        created desc -- 모든 항목에 대해 타임스탬프 내림차순
-        ) erp_auth
+        created desc
+        ) inner_query
         order by rn
         )
         where rn between #{startRow} and #{endRow}

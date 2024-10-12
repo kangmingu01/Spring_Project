@@ -4,8 +4,8 @@ import dto.ErpAuth;
 import dto.ErpUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import repository.ErpAuthDAO;
-import repository.ErpUserDAO;
 import util.Pager;
 
 import java.util.HashMap;
@@ -17,14 +17,22 @@ import java.util.Map;
 public class ErpAuthServiceImpl implements ErpAuthService {
     private final ErpAuthDAO erpAuthDAO;
 
+    @Transactional
     @Override
-    public void addErpAuth(ErpAuth erpAuth) {
-        erpAuthDAO.insertErpAuth(erpAuth);
+    public boolean addErpAuth(ErpAuth erpAuth) {
+        int authExists = erpAuthDAO.checkAuthExists(erpAuth);
+        if (authExists == 0) {
+            erpAuthDAO.insertErpAuth(erpAuth);
+            return true; // 성공
+        } else {
+            return false; // 실패
+        }
     }
 
+    @Transactional
     @Override
-    public void deleteErpAuth(String id) {
-        erpAuthDAO.deleteAuth(id);
+    public void deleteErpAuth(ErpAuth erpAuth) {
+        erpAuthDAO.deleteAuth(erpAuth);
     }
 
     @Override

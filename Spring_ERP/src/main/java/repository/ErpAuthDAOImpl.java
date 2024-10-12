@@ -17,13 +17,18 @@ public class ErpAuthDAOImpl implements ErpAuthDAO {
     private final SqlSession sqlSession;
 
     @Override
+    public int checkAuthExists(ErpAuth erpAuth) {
+        return sqlSession.getMapper(ErpAuthMapper.class).checkAuthExists(erpAuth);
+    }
+
+    @Override
     public int insertErpAuth(ErpAuth erpAuth) {
         return sqlSession.getMapper(ErpAuthMapper.class).insertErpAuth(erpAuth);
     }
 
     @Override
-    public int deleteAuth(String id) {
-        return sqlSession.getMapper(ErpAuthMapper.class).deleteAuth(id);
+    public int deleteAuth(ErpAuth erpAuth) {
+        return sqlSession.getMapper(ErpAuthMapper.class).deleteAuth(erpAuth);
     }
 
     @Override

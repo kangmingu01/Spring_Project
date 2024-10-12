@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface ErpAuthDAO {
+    int checkAuthExists(ErpAuth erpAuth);
     int insertErpAuth(ErpAuth erpAuth);
-    int deleteAuth(String id);
+    int deleteAuth(ErpAuth erpAuth);
 
     /* 리스트 페이징 */
     int selectAuthCount(Map<String, Object> map);

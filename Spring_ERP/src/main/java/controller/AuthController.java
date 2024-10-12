@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service.ErpAuthService;
 import service.ErpUserService;
 import service.OrganizationService;
@@ -23,9 +24,15 @@ public class AuthController {
     /* 탭으로 조절 가능하게 */
     /* 일단 auth 페이지에서 만들고 쪼개기 */
     @RequestMapping("/auth")
-    public String authGet(@RequestParam Map<String, Object> map, Model model) {
+    public String authGet(@RequestParam Map<String, Object> map, @ModelAttribute("errorMessage") String errorMessage, Model model) {
+
+        if(errorMessage != null){
+            model.addAttribute("errorMessage", errorMessage);
+        }
+
         model.addAttribute("resultMap", erpAuthService.getErpAuthList(map));
         model.addAttribute("searchMap", map);
+
         return "/admin/auth_management";
     }
 
@@ -63,5 +70,23 @@ public class AuthController {
         4. 그 권한명 중 원하는 행 중에서 [사용] 버튼 클릭시 그 권한 대상의 명을 가진 ID가 input 필드에 나타남 문제는 ErpUser에서 가져와야됨
         */
         return "searchId";
+    }
+
+    @RequestMapping(value = "/addAuth", method = RequestMethod.POST)
+    public String addAuth(@ModelAttribute ErpAuth erpAuth, RedirectAttributes redirectAttributes) {
+        boolean isAdded = erpAuthService.addErpAuth(erpAuth);
+
+        if(!isAdded) {
+            redirectAttributes.addFlashAttribute("errorMessage", "이미 해당 권한이 존재합니다.");
+        }
+        return "redirect:/admin/auth";
+    }
+
+    @RequestMapping(value = "/deleteAuth", method = RequestMethod.POST)
+    public String deleteAuth(@ModelAttribute ErpAuth erpAuth) {
+        System.out.println(erpAuth);
+        erpAuthService.deleteErpAuth(erpAuth);
+
+        return "redirect:/admin/auth";
     }
 }

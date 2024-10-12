@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.ErpAuthMapper">
+
+    <select id="checkAuthExists" resultType="int">
+        SELECT COUNT(*)
+        FROM erp_auth
+        WHERE (userid = #{userid} AND auth = #{auth})
+        OR
+        (
+        orgId = #{orgId} AND auth = #{auth}
+        )
+    </select>
+
     <!-- 조건 권한 추가 -->
     <insert id="insertErpAuth">
-        insert into erp_auth
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userid != null"> userid, </if>
-            <if test="orgId != null"> orgId, </if>
-            auth
-        </trim>
-        <trim prefix="values(" suffix=")" suffixOverrides=",">
-            <if test="userid != null"> #{userid}, </if>
-            <if test="orgId != null"> #{orgId}, </if>
-            #{auth}
-        </trim>
+        INSERT INTO erp_auth (userid, orgId, auth)
+        SELECT #{userid}, #{orgId}, #{auth} FROM DUAL
+        WHERE NOT EXISTS (
+        SELECT 1
+        FROM erp_auth
+        WHERE (userid = #{userid} AND auth = #{auth})
+        OR (orgId = #{orgId} AND auth = #{auth})
+        )
     </insert>
 
     <!-- 조건에 맞는 권한 삭제 -->
     <delete id="deleteAuth">
-        delete from erp_auth
+        DELETE FROM erp_auth
         <where>
             <if test="userid != null">
-                userid = #{userid}
+                userid = #{userid} AND auth = #{auth}
             </if>
             <if test="orgId != null">
-                and orgId = #{orgId}
+                orgId = #{orgId} AND auth = #{auth}
             </if>
         </where>
     </delete>

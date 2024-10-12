@@ -178,7 +178,6 @@
                                     <td class="align-middle text-center">${organization.orgId}</td>
                                     <td>
                                         <button type="button" class="btn btn-warning" onclick="selectId('${organization.orgId}')">선택</button>
-
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -233,6 +232,7 @@
 <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
 <script>
     function selectId(id) {
+
         opener.document.getElementById("searchId").value = id;
         window.close();
     }

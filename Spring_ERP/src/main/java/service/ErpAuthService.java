@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface ErpAuthService {
-    void addErpAuth(ErpAuth erpAuth);
-    void deleteErpAuth(String id);
+    boolean addErpAuth(ErpAuth erpAuth);
+    void deleteErpAuth(ErpAuth erpAuth);
 
     Map<String, Object> getErpAuthList(Map<String, Object> map);
 

@@ -1,5 +1,7 @@
 package dto;
 
+import lombok.Data;
+
 /*CREATE TABLE timecard (
     timeCard_id      NUMBER PRIMARY KEY,                                               -- 타임카드 고유 ID (PK)
     employee_id      NUMBER CONSTRAINT fk_timecard_employee_id REFERENCES employee(employee_id),  -- 직원 고유 ID (FK)
@@ -11,6 +13,7 @@ package dto;
 
 	CREATE SEQUENCE TIMECARD_SEQ;*/
 
+@Data
 public class TimeCard {
 	private int timeCardId;
 	private int employeeId;

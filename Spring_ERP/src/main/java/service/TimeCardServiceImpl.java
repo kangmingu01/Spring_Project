@@ -38,7 +38,7 @@ public class TimeCardServiceImpl implements TimeCardService{
 
 	@Override
 	public List<TimeCard> selectTimeCardByName(String name) {
-		return timeCardDAO.selectAllTimeCard();
+		return timeCardDAO.selectTimeCardByName(name);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class TimeCardServiceImpl implements TimeCardService{
 		
 		map.put("startRow", pager.getStartRow());
 		map.put("endRow", pager.getEndRow());
-		List<TimeCard> timecardList=timeCardDAO.selectAllTimeCard();
+		List<TimeCard> timecardList=timeCardDAO.selectAllTimeCard(map);
 		System.out.println("Map Contents: " + map);
 		System.out.println("Map Contents: " + timecardList);
 		Map<String, Object> result=new HashMap<String, Object>();

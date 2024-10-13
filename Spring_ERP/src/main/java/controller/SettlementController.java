@@ -48,12 +48,10 @@ public class SettlementController {
         map.putIfAbsent("productName", "");
         map.putIfAbsent("supplierId", "");
         
-        // 기본값 설정: 입고 완료 상태만 조회
+        // 기본값 설정: 입고 완료 상태(4)와 정산 완료 상태(6)를 모두 조회
         map.put("receivingStatus", "4");
-
-        // 정산 상태는 선택적으로 필터링 (대기, 완료 둘 다 조회 가능)
         if (!map.containsKey("settlementStatus") || map.get("settlementStatus").equals("")) {
-            map.remove("settlementStatus");  // 모든 정산 상태를 조회
+            map.put("settlementStatus", "6");
         }
 
         // 구매정산 목록 조회 (페이징 처리 및 검색 포함)

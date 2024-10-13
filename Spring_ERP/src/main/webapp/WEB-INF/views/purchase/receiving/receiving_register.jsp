@@ -118,13 +118,13 @@
             </div>
             <div>
               <label>발주수량</label>
-              <input type="number" id="ordersQuantity" name="ordersQuantity" readonly class="read-only-field" />
+              <input type="number" id="ordersQuantity" name="ordersQuantity" readonly class="read-only-field" min="0"/>
             </div>
             </div>
             <div>
             <div>
               <label>단가</label>
-              <input type="number" id=productPrice name="productPrice" readonly class="read-only-field" />
+              <input type="number" id=productPrice name="productPrice" readonly class="read-only-field" min="0"/>
             </div>
             <div>
               <label>납기일</label>
@@ -146,7 +146,7 @@
           </div>
           <div>
             <label>통과수량</label>
-            <input type="number" id="quantity" name="quantity" required />
+            <input type="number" id="quantity" name="quantity" required min="0"/>
           </div>
         </div>
         <div>

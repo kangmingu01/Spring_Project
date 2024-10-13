@@ -114,7 +114,7 @@
             <input type="hidden" id="ordersQuantity" name="ordersQuantity" value="${receiving.ordersQuantity}" />
             <div>
               <label>통과수량</label>
-              <input type="number" name="quantity" id="quantity" style="background-color: #f0f0f0" readonly/>
+              <input type="number" name="quantity" id="quantity" style="background-color: #f0f0f0" readonly min="0"/>
             </div>
             <div>
               <!-- 에러 메시지 -->

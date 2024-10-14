@@ -6,7 +6,7 @@ import lombok.Data;
 CREATE TABLE history(
     history_id NUMBER PRIMARY KEY,
     history_product_id NUMBER,
-    history_type NUMBER CHECK (history_type IN (1, 2, 3)), -- 1: ÀÔ°í, 2: Ãâ°í, 3:¹ÝÇ°
+    history_type NUMBER CHECK (history_type IN (1, 2, 3)), -- 1: ï¿½Ô°ï¿½, 2: ï¿½ï¿½ï¿½, 3:ï¿½ï¿½Ç°
     history_date DATE,
     history_warehouse_id NUMBER,
     history_quantity NUMBER,
@@ -21,8 +21,11 @@ CREATE SEQUENCE history_seq;
 public class History {
 	private int historyId;
 	private int historyProductId; 
-	private int historyType;	// ÀÔ°í, Ãâ°í , ¹ÝÇ°
-	private String historyDate; //ÇöÀç³¯Â¥
-	private int historyWarehouseId; // Ã¢°í ¹øÈ£
-	private int historyQty;	// ¼ö·®
+	private int historyType;	// ï¿½Ô°ï¿½, ï¿½ï¿½ï¿½ , ï¿½ï¿½Ç°
+	private String historyDate; //ï¿½ï¿½ï¿½ç³¯Â¥
+	private int historyWarehouseId; // Ã¢ï¿½ï¿½ ï¿½ï¿½È£
+	private int historyQty;	// ï¿½ï¿½ï¿½ï¿½
+	
+	private Product product;
+	private Warehouse warehouse;
 }

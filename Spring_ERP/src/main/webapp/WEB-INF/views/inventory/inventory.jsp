@@ -6,6 +6,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="_csrf" content="${_csrf.token}" />
+  <meta name="_csrf_header" content="${_csrf.headerName}" />
   <link href="<c:url value="/css/reset.css"/>" type="text/css" rel="stylesheet">
   <link href="<c:url value="/css/inventory.css"/>" type="text/css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -49,6 +51,7 @@
           <div class="onerow">
             <div class="item_code">
               <label>제품코드</label>
+              <input type="hidden" name="productId" class="productId"/>
               <input type="text"  readonly="readonly" name="productCategory" class="productCategory"/>
             </div>
             <div>
@@ -83,19 +86,19 @@
           <div>
             <div>
               <label>현재수량</label>
-              <input type="number"/>
+              <input type="number" class="inventoryQty"/>
             </div>
             <div>
               <label>파손수량</label>
-              <input type="number"/>
+              <input type="number" class="inventoryDamagedQty"/>
             </div>
             <div>
             	<label>창고</label>
-            	<input type="text"/>
+            	<input type="text" class="inventoryWarehouseId"/>
             </div>
             <div>
             	<label>입출고일자</label>
-            	<input type="date"/>
+            	<input type="date" class="lastDate"/>
             </div>
             
           </div>
@@ -243,7 +246,9 @@
 	</div>
 
   <script>
-  	 inventoryDisplay(pageNum=1)
+ 	var csrfToken = $('meta[name="_csrf"]').attr('content');
+  	var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+  	inventoryDisplay(pageNum=1)
  
     // 추가 정보 클릭 이벤트
     var plusBtn=document.querySelector(".content_body_search_plus");
@@ -261,8 +266,9 @@
     //reset
     $(".content_header_reset_btn").click(function(){
     	// 모든 input 태그를 선택하고 값 초기화
-        $('input[type="text"], input[type="hidden"], input[type="number"]').val('');
+        $('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"]').val('');
     });
+    
 
     //제품조회 클릭이벤트
     $(".content_header_search_btn").click(function(){
@@ -384,6 +390,46 @@
     		}
     	});    	
     }
+    
+  	//재고 등록 이벤트
+    $(".content_header_plus_btn").click(function(){
+    	var inventoryProductId= $(".productId").val();
+    	console.log(inventoryProductId);
+    	var	inventoryQty=$(".inventoryQty").val();
+    	console.log(inventoryQty);
+    	var	inventoryWarehouseId=$(".inventoryWarehouseId").val();
+    	console.log(inventoryWarehouseId);
+    	var inventoryDamagedQty=$(".inventoryDamagedQty").val();
+    	console.log(inventoryDamagedQty);
+    	var lastDate=$(".lastDate").val();
+    	console.log(lastDate);
+    		
+    	
+    	if(confirm("재고를 등록 하시겠습니까?")){
+	        $.ajax({
+	    		type:"post",
+	    		url: "<c:url value="/inventory/inventory_add"/>",
+	    		contentType : "application/json",
+	    		data: JSON.stringify({"inventoryProductId":inventoryProductId,"inventoryQty":inventoryQty,"inventoryWarehouseId":inventoryWarehouseId,"inventoryDamagedQty":inventoryDamagedQty,"lastDate":lastDate }),
+	    		dataType:"text",
+	    		beforeSend: function(xhr) {
+                    // CSRF 토큰을 HTTP 요청 헤더에 추가
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+	    		success: function(){
+	    			$(".content_body_list").empty();
+	    			$(".pageNumDiv").empty();
+	    			productDisplay();
+	    			alert("성공적으로 등록되었습니다.");
+	    		},
+	    		error: function(xhr){
+	    			alert("등록이 실패 하였습니다.");
+	    		}
+	    	});
+        }
+    });
+    
+    
     
     
     //################################# 수정중 .. 다른 리스트 형식 함수 호출해야함
@@ -680,6 +726,7 @@
 				$(".updateWarehouse").val(result.inventoryWarehouseId); 
 				$(".updateDamageQty").val(result.inventoryDamagedQty); 
 				$(".updateDate").val(result.lastDate.substring(0, 10));
+				
     		},
     		error:function(xhr){
     			alert("검색된 정보가 없습니다.")
@@ -714,6 +761,10 @@
 			contentType: "application/json",
 			data: JSON.stringify({"inventoryId":inventoryId, "inventoryProductId":inventoryProductId, "inventoryQty":inventoryQty, "inventoryWarehouseId":inventoryWarehouseId, "inventoryDamagedQty":inventoryDamagedQty, "lastDate":lastDate }),
 			dataType: "text",
+			beforeSend: function(xhr) {
+                // CSRF 토큰을 HTTP 요청 헤더에 추가
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
 			success:function(result){
 				if(result == "success") {
 					$('input[type="text"], input[type="hidden"], input[type="number"]').val('');
@@ -736,6 +787,10 @@
     			type:"delete",
     			url: "<c:url value="/inventory/inventory_remove"/>/"+inventoryId,
     			dataType: "text",
+    			beforeSend: function(xhr) {
+                    // CSRF 토큰을 HTTP 요청 헤더에 추가
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
     			success: function(result){
     				if(result=="success"){
     					//init();
@@ -758,6 +813,10 @@
     			type:"delete",
     			url: "<c:url value="/inventory/inventory_remove"/>/"+inventoryId,
     			dataType: "text",
+    			beforeSend: function(xhr) {
+                    // CSRF 토큰을 HTTP 요청 헤더에 추가
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
     			success: function(result){
     				if(result=="success"){
     					//init();

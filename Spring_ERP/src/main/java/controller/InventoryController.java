@@ -45,7 +45,7 @@ public class InventoryController {
 	}
 	
 	@PostMapping("/inventory_add")
-	public String inventoryadd(@RequestParam Inventory inventory) {
+	public String inventoryadd(@RequestBody Inventory inventory) {
 		inventoryService.addInventory(inventory);
 		return "success";
 	}

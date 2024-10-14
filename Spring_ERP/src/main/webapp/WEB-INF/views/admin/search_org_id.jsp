@@ -73,14 +73,11 @@
     </div>
 </header>
 <section class="">
-
     <div class="content d-md-flex justify-content-center pt-2 pb-2 ps-4 pe-4 align-items-center">
-
-        <form action="<c:url value='/admin/searchId'/>" method="post">
+        <form action="<c:url value='/admin/searchOrgId'/>" method="post">
             <input type="hidden" name="column" value="org_name">
             <input type="hidden" name="searchType" value="orgId">
             <div class="row ">
-
                 <div class="col-11">
                     <input type="text" class="form-control" name="keyword" placeholder="조직 이름으로 입력하세요">
                 </div>
@@ -133,7 +130,7 @@
             <c:choose>
                 <c:when test="${resultMap.pager.pageNum > 1}">
                     <a class="btn btn-primary"
-                       href="<c:url value='/admin/searchOrgId'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}&searchType=${searchType}">
+                       href="<c:url value='/admin/searchOrgId'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
                         &laquo; 이전
                     </a>
                 </c:when>
@@ -149,7 +146,7 @@
                     </c:when>
                     <c:otherwise>
                         <a class="btn btn-outline-primary mx-1"
-                           href="<c:url value='/admin/searchOrgId'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}&searchType=${searchType}">
+                           href="<c:url value='/admin/searchOrgId'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
                                 ${i}
                         </a>
                     </c:otherwise>
@@ -159,7 +156,7 @@
             <c:choose>
                 <c:when test="${resultMap.pager.pageNum < resultMap.pager.totalPage}">
                     <a class="btn btn-primary"
-                       href="<c:url value='/admin/searchOrgId'/>?pageNum=${resultMap.pager.pageNum + 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}&searchType=${searchType}">
+                       href="<c:url value='/admin/searchOrgId'/>?pageNum=${resultMap.pager.pageNum + 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}">
                         다음 &raquo;
                     </a>
                 </c:when>

@@ -44,15 +44,16 @@
                             <a href="<c:url value="/admin/user"/>" class="nav-link">유저 관리</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<c:url value="/admin/html"/>" class="nav-link">권한 관리</a>
+                            <a href="<c:url value="/admin/auth"/>" class="nav-link">권한 관리</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<c:url value="/admin/organization"/>" class="nav-link">부서 권한</a>
+                            <a href="<c:url value="/admin/organization"/>" class="nav-link">부서/매장 관리</a>
                         </li>
                     </ul>
                 </div>
             </li>
-            <%-- 구매팀 부분 --%>
+            <%--
+            <%-- 구매팀 부분 --%> 
             <li class="nav-item">
                 <a
                         class="nav-link"
@@ -68,7 +69,7 @@
                 <div class="collapse" data-bs-parent="#sidebarNav" id="orderingSidebar">
                     <ul class="nav sub-menu">
                         <li class="nav-item">
-                            <a href="<c:url value="/purchase/supplier/manage"/>" class="nav-link">공급업체</a>
+                            <a href="<c:url value="/purchase/supplier/manage"/>" class="nav-link">공급업체 관리</a>
                         </li>
                         <li class="nav-item">
                             <a href="<c:url value="/purchase/orders/register"/>" class="nav-link">발주 등록</a>
@@ -76,9 +77,19 @@
                         <li class="nav-item">
                             <a href="<c:url value="/purchase/orders/list"/>" class="nav-link">발주 조회</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/receiving/register"/>" class="nav-link">입고 등록</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/receiving/list"/>" class="nav-link">입고 조회</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<c:url value="/purchase/settlement/list"/>" class="nav-link">구매정산 조회</a>
+                        </li>
                     </ul>
                 </div>
             </li>
+            
             <%-- 재고팀 부분 --%>
             <li class="nav-item">
                 <a
@@ -98,10 +109,10 @@
                             <a href="<c:url value="/inventory/register"/>" class="nav-link">상품/창고 등록</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<c:url value="/inventory"/>" class="nav-link">재고 관리</a>
+                            <a href="<c:url value="/inventory/list"/>" class="nav-link">재고 관리</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<c:url value="/inventory"/>" class="nav-link">출입고 관리</a>
+                            <a href="<c:url value="/inventory/history"/>" class="nav-link">출입고 관리</a>
                         </li>
                     </ul>
                 </div>

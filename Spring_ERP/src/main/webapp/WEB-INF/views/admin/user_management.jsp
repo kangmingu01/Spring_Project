@@ -134,8 +134,6 @@
                             </button>
                         </div>
                         <div id="passwdMsg" class="error">랜덤생성 버튼을 눌러주세요</div>
-
-
                     </div>
                     <!-- 이름 -->
                     <div class="col-md-4">

@@ -104,43 +104,46 @@
 	<!-- 발주 목록 조회 (페이징 처리 및 검색 기능 포함) -->
 	<select id="selectOrdersList" resultType="Orders">
 	    select * from (
-	        select rownum rn, o.orders_id, o.orders_date, o.userid, u.name,
-	               o.supplier_id, o.product_id, o.orders_quantity, o.product_price,
-	               o.delivery_date, o.orders_status, p.product_name, p.product_category,
-	               s.supplier_name
-	        from orders o
-	        join product p on o.product_id = p.product_id
-	        join supplier s on o.supplier_id = s.supplier_id
-	        join erp_user u on o.userid = u.userid
-	        <where>
-	            <if test="ordersId != null and ordersId != ''">
-	                o.orders_id = #{ordersId}
-	            </if>
-	            <if test="ordersDate != null and ordersDate != ''">
-	                and to_char(o.orders_date, 'YYYY-MM-DD') = #{ordersDate}
-	            </if>
-	            <if test="name != null and name != ''">
-				    and u.name = #{name} 
-				</if>
-	            <if test="productId != null and productId != ''">
-	                and o.product_id = #{productId}
-	            </if>
-	            <if test="productName != null and productName != ''">
-	                and p.product_name like '%' || #{productName} || '%'
-	            </if>
-	            <if test="brand != null and brand != ''">
-	                and SUBSTR(p.product_category, 1, 2) = #{brand}
-	            </if>
-	            <if test="supplierId != null and supplierId != ''">
-	                and o.supplier_id = #{supplierId}
-	            </if>
-	            <if test="ordersStatus != null and ordersStatus != ''">
-	                and o.orders_status = #{ordersStatus}
-	            </if>
-	        </where>
-	        order by o.orders_date desc
+	        select rownum rn, ordersData.*
+	        from (
+	            select o.orders_id, o.orders_date, o.userid, u.name,
+	                   o.supplier_id, o.product_id, o.orders_quantity, o.product_price,
+	                   o.delivery_date, o.orders_status, p.product_name, p.product_category,
+	                   s.supplier_name
+	            from orders o
+	            join product p on o.product_id = p.product_id
+	            join supplier s on o.supplier_id = s.supplier_id
+	            join erp_user u on o.userid = u.userid
+	            <where>
+	                <if test="ordersId != null and ordersId != ''">
+	                    o.orders_id = #{ordersId}
+	                </if>
+	                <if test="ordersDate != null and ordersDate != ''">
+	                    and to_char(o.orders_date, 'YYYY-MM-DD') = #{ordersDate}
+	                </if>
+	                <if test="name != null and name != ''">
+	                    and u.name = #{name} 
+	                </if>
+	                <if test="productId != null and productId != ''">
+	                    and o.product_id = #{productId}
+	                </if>
+	                <if test="productName != null and productName != ''">
+	                    and p.product_name like '%' || #{productName} || '%'
+	                </if>
+	                <if test="brand != null and brand != ''">
+	                    and SUBSTR(p.product_category, 1, 2) = #{brand}
+	                </if>
+	                <if test="supplierId != null and supplierId != ''">
+	                    and o.supplier_id = #{supplierId}
+	                </if>
+	                <if test="ordersStatus != null and ordersStatus != ''">
+	                    and o.orders_status = #{ordersStatus}
+	                </if>
+	            </where>
+	            order by o.orders_id desc  <!-- 정렬을 먼저 처리 -->
+	        ) ordersData  <!-- 전체 정렬된 데이터에 rownum 부여 -->
 	    )
-	    where rn between #{startRow} and #{endRow}
+	    where rn between #{startRow} and #{endRow}  <!-- 페이징 처리 -->
 	</select>
 
 	<!-- 발주 정보 수정 (발주 대기 상태일 때) -->

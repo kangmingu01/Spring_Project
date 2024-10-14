@@ -99,8 +99,8 @@
     </select>
     
     <!-- 특정 입고 데이터 조회 (receiving_status가 4인 항목만) -->
-	<select id="selectReceivingById" parameterType="int" resultType="Receiving">
-	    select * from receiving where receiving_id = #{receivingId} and receiving_status = 4 
+	<select id="selectReceivingListByStatus" resultType="Receiving">
+	    select * from receiving where receiving_status = 4
 	</select>
 	
 	<!-- 정산 데이터 삽입 -->
@@ -111,11 +111,4 @@
 	    insert into settlement values (#{settlementId}, sysdate, #{userid}, #{receivingId}, 6, #{auth})
 	</insert>
 	
-	<!-- 입고 상태 업데이트 -->
-	<update id="updateSettlement">
-	    update settlement set settlement_status = 6 where settlement_id = #{settlementId}
-	    and exists (select 1 from receiving r where r.receiving_id = settlement.receiving_id 
-	    and r.receiving_status = 4)
-	</update>
-
 </mapper>

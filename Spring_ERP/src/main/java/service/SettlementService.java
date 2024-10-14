@@ -10,7 +10,6 @@ import dto.Supplier;
 public interface SettlementService {
 	Map<String, Object> getSettlementList(Map<String, Object> map);
 	List<Supplier> getSupplierList();
-	Receiving getReceivingById(int receivingId);
+	List<Receiving> getReceivingList(Receiving receiving);
 	void addSettlement(Settlement settlement);
-	int modifySettlement(Settlement settlement);
 }

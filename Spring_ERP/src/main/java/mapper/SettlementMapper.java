@@ -11,7 +11,6 @@ public interface SettlementMapper {
 	int selectSettlementCount(Map<String, Object> map);
 	List<Settlement> selectSettlementList(Map<String, Object> map);
 	List<Supplier> selectSupplierList();
-	Receiving selectReceivingById(int receivingId);
+	List<Receiving> selectReceivingListByStatus(Receiving receiving);
 	int insertSettlement(Settlement settlement);
-	int updateSettlement(Settlement settlement);	
 }

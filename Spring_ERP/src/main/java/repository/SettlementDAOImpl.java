@@ -33,8 +33,8 @@ public class SettlementDAOImpl implements SettlementDAO {
 	}
 
 	@Override
-	public Receiving selectReceivingById(int receivingId) {
-		return sqlSession.getMapper(SettlementMapper.class).selectReceivingById(receivingId);
+	public List<Receiving> selectReceivingListByStatus(Receiving receiving) {
+		return sqlSession.getMapper(SettlementMapper.class).selectReceivingListByStatus(receiving);
 	}
 
 	@Override
@@ -42,8 +42,4 @@ public class SettlementDAOImpl implements SettlementDAO {
 		return sqlSession.getMapper(SettlementMapper.class).insertSettlement(settlement);
 	}
 
-	@Override
-	public int updateSettlement(Settlement settlement) {
-		return sqlSession.getMapper(SettlementMapper.class).updateSettlement(settlement);
-	}
 }

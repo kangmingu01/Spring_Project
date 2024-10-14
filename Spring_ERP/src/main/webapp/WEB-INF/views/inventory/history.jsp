@@ -225,9 +225,13 @@
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
-	        <div class="input-group mb-3">
-			  <input type="text"  name="keyword" value="${ keyword}" class="form-control keyword" placeholder="상품명 또는 브랜드를 입력해주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
-			  <button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
+	        <div class="input-group mb-3 selectSearch">
+	        	<select class="modalsearch" name="modalsearch">
+	      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
+	      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
+      			</select>
+			  	<input type="text"  name="keyword" value="${ keyword}" class="form-control modalkeyword" placeholder="상품명 또는 제품코드를 입력해주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
+			  	<button class="btn btn-outline-secondary modalSearch_btn" type="button" id="button-addon2">검색</button>
 			</div>
 			<div class="product_brand_search"></div>
 			<div class="modalpage"></div>
@@ -258,6 +262,11 @@
       }
     });
     
+    //모달창 제품 검색 이벤트
+    $(".modalSearch_btn").click(function(){
+    	productDisplay();
+    });
+    
     //제품조회 클릭이벤트
     $(".content_header_search_btn").click(function(){
     	productDisplay();
@@ -266,8 +275,8 @@
     //제품조회 함수
     function productDisplay(pageNum=1) {
     	var pageSize=10;
-    	var search = document.querySelector(".search").value;
-    	var keyword = document.querySelector(".keyword").value;
+    	var search = document.querySelector(".modalsearch").value;
+    	var keyword = document.querySelector(".modalkeyword").value;
     	$.ajax({
     		type:"get",
     		url: "<c:url value="/inventory/product_list"/>", 
@@ -303,9 +312,9 @@
 				$(result.productList).each(function(index){
 					html+="<tr>";					
 					html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-					html+="<td>"+this.productId+"</td>";
 					html+="<td>"+this.productCategory+"</td>";
 					html+="<td>"+this.productName+"</td>";
+					html+="<td>"+this.productCategory+"</td>";
 					html+="<td>"+this.productCategory+"</td>";
 					html+="<td>"+this.productCategory+"</td>";
 					html+="<td>"+this.productCategory+"</td>";
@@ -520,7 +529,7 @@
 					html+="<td>"+historyTime[0]+"</td>";
 					html+="<td>"; 
 					html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.historyId+');">수정</button>'; 
-					html+="<button type='button' onclick='remove("+this.historyId+","+pageNum+");'>삭제</button>"
+					html+="<button type='button' class='btn btn-danger' onclick='remove("+this.historyId+","+pageNum+");'>삭제</button>"
 					html+="</td>"
 					html+="</tr>";
 				});

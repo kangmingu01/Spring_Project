@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.InventoryMapper">
+	<insert id="insertInventory">
+		<selectKey resultType="int" keyProperty="inventoryId" order="BEFORE">
+			select inventory_seq.nextval from dual
+		</selectKey>
+		insert into inventory values(#{inventoryId},#{inventoryProductId},#{inventoryQty},#{inventoryWarehouseId},#{inventoryDamagedQty},#{lastDate} )
+	</insert>
+	
+	<update id="updateInventory">
+		update inventory set inv_product_id=#{inventoryProductId},inv_current_qty=#{inventoryQty}
+		,inv_warehouse_id=#{inventoryWarehouseId},inv_damaged_qty=#{inventoryDamagedQty},inv_last_date=#{lastDate}  where inv_id=#{inventoryId}
+	</update>
+	
+	<delete id="deleteInventory">
+		delete from inventory where inv_id=#{inventoryId}
+	</delete>
+
+	<!-- <select id="selectProductInventoryUpdate" resultMap="inventoryResultMap">
+		select product_id ,product_category,product_name,product_price,delivery_price , inv_id,inv_product_id,inv_current_qty,inv_warehouse_id,inv_damaged_qty,inv_last_date
+		FROM inventory JOIN product ON product.product_id = inventory.inv_product_id where inv_id=#{inventoryId}
+	</select> -->
+	<select id="selectProductInventoryUpdate" resultMap="inventoryResultMap">
+		SELECT 
+	        inv.inv_id,
+	        inv.inv_product_id,
+	        inv.inv_current_qty,
+	        inv.inv_warehouse_id,
+	        inv.inv_damaged_qty,
+	        inv.inv_last_date,
+	        p.product_name,
+	        p.product_category,
+	        w.warehouse_name,
+	        w.warehouse_location
+	    FROM inventory inv 
+	    JOIN warehouse w ON w.warehouse_id = inv.inv_warehouse_id
+	    JOIN product p ON p.product_id = inv.inv_product_id
+	    WHERE inv.inv_id = #{inventoryId}
+	</select>
+
+	<select id="selectProductInventoryList">
+		select inv_id, inv_product_id, product_name,product_category,inv_current_qty,inv_damaged_qty,inv_last_date
+			from inventory join product on inventory.inv_product_id= product.product_id 
+	</select>
+	
+	<resultMap id="inventoryResultMap" type="Inventory">
+	    <id property="inventoryId" column="inv_id"/>
+	    <result property="inventoryProductId" column="inv_product_id"/>
+	    <result property="inventoryQty" column="inv_current_qty"/>
+	    <result property="inventoryWarehouseId" column="inv_warehouse_id"/>
+	    <result property="inventoryDamagedQty" column="inv_damaged_qty"/>
+	    <result property="lastDate" column="inv_last_date"/>
+	
+		<association property="warehouse" javaType="Warehouse">
+		    <id property="warehouseId" column="warehouse_id"/>
+		    <result property="warehouseName" column="warehouse_name"/>
+		    <result property="warehouseLocation" column="warehouse_location"/>
+		    <result property="warehouseCapacity" column="warehouse_capacity"/>
+		</association>
+
+	    <!-- Product 객체와의 매핑 -->
+	    <association property="product" javaType="Product">
+	        <id property="productId" column="product_id"/>
+	        <result property="productCategory" column="product_category"/>
+	        <result property="productName" column="product_name"/>
+	        <result property="productPrice" column="product_price"/>
+	        <result property="deliveryPrice" column="delivery_price"/>
+	        <result property="productImg" column="product_img"/>
+	    </association>
+	</resultMap>
+	
+	<!-- 전체 리스트 -->
+	<!-- <select id="selectProductInventoryCount" resultType="int">
+		select count(*)from product join inventory on product_id=inv_product_id
+		<if test="keyword != null and keyword != ''">
+			<bind name="word" value="'%'+keyword+'%'"/>
+			where ${search} like #{word}
+		</if>
+	</select> -->
+	
+	<!-- <select id="selectProductInventoryPageList" resultMap="inventoryResultMap">
+	    SELECT * FROM (
+	        SELECT rownum rn, inventory.* FROM (
+	            SELECT inv.inv_id, 
+	                   inv.inv_product_id, 
+	                   inv.inv_current_qty, 
+	                   inv.inv_warehouse_id, 
+	                   inv.inv_damaged_qty, 
+	                   inv.inv_last_date,
+	                   p.product_name, 
+	                   p.product_category 
+	            FROM inventory inv 
+	            JOIN product p ON p.product_id = inv.inv_product_id 
+	            <if test="keyword != null and keyword != ''">
+	                <bind name="word" value="'%' + keyword + '%'"/>
+	                WHERE ${search} LIKE #{word}
+	            </if>
+	            ORDER BY inv.inv_id DESC ) inventory ) WHERE rn BETWEEN #{startRow} and #{endRow}   
+	</select> -->
+	<select id="selectProductInventoryCount" resultType="int">
+		SELECT count(*)
+	    FROM inventory i
+	    JOIN warehouse w ON w.warehouse_id = i.inv_warehouse_id
+	    JOIN product p ON p.product_id = i.inv_product_id
+	    <if test="keyword != null and keyword != ''">
+	        <bind name="word" value="'%' + keyword + '%'"/>
+	        WHERE ${search} LIKE #{word}
+	    </if>
+	</select>
+	
+	<select id="selectProductInventoryPageList" resultMap="inventoryResultMap">
+	    SELECT * FROM (
+	        SELECT rownum rn, inventory.* FROM (
+	            SELECT 
+	            	inv.inv_id, 
+	                inv.inv_product_id, 
+	                inv.inv_current_qty, 
+	                inv.inv_warehouse_id, 
+	                inv.inv_damaged_qty, 
+	                inv.inv_last_date,
+	                p.product_name, 
+	                p.product_category,
+	                w.warehouse_name, 
+	                w.warehouse_location 
+	            FROM inventory inv 
+	            JOIN warehouse w ON w.warehouse_id = inv.inv_warehouse_id
+	            JOIN product p ON p.product_id = inv.inv_product_id 
+	            <if test="keyword != null and keyword != ''">
+	                <bind name="word" value="'%' + keyword + '%'"/>
+	                WHERE ${search} LIKE #{word}
+	            </if>
+	            ORDER BY inv.inv_id DESC
+	        ) inventory
+	    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<!-- 파손상품 제어 -->
+	<!-- <select id="selectProductInventoryDamageCount" resultType="int">
+	    select count(*) 
+	    from product 
+	    join inventory on product.product_id = inventory.inv_product_id 
+	    where inventory.inv_damaged_qty > 0  손상된 수량이 0이 아닌 것만 필터링
+	    <if test="keyword != null and keyword != ''">
+	        <bind name="word" value="'%' + keyword + '%'"/>
+	        and ${search} like #{word}  검색 조건 추가
+	    </if>
+	</select>
+	
+	<select id="selectProductInventoryDamagePageList" resultMap="inventoryResultMap">
+	    SELECT * FROM (
+	        SELECT rownum rn, inventory.* FROM (
+	            SELECT inv.inv_id, 
+	                   inv.inv_product_id, 
+	                   inv.inv_current_qty, 
+	                   inv.inv_warehouse_id, 
+	                   inv.inv_damaged_qty, 
+	                   inv.inv_last_date,
+	                   p.product_name, 
+	                   p.product_category 
+	            FROM inventory inv 
+	            JOIN product p ON p.product_id = inv.inv_product_id 
+	            WHERE inv.inv_damaged_qty > 0  여기에 필터 추가
+	            <if test="keyword != null and keyword != ''">
+	                <bind name="word" value="'%' + keyword + '%'"/>
+	                AND ${search} LIKE #{word}  AND로 연결
+	            </if>
+	            ORDER BY inv.inv_id DESC 
+	        ) inventory 
+	    ) 
+	    WHERE rn BETWEEN #{startRow} and #{endRow}  
+    </select> -->
+     
+	<!-- 파손상품 제어 -->
+	<select id="selectProductInventoryDamageCount" resultType="int">
+	    SELECT count(*)
+	    FROM inventory i
+	    JOIN warehouse w ON w.warehouse_id = i.inv_warehouse_id
+	    JOIN product p ON p.product_id = i.inv_product_id
+	    WHERE i.inv_damaged_qty > 0  <!-- 손상된 수량이 0이 아닌 것만 필터링 -->
+	    <if test="keyword != null and keyword != ''">
+	        <bind name="word" value="'%' + keyword + '%'"/>
+	        AND ${search} LIKE #{word}  <!-- 검색 조건 추가 -->
+	    </if>
+	</select>
+	
+	<select id="selectProductInventoryDamagePageList" resultMap="inventoryResultMap">
+	    SELECT * FROM (
+	        SELECT rownum rn, inventory.* FROM (
+	            SELECT 
+	                inv.inv_id, 
+	                inv.inv_product_id, 
+	                inv.inv_current_qty, 
+	                inv.inv_warehouse_id, 
+	                inv.inv_damaged_qty, 
+	                inv.inv_last_date,
+	                p.product_name, 
+	                p.product_category,
+	                w.warehouse_name, 
+	                w.warehouse_location 
+	            FROM inventory inv 
+	            JOIN warehouse w ON w.warehouse_id = inv.inv_warehouse_id
+	            JOIN product p ON p.product_id = inv.inv_product_id 
+	            WHERE inv.inv_damaged_qty > 0  <!-- 손상된 수량이 0보다 큰 경우 -->
+	            <if test="keyword != null and keyword != ''">
+	                <bind name="word" value="'%' + keyword + '%'"/>
+	                AND ${search} LIKE #{word}  <!-- 검색 조건 추가 -->
+	            </if>
+	            ORDER BY inv.inv_id DESC 
+	        ) inventory 
+	    ) 
+	    WHERE rn BETWEEN #{startRow} AND #{endRow}  
+    </select>
+     
+     
+	<!-- 수량제어 -->
+	<!-- <select id="selectProductInventoryQtyCount" resultType="int">
+	    select count(*) 
+	    from product 
+	    join inventory on product.product_id = inventory.inv_product_id 
+	    where inventory.inv_current_qty &lt; 100  현재 수량이 100이 아닌 것만 필터링
+	    <if test="keyword != null and keyword != ''">
+	        <bind name="word" value="'%' + keyword + '%'"/>
+	        and ${search} like #{word}  검색 조건 추가
+	    </if>
+	</select>
+	
+	<select id="selectProductInventoryQtyPageList" resultMap="inventoryResultMap">
+	    SELECT * FROM (
+	        SELECT rownum rn, inventory.* FROM (
+	            SELECT inv.inv_id, 
+	                   inv.inv_product_id, 
+	                   inv.inv_current_qty, 
+	                   inv.inv_warehouse_id, 
+	                   inv.inv_damaged_qty, 
+	                   inv.inv_last_date,
+	                   p.product_name, 
+	                   p.product_category 
+	            FROM inventory inv 
+	            JOIN product p ON p.product_id = inv.inv_product_id 
+	            WHERE inv.inv_current_qty &lt; 100  여기에 필터 추가
+	            <if test="keyword != null and keyword != ''">
+	                <bind name="word" value="'%' + keyword + '%'"/>
+	                AND ${search} LIKE #{word}  AND로 연결
+	            </if>
+	            ORDER BY inv.inv_id DESC 
+	        ) inventory 
+	    ) 
+	    WHERE rn BETWEEN #{startRow} and #{endRow}   
+	</select> -->
+	
+	<!-- 수량제어 -->
+	<select id="selectProductInventoryQtyCount" resultType="int">
+	    SELECT count(*)
+	    FROM inventory inv
+	    JOIN warehouse w ON w.warehouse_id = inv.inv_warehouse_id
+	    JOIN product p ON p.product_id = inv.inv_product_id
+	    where inv.inv_current_qty &lt; 100  <!-- 현재 수량이 100이 아닌 것만 필터링 -->
+	    <if test="keyword != null and keyword != ''">
+	        <bind name="word" value="'%' + keyword + '%'"/>
+	        and ${search} like #{word}  <!-- 검색 조건 추가 -->
+	    </if>
+	</select>
+	
+	<select id="selectProductInventoryQtyPageList" resultMap="inventoryResultMap">
+	    SELECT * FROM (
+	        SELECT rownum rn, inventory.* FROM (
+	            SELECT 
+	                inv.inv_id, 
+	                inv.inv_product_id, 
+	                inv.inv_current_qty, 
+	                inv.inv_warehouse_id, 
+	                inv.inv_damaged_qty, 
+	                inv.inv_last_date,
+	                p.product_name, 
+	                p.product_category,
+	                w.warehouse_name, 
+	                w.warehouse_location 
+	            FROM inventory inv 
+	            JOIN warehouse w ON w.warehouse_id = inv.inv_warehouse_id
+	            JOIN product p ON p.product_id = inv.inv_product_id 
+	            WHERE inv.inv_current_qty &lt; 100  <!-- 여기에 필터 추가 -->
+	            <if test="keyword != null and keyword != ''">
+	                <bind name="word" value="'%' + keyword + '%'"/>
+	                AND ${search} LIKE #{word}  <!-- AND로 연결 -->
+	            </if>
+	            ORDER BY inv.inv_id DESC 
+	        ) inventory 
+	    ) 
+	    WHERE rn BETWEEN #{startRow} and #{endRow}   
+	</select>
+	
+	
+</mapper>

@@ -85,4 +85,12 @@
             </when>
         </choose>
     </select>
+    
+    <!-- 해당 부서 권한 가져오는 쿼리 -->
+    <select id="findAuthByOrgId" resultType="ErpAuth">
+        SELECT auth
+        FROM erp_auth
+        WHERE orgId = #{orgId}
+    </select>
+    
 </mapper>

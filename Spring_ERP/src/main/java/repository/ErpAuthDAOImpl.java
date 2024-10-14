@@ -45,4 +45,9 @@ public class ErpAuthDAOImpl implements ErpAuthDAO {
     public List<ErpUser> selectErpAuthById(Map<String, Object> map) {
         return sqlSession.getMapper(ErpAuthMapper.class).selectErpAuthById(map);
     }
+
+    @Override
+    public List<ErpAuth> findAuthByOrgId(String orgId) {
+        return sqlSession.getMapper(ErpAuthMapper.class).findAuthByOrgId(orgId);
+    }
 }

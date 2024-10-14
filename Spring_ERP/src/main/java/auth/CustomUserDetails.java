@@ -8,9 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 // 인증된 사용자 정보와 권한 정보를 저장하기 위한 클래스
 // => 인증 성공 후 인증 정보 및 권한 정보가 저장된 UserDetails 객체를 Spring Security로부터 제공
@@ -34,9 +32,10 @@ public class CustomUserDetails implements UserDetails {
     private String orgId;      // 조직 ID (부서 또는 지점)
 
     // 인증된 사용자의 모든 권한 정보가 저장될 필드 작성
-    private List<GrantedAuthority> erpAuthList;
+    /* 혹시 모를 중복 권한 방지 => Set */
+    private Set<GrantedAuthority> erpAuthList;
 
-    public CustomUserDetails(ErpUser user) {
+    public CustomUserDetails(ErpUser user, List<ErpAuth> departmentAuthList) {
         this.userid = user.getUserid();
         this.passwd = user.getPasswd();
         this.name = user.getName();
@@ -49,11 +48,18 @@ public class CustomUserDetails implements UserDetails {
         this.enabled = user.getEnabled();
         this.orgId = user.getOrgId();
 
-        this.erpAuthList = new ArrayList<GrantedAuthority>();
+        this.erpAuthList = new HashSet<>();
 
         for (ErpAuth auth : user.getErpAuthList()) {
             this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
         }
+
+        if (departmentAuthList != null) {
+            for (ErpAuth auth : departmentAuthList) {
+                this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
+            }
+        }
+
     }
 
     // 인증된 사용자의 권한정보를 반환하는 메소드

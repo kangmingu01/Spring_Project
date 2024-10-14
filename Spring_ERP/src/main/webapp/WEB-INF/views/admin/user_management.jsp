@@ -573,6 +573,7 @@
 
             // disabled 속성 있으면 값을 넘길 때 아무것도 들어가지 않음
             $("#passwd").prop("disabled", false);
+            $("#searchOrgId").prop("disabled", false);
 
             if ($("#userid").val() == "") {
                 $("#idMsg").css("display", "block").css("visibility", "visible");

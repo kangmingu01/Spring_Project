@@ -442,7 +442,7 @@
     });
 
     /* 한글만 입력 검증 */
-    const orgReg = /^[가-힣]+$/;
+    const orgReg = /^[가-힣\s]+$/;
 
     $("#orgForm").submit(function (e) {
         /*e.preventDefault();*/
@@ -455,6 +455,7 @@
         $("#address").removeClass("is-invalid");
         $("#middleNum").removeClass("is-invalid");
         $("#endNum").removeClass("is-invalid");
+
         if ($("#orgName").val() == "") {
             $("#orgMsg").css("display", "block").css("visibility", "visible");
             $("#orgName").addClass("is-invalid");

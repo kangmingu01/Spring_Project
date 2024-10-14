@@ -314,7 +314,6 @@ tr > th:nth-child(1) , tr > td:nth-child(1){
 }
 tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
 	width: 150px;	
-
 }
 .sty button {
 	font-size: 12px;
@@ -322,8 +321,9 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     height: 30px;
 	margin-right: 5px;
 }
-.sty tr:hover{
+.sty tr:hover td{
     background-color: #6571ff;
+    color:white;
     cursor: pointer;
 }
 .pageNumDiv{

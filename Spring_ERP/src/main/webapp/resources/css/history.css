@@ -313,7 +313,7 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     height: 30px;
 	margin-right: 5px;
 }
-.sty tr:hover{
+.sty tr:hover td{
     background-color: #6571ff;
     color:white;
     cursor: pointer;

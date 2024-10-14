@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.OrdersMapper">
+
+    <!-- 발주 정보 등록 -->
+    <insert id="insertOrders">
+        <selectKey resultType="int" keyProperty="ordersId" order="BEFORE">
+            select orders_seq.nextval from dual
+        </selectKey>
+        insert into orders values (#{ordersId}, sysdate, #{userid}, #{supplierId}, #{productId},
+        	 #{ordersQuantity}, #{productPrice}, #{deliveryDate}, 1)
+    </insert>
+   
+    <!-- 제품 정보 개수 조회 (페이징 처리를 위한 전체 개수) -->
+    <select id="selectProductCount" resultType="int">
+        select count(*) from product
+        <where>
+            <!-- 제품명 검색 조건 -->
+            <if test="productName != null and productName != ''">
+                product_name like '%' || #{productName} || '%'
+            </if>
+            <!-- 브랜드 검색 조건 -->
+            <if test="brand != null and brand != ''">
+                and SUBSTR(product_category, 1, 2) = #{brand}
+            </if>
+        </where>
+    </select>
+
+    <!-- 제품 정보 리스트 조회 (페이징 처리 및 검색 기능 포함) -->
+    <select id="selectProductList" resultType="Product">
+        select * from (select rownum rn, product.* from (
+            select product_id, product_category, product_name, product_price, delivery_price, product_img from product
+            <where>
+                <!-- 제품명 검색 조건 -->
+                <if test="productName != null and productName != ''">
+                    product_name like '%' || #{productName} || '%'
+                </if>
+                <!-- 브랜드 검색 조건 -->
+                <if test="brand != null and brand != ''">
+                    and SUBSTR(product_category, 1, 2) = #{brand}
+                </if>
+            </where>
+            order by product_id desc) product) where rn between #{startRow} and #{endRow}
+    </select>
+
+    <!-- 공급 업체 이름 목록 조회 -->
+    <select id="selectSupplierList" resultType="Supplier">
+        select supplier_id, supplier_name from supplier order by supplier_name
+    </select>
+    
+    <!-- 특정 키워드로 공급 업체 목록 조회 -->
+    <!--
+    <select id="getSupplierListByKeyword" parameterType="String" resultType="Supplier">
+        select supplier_id, supplier_name from supplier where supplier_name like '%' || #{keyword} || '%' order by supplier_name
+    </select>
+    -->
+        
+    <!-- 특정 발주 정보 조회 (발주 ID 기준) -->
+    <select id="selectOrdersById" parameterType="int" resultType="Orders">
+        SELECT o.orders_id, o.orders_date, o.userid, o.supplier_id, o.product_id, o.orders_quantity,
+               o.product_price, o.delivery_date, o.orders_status, p.product_name, p.product_category,
+               s.supplier_name
+        FROM orders o
+        JOIN product p ON o.product_id = p.product_id
+        JOIN supplier s ON o.supplier_id = s.supplier_id
+        WHERE o.orders_id = #{ordersId}
+    </select>
+    
+    <!-- 발주 목록 개수 조회 (페이징 처리를 위한 전체 개수) -->
+	<select id="selectOrdersCount" resultType="int">
+	    select count(*)
+	    from orders o
+	    join product p on o.product_id = p.product_id
+	    join supplier s on o.supplier_id = s.supplier_id
+	    join erp_user u on o.userid = u.userid
+	    <where>
+	        <if test="ordersId != null and ordersId != ''">
+	            o.orders_id = #{ordersId}
+	        </if>
+	        <if test="ordersDate != null and ordersDate != ''">
+	            and to_char(o.orders_date, 'YYYY-MM-DD') = #{ordersDate}
+	        </if>
+	        <if test="name != null and name != ''">
+			    and u.name = #{name} 
+			</if>
+	        <if test="productId != null and productId != ''">
+	            and o.product_id = #{productId}
+	        </if>
+	        <if test="productName != null and productName != ''">
+	            and p.product_name like '%' || #{productName} || '%'
+	        </if>
+	        <if test="brand != null and brand != ''">
+	            and SUBSTR(p.product_category, 1, 2) = #{brand}
+	        </if>
+	        <if test="supplierId != null and supplierId != ''">
+	            and o.supplier_id = #{supplierId}
+	        </if>
+	        <if test="ordersStatus != null and ordersStatus != ''">
+	            and o.orders_status = #{ordersStatus}
+	        </if>
+	    </where>
+	</select>
+	
+	<!-- 발주 목록 조회 (페이징 처리 및 검색 기능 포함) -->
+	<select id="selectOrdersList" resultType="Orders">
+	    select * from (
+	        select rownum rn, o.orders_id, o.orders_date, o.userid, u.name,
+	               o.supplier_id, o.product_id, o.orders_quantity, o.product_price,
+	               o.delivery_date, o.orders_status, p.product_name, p.product_category,
+	               s.supplier_name
+	        from orders o
+	        join product p on o.product_id = p.product_id
+	        join supplier s on o.supplier_id = s.supplier_id
+	        join erp_user u on o.userid = u.userid
+	        <where>
+	            <if test="ordersId != null and ordersId != ''">
+	                o.orders_id = #{ordersId}
+	            </if>
+	            <if test="ordersDate != null and ordersDate != ''">
+	                and to_char(o.orders_date, 'YYYY-MM-DD') = #{ordersDate}
+	            </if>
+	            <if test="name != null and name != ''">
+				    and u.name = #{name} 
+				</if>
+	            <if test="productId != null and productId != ''">
+	                and o.product_id = #{productId}
+	            </if>
+	            <if test="productName != null and productName != ''">
+	                and p.product_name like '%' || #{productName} || '%'
+	            </if>
+	            <if test="brand != null and brand != ''">
+	                and SUBSTR(p.product_category, 1, 2) = #{brand}
+	            </if>
+	            <if test="supplierId != null and supplierId != ''">
+	                and o.supplier_id = #{supplierId}
+	            </if>
+	            <if test="ordersStatus != null and ordersStatus != ''">
+	                and o.orders_status = #{ordersStatus}
+	            </if>
+	        </where>
+	        order by o.orders_date desc
+	    )
+	    where rn between #{startRow} and #{endRow}
+	</select>
+
+	<!-- 발주 정보 수정 (발주 대기 상태일 때) -->
+	<update id="updateOrders" parameterType="Orders">
+	    update orders
+	    <set>
+	        <if test="ordersQuantity != null">
+	            orders_quantity = #{ordersQuantity},
+	        </if>
+	        <if test="productPrice != null">
+	            product_price = #{productPrice},
+	        </if>
+	        <if test="deliveryDate != null">
+	            delivery_date = #{deliveryDate}
+	        </if>
+	    </set>
+	    where orders_id = #{ordersId}
+	</update>  
+	
+	<!-- 발주 상태 업데이트 (확정 버튼 눌렀을 때) -->
+	<update id="updateOrdersStatus" parameterType="int">
+    	update orders set orders_status = 2 where orders_id = #{ordersId} and orders_status = 1
+	</update>
+	
+</mapper>

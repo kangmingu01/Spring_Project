@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.RequestProdutMapper">
+<!--  product 테이블의 값을 salesRequest테이블에 넣는  -->
+<insert id="insertSalesRequest" parameterType="requestProdut">
+    INSERT INTO salesRequest (
+        REQUEST_ID, REQUEST_DATE, ORG_ID, PRODUCT_ID, REQUEST_QUANTITY, SALES_PRICE, REQUEST_STATUS
+    ) 
+    VALUES (
+        SALESREQUEST_SEQ.NEXTVAL, SYSDATE, #{orgId}, #{productId},0, 
+        (SELECT DELIVERY_PRICE FROM product WHERE product_id = #{productId}),100
+    )
+</insert>
+
+    <!-- 제품 정보 개수 조회 (페이징 처리를 위한 전체 개수) -->
+ <select id="selectProductCount" resultType="int">
+        select count(*) from product
+        <where>
+            <!-- 제품명 검색 조건 -->
+            <if test="productName != null and productName != ''">
+                product_name like '%' || #{productName} || '%'
+            </if>
+            <!-- 브랜드 검색 조건 -->
+            <if test="brand != null and brand != ''">
+                and SUBSTR(product_category, 1, 2) = #{brand}
+            </if>
+        </where>
+    </select>
+   <!-- 제품 정보 리스트 조회 (페이징 처리 및 검색 기능 포함) -->
+<select id="selectProductList" resultType="product">
+       select * from (select rownum rn, product.* from(
+    SELECT 
+        PRODUCT_ID, 
+        PRODUCT_CATEGORY, 
+        PRODUCT_NAME, 
+        PRODUCT_PRICE, 
+        DELIVERY_PRICE 
+    FROM 
+        product
+        <where>
+                <!-- 제품명 검색 조건 -->
+                <if test="productName != null and productName != ''">
+                    product_name like '%' || #{productName} || '%'
+                </if>
+                <!-- 브랜드 검색 조건 -->
+                <if test="brand != null and brand != ''">
+                    and SUBSTR(product_category, 1, 2) = #{brand}
+                </if>
+            </where>
+             order by product_id desc) product) where rn between #{startRow} and #{endRow}
+</select>
+</mapper>

@@ -6,21 +6,45 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import dto.Sales;
 import dto.SalesRequest;
 import lombok.RequiredArgsConstructor;
 import mapper.SalesRequestMapper;
 
 @Repository
 @RequiredArgsConstructor
-public class SalesRequestDAOImpl implements SalesRequestDAO {
+
+public class SalesRequestDAOImpl  implements SalesRequestDAO{
 	private final SqlSession sqlSession;
+	
 	@Override
 	public int insertSalesRequest(SalesRequest salesRequest) {
-		
+		// TODO Auto-generated method stub
 		return sqlSession.getMapper(SalesRequestMapper.class).insertSalesRequest(salesRequest);
 	}
 
+	@Override
+//	public int updateSalesRequest(List<SalesRequest> salesRequests) {
+		public int updateSalesRequest(SalesRequest salesRequests) {
+		System.out.println("DAO"+salesRequests);
+	
+		// TODO Auto-generated method stub
+		return sqlSession.getMapper(SalesRequestMapper.class).updateSalesRequest(salesRequests);
+	}
 
+	@Override
+	public int deleteSalesRequest(SalesRequest salesRequest) {
+		// TODO Auto-generated method stub
+		return sqlSession.getMapper(SalesRequestMapper.class).deleteSalesRequest(salesRequest);
+	}
+
+
+
+	@Override
+	public int insertSalesList(List<Sales> salesList) {
+		// TODO Auto-generated method stub
+		return sqlSession.getMapper(SalesRequestMapper.class).insertSalesList(salesList);
+	}
 
 	@Override
 	public SalesRequest selectSalesReqeustById(int requestId) {
@@ -29,9 +53,9 @@ public class SalesRequestDAOImpl implements SalesRequestDAO {
 	}
 
 	@Override
-	public int selectSalesReqeustByCount(Map<String, Object> map) {
+	public int selectSalesRequestByCount(Map<String, Object> map) {
 		// TODO Auto-generated method stub
-		return sqlSession.getMapper(SalesRequestMapper.class).selectSalesReqeustByCount(map);
+		return sqlSession.getMapper(SalesRequestMapper.class).selectSalesRequestByCount(map);
 	}
 
 	@Override
@@ -42,17 +66,4 @@ public class SalesRequestDAOImpl implements SalesRequestDAO {
 
 
 
-	@Override
-	 public int updateSalesRequest(List<SalesRequest> salesRequests) {
-        return sqlSession.getMapper(SalesRequestMapper.class).updateSalesRequest(salesRequests);
-    }
-
-
-
-	@Override
-	public int deleteSalesRequest(SalesRequest salesRequest) {
-		// TODO Auto-generated method stub
-		return sqlSession.getMapper(SalesRequestMapper.class).deleteSalesRequest(salesRequest);
-	}
-	
 }

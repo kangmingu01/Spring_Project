@@ -30,5 +30,8 @@ public class SalesRequest {
 	private String orgName;
 	private String productCategory;
 	private String productName;
+	private String userId;
 
+ 
+    private ProductCategory productCategoryDetails;  // 제품 카테고리 파싱 결과
 }

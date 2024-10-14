@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.salesRequestMapper">
+<mapper namespace="mapper.SalesRequestMapper">
   <!-- Sales Request 단일 데이터 삽입 -->
     <insert id="insertSalesRequest" >
-    <selectKey resultType="int" keyProperty="num" order="BEFORE">
+    <selectKey resultType="int" keyProperty="requestId" order="BEFORE">
 			select SALES_REQUEST_SEQ.NEXTVAL from dual
 		</selectKey>
        insert into salesRequest values (
@@ -18,12 +18,44 @@
        
     </insert>
     
-    <update id="updateSalesRequest">
-        <foreach collection="salesRequests" item="salesRequest" separator=";">
+<insert id="insertSalesList">
+    <!-- 여러 개의 데이터를 한번에 삽입하기 위해서는 반복 처리 부분을 올바르게 사용해야 함 -->
+    INSERT INTO sales (
+        sales_id, sales_date, sales_charge, org_id, product_id, request_id
+    ) VALUES
+    <foreach collection="salesList" item="sales" separator=",">
+      (
+            sales_SEQ.NEXTVAL, SYSDATE, #{sales.salesCharge}, #{sales.orgId}, #{sales.productId}, #{sales.requestId}
+        )
+    </foreach>
+</insert>
+    
+   <!--  <update id="updateSalesRequest">
+        <foreach collection="list" item="salesRequest" separator=";">
             UPDATE salesRequest
             SET request_Quantity = #{salesRequest.requestQuantity}
             WHERE request_id = #{salesRequest.requestId}
         </foreach>
+    </update>
+     -->
+    
+    <update id="updateSalesRequest">
+       
+            UPDATE salesRequest
+             <if test="requestQuantity != null">
+            SET request_Quantity = #{requestQuantity}
+            </if>
+            WHERE request_id = #{requestId}
+
+    </update>
+    
+
+    <update id="updateSalesRequestStatus">
+       
+            UPDATE salesRequest
+            SET request_Status = #{requestStatus}
+            WHERE request_id = #{requestId}
+ 
     </update>
 
 	
@@ -47,18 +79,46 @@
 	       o.org_name 
 		FROM salesRequest sr
 		JOIN organization o ON sr.org_id = o.org_id 
-		WHERE sr.request_id = #{requestId};
+		WHERE sr.request_id = #{requestId}
   
 	</select>
 		
-	<select id="selectSalesRequestByCount" resultType="int">
+	<!-- <select id="selectSalesRequestByCount" resultType="int">
     SELECT COUNT(*) 
-    FROM SALES_REQUEST sr 
+    FROM salesRequest sr 
     JOIN organization o ON o.org_id = sr.org_id 
     <if test="keyword != null and keyword != ''">
         <bind name="word" value="'%'+keyword+'%'"/>
         WHERE ${column} LIKE #{word}
     </if>
+	</select> -->
+	<select id="selectSalesRequestByCount" resultType="int">
+    SELECT COUNT(*) 
+    FROM salesRequest sr 
+    JOIN organization o ON o.org_id = sr.org_id 
+    JOIN product p ON p.product_id = sr.product_id
+   <where>
+	        
+	        <if test="requestDate != null and requestDate != ''">
+	            and to_char(sr.request_date, 'YYYY-MM-DD') = #{requestDate}
+	        </if>
+	        <if test="orgName != null and orgName != ''">
+			    and o.org_name = #{orgName} 
+			</if>
+	        <if test="productId != null and productId != ''">
+	            and o.product_id = #{productId}
+	        </if>
+	        <if test="productName != null and productName != ''">
+	            and p.product_name like '%' || #{productName} || '%'
+	        </if>
+	        <if test="brand != null and brand != ''">
+	            and SUBSTR(p.product_category, 1, 2) = #{brand}
+	        </if>
+	        <if test="requestStatus != null and requestStatus != ''">
+	            and sr.request_status = #{requestStatus}
+	        </if>
+	        
+	    </where>
 	</select>
 	
 <select id="selectSalesRequestList" resultType="salesRequest">
@@ -84,6 +144,57 @@
                 organization ON organization.org_id = sr.org_id 
             JOIN 
                 product p ON p.product_id = sr.product_id  <!-- product 테이블과 조인 -->
+         WHERE sr.request_status = 100  <!-- sr.request_status가 1인 조건 추가 -->
+           <where>
+	        
+	        <if test="requestDate != null and requestDate != ''">
+	            and to_char(sr.request_date, 'YYYY-MM-DD') = #{requestDate}
+	        </if>
+	        <if test="orgName != null and orgName != ''">
+			    and organization.org_name = #{orgName} 
+			</if>
+	        <if test="productId != null and productId != ''">
+	            and sr.product_id = #{productId}
+	        </if>
+	        <if test="productName != null and productName != ''">
+	            and p.product_name like '%' || #{productName} || '%'
+	        </if>
+	        <if test="brand != null and brand != ''">
+	            and SUBSTR(p.product_category, 1, 2) = #{brand}
+	        </if>
+	        <if test="requestStatus != null and requestStatus != ''">
+	            and sr.request_status = #{requestStatus}
+	        </if>
+	        
+	    </where>
+            ORDER BY sr.request_id DESC
+        ) board
+    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+<!-- <select id="selectSalesRequestList" resultType="salesRequest">
+    SELECT * FROM (
+        SELECT ROWNUM AS rn, board.* 
+        FROM (
+            SELECT 
+                sr.request_id, 
+                sr.request_date, 
+                sr.org_id, 
+                sr.product_id, 
+                sr.request_quantity, 
+                sr.sales_price, 
+                sr.tax, 
+                sr.total_amount, 
+                sr.request_status, 
+                organization.org_name,
+                p.product_category,  product_category 추가
+                p.product_name       product_name 추가
+            FROM 
+                SALESREQUEST sr 
+            JOIN 
+                organization ON organization.org_id = sr.org_id 
+            JOIN 
+                product p ON p.product_id = sr.product_id  product 테이블과 조인
+         WHERE sr.request_status = 100  sr.request_status가 1인 조건 추가
             <if test="keyword != null and keyword != ''">
                 <bind name="word" value="'%'+keyword+'%'"/>
                 WHERE ${column} LIKE #{word}
@@ -91,7 +202,8 @@
             ORDER BY sr.request_id DESC
         ) board
     ) WHERE rn BETWEEN #{startRow} AND #{endRow}
-</select>
+</select> -->
+
 	
 	
      

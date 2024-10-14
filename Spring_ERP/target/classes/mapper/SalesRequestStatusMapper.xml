@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.SalesRequestStatusMapper">
+
+  
+<insert id="insertSalesRequestToSales">
+    INSERT INTO sales (
+        sales_id,
+        sales_date,
+        sales_charge,
+        org_id,
+        product_id,
+        request_id,
+        request_quantity,
+        sales_quantity,
+        product_delivery_price,
+        auth
+    )
+    VALUES (
+        sales_seq.NEXTVAL,                   -- sales_id는 selectKey에서 설정
+        SYSDATE,                             -- 판매 날짜
+        #{userId},          -- userId 파라미터 사용
+        #{orgId},                            -- organization ID
+        #{productId},                        -- product ID
+        #{requestId},                        -- salesRequest ID
+        #{requestQuantity},                  -- 요청 수량
+        0,                                   -- 출고 수량 (초기값 0)
+        #{salesPrice},                       -- 판매 가격
+        #{requestStatus}                     -- auth에 requestStatus 저장
+    )
+</insert>
+    
+
+
+ 
+
+    <update id="updateSalesRequestStatus">
+       
+            UPDATE salesRequest
+            <if test="requestStatus != null">
+            SET request_Status = #{requestStatus}
+             </if>
+            WHERE request_id = #{requestId}
+ 
+    </update>
+
+	
+	<delete id="deleteSalesRequest">
+		  UPDATE salesRequest
+    SET request_Status =   #{requestStatus}
+    WHERE request_id = #{requestId}
+	</delete>
+	
+    
+    <select id="selectSalesRequestStatusById" resultType="SalesRequest">
+		SELECT sr.request_id, 
+	       sr.request_date, 
+	       sr.org_id AS request_org_id, 
+	       sr.product_id, 
+	       sr.request_quantity, 
+	       sr.sales_price,
+	       sr.tax,
+	       sr.total_amount, 
+	       sr.request_status, 
+	       o.org_name 
+		FROM salesRequest sr
+		JOIN organization o ON sr.org_id = o.org_id 
+		WHERE sr.request_id = #{requestId}
+  
+	</select>
+		
+	<select id="selectSalesRequestStatusByCount" resultType="int">
+    SELECT COUNT(*) 
+    FROM salesRequest sr 
+    JOIN organization o ON o.org_id = sr.org_id 
+     JOIN product p ON p.product_id = sr.product_id
+     <where>
+	        
+	        <if test="requestDate != null and requestDate != ''">
+	            and to_char(sr.request_date, 'YYYY-MM-DD') = #{requestDate}
+	        </if>
+	        <if test="orgName != null and orgName != ''">
+			    and o.org_name = #{orgName} 
+			</if>
+	        <if test="productId != null and productId != ''">
+	            and o.product_id = #{productId}
+	        </if>
+	        <if test="productName != null and productName != ''">
+	            and p.product_name like '%' || #{productName} || '%'
+	        </if>
+	        <if test="brand != null and brand != ''">
+	            and SUBSTR(p.product_category, 1, 2) = #{brand}
+	        </if>
+	        <if test="requestStatus != null and requestStatus != ''">
+	            and sr.request_status = #{requestStatus}
+	        </if>
+	        
+	    </where>
+	</select>
+	
+
+<select id="selectSalesRequestListStatus" resultType="salesRequest">
+   SELECT * FROM (
+        SELECT ROWNUM AS rn, board.* 
+        FROM (
+            SELECT 
+                sr.request_id, 
+                sr.request_date, 
+                sr.org_id, 
+                sr.product_id, 
+                sr.request_quantity, 
+                sr.sales_price, 
+                sr.tax, 
+                sr.total_amount, 
+                sr.request_status, 
+                organization.org_name,
+                p.product_category,  <!-- product_category 추가 -->
+                p.product_name, 
+                eu.userId     <!-- product_name 추가 -->
+            FROM 
+                SALESREQUEST sr 
+            JOIN 
+                organization ON organization.org_id = sr.org_id 
+            JOIN 
+                product p ON p.product_id = sr.product_id  <!-- product 테이블과 조인 -->
+       		Join 
+       			erp_user eu on eu.org_id = organization.org_id 
+           <where>
+	        
+	        <if test="requestDate != null and requestDate != ''">
+	            and to_char(sr.request_date, 'YYYY-MM-DD') = #{requestDate}
+	        </if>
+	        <if test="orgName != null and orgName != ''">
+			    and organization.org_name = #{orgName} 
+			</if>
+	        <if test="productId != null and productId != ''">
+	            and sr.product_id = #{productId}
+	        </if>
+	        <if test="productName != null and productName != ''">
+	            and p.product_name like '%' || #{productName} || '%'
+	        </if>
+	        <if test="brand != null and brand != ''">
+	            and SUBSTR(p.product_category, 1, 2) = #{brand}
+	        </if>
+	        <if test="requestStatus != null and requestStatus != ''">
+	            and sr.request_status = #{requestStatus}
+	        </if>
+	        
+	    </where>
+            ORDER BY sr.request_id DESC
+        ) board
+    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+	
+	
+     
+    
+
+</mapper>

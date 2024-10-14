@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.SalesMapper">
+  <!-- Sales Request 단일 데이터 삽입 -->
+    <insert id="insertSales" >
+    <selectKey resultType="int" keyProperty="requestId" order="BEFORE">
+			select SALES_REQUEST_SEQ.NEXTVAL from dual
+		</selectKey>
+       insert into salesRequest values (
+            # {requestId}, <!-- requestId는 시퀀스로 생성 -->
+              SYSDATE,
+            #{orgId}, 
+            #{productId}, 
+            #{requestQuantity}, 
+            #{salesPrice}, 
+            #{requestStatus}
+        )
+       
+    </insert>
+    
+<insert id="insertSalesList">
+    <!-- 여러 개의 데이터를 한번에 삽입하기 위해서는 반복 처리 부분을 올바르게 사용해야 함 -->
+    INSERT INTO sales (
+        sales_id, sales_date, sales_charge, org_id, product_id, request_id
+    ) VALUES
+    <foreach collection="salesList" item="sales" separator=",">
+      (
+            sales_SEQ.NEXTVAL, SYSDATE, #{sales.salesCharge}, #{sales.orgId}, #{sales.productId}, #{sales.requestId}
+        )
+    </foreach>
+</insert>
+    
+   <!--  <update id="updateSalesRequest">
+        <foreach collection="list" item="salesRequest" separator=";">
+            UPDATE salesRequest
+            SET request_Quantity = #{salesRequest.requestQuantity}
+            WHERE request_id = #{salesRequest.requestId}
+        </foreach>
+    </update>
+     -->
+    
+    <update id="updateSales">       
+            UPDATE sales
+            <if test="salesQuantity != null">
+            SET sales_Quantity = #{salesQuantity}
+            </if>
+            WHERE sales_Id = #{salesId}
+    </update>
+    
+
+    <update id="updateSalesStatus">
+       
+            UPDATE sales
+           <if test="salesQuantity != null">
+            SET auth = #{auth}
+            </if>
+            WHERE sales_Id = #{salesId}
+ 
+    </update>
+
+	
+	<delete id="deleteSales">
+		  UPDATE salesRequest
+    SET request_Status =   #{requestStatus}
+    WHERE request_id = #{requestId}
+	</delete>
+	
+    
+    <select id="selectSalesById" resultType="Sales">
+		SELECT sr.request_id, 
+	       sr.request_date, 
+	       sr.org_id AS request_org_id, 
+	       sr.product_id, 
+	       sr.request_quantity, 
+	       sr.sales_price,
+	       sr.tax,
+	       sr.total_amount, 
+	       sr.request_status, 
+	       o.org_name 
+		FROM salesRequest sr
+		JOIN organization o ON sr.org_id = o.org_id 
+		WHERE sr.request_id = #{requestId}
+  
+	</select>
+		
+	<select id="selectSalesByCount" resultType="int">
+    SELECT COUNT(*) 
+    FROM sales s 
+       JOIN product p ON p.product_id = s.product_id  
+     JOIN erp_user eu ON eu.userId= s.sales_charge 
+     JOIN inventory i ON i.inv_product_id = p.product_id 
+  
+     <where>
+	        
+	        <if test="salesDate != null and salesDate != ''">
+	            and to_char(s.sales_date, 'YYYY-MM-DD') = #{salesDate}
+	        </if>
+	        <if test="userId != null and userId != ''">
+			    and eu.userId = #{userId} 
+			</if>
+	        <if test="productId != null and productId != ''">
+	            and p.product_id = #{productId}
+	        </if>
+	        <if test="productName != null and productName != ''">
+	            and p.product_name like '%' || #{productName} || '%'
+	        </if>
+	        <if test="brand != null and brand != ''">
+	            and SUBSTR(p.product_category, 1, 2) = #{brand}
+	        </if>
+	        <if test="invWarehouseId != null and invWarehouseId != ''">
+	            and i.inv_warehouse_id   = #{invWarehouseId}
+	        </if>
+	        
+	    </where>
+	</select>
+	
+<select id="selectSalesList" resultType="sales">
+    SELECT * FROM (
+    SELECT ROWNUM AS rn, board.* 
+    FROM (
+        SELECT 
+            s.sales_id, 
+            s.sales_date, 
+            eu.userId AS sales_charge,  
+            eu.name, 
+            s.org_id, 
+            s.product_id, 
+            s.request_id, 
+            s.request_quantity,  
+            s.sales_quantity,
+            s.product_delivery_price,  
+            s.tax, 
+            s.total_amount, 
+            s.auth,
+            organization.org_name,
+            p.product_category,  
+            p.product_name, 
+            i.inv_current_qty,  
+            i.inv_warehouse_id  
+        FROM 
+            sales s 
+        JOIN 
+            organization ON organization.org_id = s.org_id 
+        JOIN 
+            product p ON p.product_id = s.product_id  
+        JOIN 
+            salesRequest sr ON sr.request_id = s.request_id  
+        JOIN 
+            erp_user eu ON eu.userId = s.sales_charge  
+         JOIN 
+            inventory i ON i.inv_product_id = p.product_id  
+            <where>
+	        
+	        <if test="salesDate != null and salesDate != ''">
+	            and to_char(s.sales_date, 'YYYY-MM-DD') = #{salesDate}
+	        </if>
+	        <if test="userId != null and userId != ''">
+			    and eu.userId = #{userId} 
+			</if>
+	        <if test="productId != null and productId != ''">
+	            and p.product_id = #{productId}
+	        </if>
+	        <if test="productName != null and productName != ''">
+	            and p.product_name like '%' || #{productName} || '%'
+	        </if>
+	        <if test="brand != null and brand != ''">
+	            and SUBSTR(p.product_category, 1, 2) = #{brand}
+	        </if>
+	        <if test="invWarehouseId != null and invWarehouseId != ''">
+	            and i.inv_warehouse_id   = #{invWarehouseId}
+	        </if>
+	        
+	    </where>
+            ORDER BY s.sales_id DESC
+        ) board
+    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+	
+	
+     
+    
+
+</mapper>

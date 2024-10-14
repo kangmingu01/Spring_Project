@@ -264,35 +264,35 @@
                                     </c:when>
 
 
-                                <c:otherwise>
-                                    <button type="submit" class="btn btn-secondary disabled">
-                                        수정
-                                    </button>
-                                </c:otherwise>
+                                    <c:otherwise>
+                                        <button type="submit" class="btn btn-secondary disabled">
+                                            수정
+                                        </button>
+                                    </c:otherwise>
                                 </c:choose>
                             </td>
                             <td>
                                 <form action="<c:url value="/admin/deleteOrg"/>" method="post">
                                     <input type="hidden" name="orgId" value="${organization.orgId}">
-
-                                            <c:choose>
-                                                <c:when test="${organization.orgType == 0}">
-                                    <button type="submit" class="btn btn-danger"
-                                                    onclick="return confirm('해당 부서[${organization.orgName}]를 정말 삭제하시겠습니까?')">삭제
-                                    </button>
-                                                </c:when>
-                                                <c:when test="${organization.orgType == 1}">
-                                                    <button type="submit" class="btn btn-danger"
-                                                    onclick="return confirm('해당 매장[${organization.orgName}]를 폐업 처리 하시겠습니까?')">삭제
-                                                    </button>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <button type="submit" class="btn btn-danger disabled">
-                                                    삭제
-                                                    </button>
-                                                </c:otherwise>
-                                            </c:choose>
-
+                                    <c:choose>
+                                        <c:when test="${organization.orgType == 0}">
+                                            <button type="submit" class="btn btn-danger"
+                                                    onclick="return confirm('해당 부서[${organization.orgName}]를 정말 삭제하시겠습니까?')">
+                                                삭제
+                                            </button>
+                                        </c:when>
+                                        <c:when test="${organization.orgType == 1}">
+                                            <button type="submit" class="btn btn-danger"
+                                                    onclick="return confirm('해당 매장[${organization.orgName}]를 폐업 처리 하시겠습니까?')">
+                                                삭제
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button type="submit" class="btn btn-danger disabled">
+                                                삭제
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <sec:csrfInput/>
                                 </form>
                             </td>
@@ -526,7 +526,6 @@
 
         });
     });
-
 
 
     function submitEditForm() {

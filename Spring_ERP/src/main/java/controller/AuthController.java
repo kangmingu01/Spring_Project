@@ -53,13 +53,13 @@ public class AuthController {
         if(searchType.equals("userid")) {
             model.addAttribute("searchType", searchType);
             model.addAttribute("resultMap", erpUserService.getErpUserList(map));
-            model.addAttribute("searchMap", map);;
+            model.addAttribute("searchMap", map);
         }
 
         if(searchType.equals("orgId")) {
             model.addAttribute("searchType", searchType);
             model.addAttribute("resultMap", organizationService.getOrganizationList(map));
-            model.addAttribute("searchMap", map);;
+            model.addAttribute("searchMap", map);
         }
 
         /* 로직 구현 */
@@ -84,7 +84,6 @@ public class AuthController {
 
     @RequestMapping(value = "/deleteAuth", method = RequestMethod.POST)
     public String deleteAuth(@ModelAttribute ErpAuth erpAuth) {
-        System.out.println(erpAuth);
         erpAuthService.deleteErpAuth(erpAuth);
 
         return "redirect:/admin/auth";

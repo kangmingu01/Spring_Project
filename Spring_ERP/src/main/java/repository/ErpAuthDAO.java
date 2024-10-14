@@ -17,4 +17,7 @@ public interface ErpAuthDAO {
 
     /* 검색 값 */
     List<ErpUser> selectErpAuthById(Map<String, Object> map);
+
+    /* 사용자의 소속된 부서 검색 */
+    List<ErpAuth> findAuthByOrgId(String orgId);
 }

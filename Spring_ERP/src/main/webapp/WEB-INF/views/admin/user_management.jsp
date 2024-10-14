@@ -123,7 +123,7 @@
                     <!-- 비밀번호 -->
                     <div class="col-md-4">
                         <label for="passwd" class="form-label">비밀번호</label>
-                        <div class="d-flex form-control-position">
+                        <%--<div class="d-flex form-control-position">
                             <input type="password" class="form-control" id="passwd" name="passwd" disabled
                                    readonly>
                             <span class="toggle-password" onclick="togglePassword()">
@@ -132,8 +132,15 @@
                             <button type="button" class="btn btn-secondary btn-sm text-nowrap"
                                     onclick="generateRandomPassword()">랜덤생성
                             </button>
+                        </div>--%>
+                        <div class="d-flex form-control-position">
+                            <input type="text" class="form-control" id="passwd" name="passwd"
+                                   >
+                            <button type="button" class="btn btn-secondary btn-sm text-nowrap"
+                                    onclick="generateRandomPassword()">랜덤생성
+                            </button>
                         </div>
-                        <div id="passwdMsg" class="error">랜덤생성 버튼을 눌러주세요</div>
+                        <div id="passwdMsg" class="error">비밀번호를 입력해주세요</div>
                     </div>
                     <!-- 이름 -->
                     <div class="col-md-4">
@@ -206,11 +213,21 @@
                         </select>
                     </div>
                     <!-- 조직 ID -->
-                    <div class="col-md-4">
+                    <%--<div class="col-md-4">
                         <label for="orgId" class="form-label">조직 ID</label>
                         <input type="text" class="form-control" id="orgId" name="orgId">
-                        <%-- 여기가 문제임 조직명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 --%>
+                        &lt;%&ndash; 여기가 문제임 조직명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 &ndash;%&gt;
                         <div id="orgIdMsg" class="error">조직 ID를 입력해주세요. 입력값이 없다면 null로 입력해주세요</div>
+                    </div>--%>
+                    <%-- 대상 ID --%>
+                    <div class="col-md-4">
+                        <label for="searchOrgId" class="form-label">조직 ID</label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control" id="searchOrgId" name="orgId" disabled>
+                            <button type="button" id="orgIdCheck" class="btn btn-secondary btn-sm text-nowrap">검색
+                            </button>
+                        </div>
+                        <div id="searchMsg" class="error">조직ID를 검색해주세요</div>
                     </div>
                 </div>
 
@@ -509,15 +526,14 @@
         for (let i = 0; i < 10; i++) {
             password += characters.charAt(Math.floor(Math.random() * characters.length));
         }
-        // Check if we are in the modal context or normal context
-        let passwdField = document.getElementById("passwd");  // Normal form
-        let passwdModalField = document.getElementById("passwd_modal");  // Modal form
 
-        // Set the generated password to the appropriate field
+        let passwdField = document.getElementById("passwd");
+        let passwdModalField = document.getElementById("passwd_modal");
+
         if (passwdModalField && passwdModalField.offsetParent !== null) {
-            passwdModalField.value = password;  // Modal password field
+            passwdModalField.value = password;
         } else if (passwdField) {
-            passwdField.value = password;  // Normal password field
+            passwdField.value = password;
         }
 
         $("#passwd").removeClass("is-invalid");
@@ -557,6 +573,7 @@
 
             // disabled 속성 있으면 값을 넘길 때 아무것도 들어가지 않음
             $("#passwd").prop("disabled", false);
+            $("#searchOrgId").prop("disabled", false);
 
             if ($("#userid").val() == "") {
                 $("#idMsg").css("display", "block").css("visibility", "visible");
@@ -576,11 +593,7 @@
                 $("#passwdMsg").css("display", "block").css("visibility", "visible");
                 $("#passwd").addClass("is-invalid");
                 submitResult = false;
-            }/* else if (!passwdReg.test($("passwd").val())) {
-            $("#passwdMsg").css("display", "block").css("visibility", "visible");
-            $("#passwd").addClass("is-invalid");
-            submitResult = false;
-        }*/
+            }
 
             if ($("#name").val() == "") {
                 $("#nameMsg").css("display", "block").css("visibility", "visible");
@@ -749,6 +762,30 @@
 
         // 새 창 열기
         window.open('<c:url value="/admin/idCheck"/>?userid=' + $("#userid").val(), 'idCheck', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top);
+
+    });
+
+    $("#orgIdCheck").click(function () {
+        // 화면 크기 및 브라우저 창 크기 계산
+        var screenWidth = window.screen.width;
+        var screenHeight = window.screen.height;
+
+        var popupWidth = 700;
+        var popupHeight = 500;
+
+        // 창을 화면 가운데에 위치시키기 위한 좌표 계산
+        var left = (screenWidth / 2) - (popupWidth / 2);
+        var top = (screenHeight / 2) - (popupHeight / 2);
+
+        // 새 창 열기
+        var popup = window.open(
+            '<c:url value="/admin/searchOrgId"/>?type=all',
+            'orgIdCheck',
+            'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top
+        );
+        if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+            alert('팝업 차단이 활성화되어 있습니다. 브라우저 설정을 확인해주세요.');
+        }
 
     });
 

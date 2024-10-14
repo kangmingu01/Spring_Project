@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import dto.Receiving;
 import dto.Settlement;
 import dto.Supplier;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +47,6 @@ public class SettlementServiceImpl implements SettlementService {
         
         System.out.println("Start Row: " + pager.getStartRow());
         System.out.println("End Row: " + pager.getEndRow());
-
         System.out.println("Settlement List Size: " + settlementList.size());
         
         // 결과 맵 생성

@@ -46,6 +46,11 @@ public class SettlementServiceImpl implements SettlementService {
         map.put("endRow", pager.getEndRow());
         List<Settlement> settlementList = settlementDAO.selectSettlementList(map);
         
+        System.out.println("Start Row: " + pager.getStartRow());
+        System.out.println("End Row: " + pager.getEndRow());
+
+        System.out.println("Settlement List Size: " + settlementList.size());
+        
         // 결과 맵 생성
         Map<String, Object> result = new HashMap<>();
         result.put("pager", pager);
@@ -59,10 +64,7 @@ public class SettlementServiceImpl implements SettlementService {
         return settlementDAO.selectSupplierList();
     }
 
-    @Override
-    public List<Receiving> getReceivingList(Receiving receiving) {
-        return settlementDAO.selectReceivingListByStatus(receiving);
-    }
+   
 
     @Override
     public void addSettlement(Settlement settlement) {

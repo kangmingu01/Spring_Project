@@ -82,17 +82,20 @@
           </div>           
           <div>
             <label>상태</label>
-            <select id="settlementStatus" name="settlementStatus">
-              <option value="">상태 선택</option>
-              <option value="4">정산 대기</option> 
-              <option value="6">정산 완료</option>                         
-            </select>           
+            <select id="status" name="status">
+			  <option value="">상태 선택</option>
+			  <option value="4" ${param.status == '4' ? 'selected' : ''}>정산 대기</option>
+			  <option value="6" ${param.status == '6' ? 'selected' : ''}>정산 완료</option>
+			</select>
+
+         
           </div>
         </div>    
       </div>
       <!-- 페이지 번호와 페이지 크기를 히든 필드로 추가 -->
       <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
-      <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+		<input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+
     </form>
    
   <!-- 정산 목록 테이블 -->
@@ -117,28 +120,31 @@
           </tr>
         </thead>
         <tbody id="settlementTable" class="sty">
-           <c:forEach var="receiving" items="${settlementList}">
+          <c:forEach var="settlement" items="${settlementList}">
             <tr>
-              <td>${receiving.settlementId}</td>
-              <td>${fn:substring(receiving.settlementDate, 0, 10)}</td>
-              <td>${receiving.receivingId}</td>
-              <td>${receiving.name}</td>
-              <td>${receiving.productId}</td>
-              <td>${receiving.productName}</td>
-              <td>${receiving.supplierName}</td>
-              <td>${receiving.quantity}</td>
-              <td>${receiving.productPrice}</td>
-              <td>${receiving.quantity * receiving.productPrice}</td>
+              <td>${settlement.settlementId}</td>
+              <td>${fn:substring(settlement.settlementDate, 0, 10)}</td>
+              <td>${settlement.receivingId}</td>
+              <td>${settlement.name}</td>
+              <td>${settlement.productId}</td>
+              <td>${settlement.productName}</td>
+              <td>${settlement.supplierName}</td>
+              <td>${settlement.quantity}</td>
+              <td>${settlement.productPrice}</td>
+              <td>${settlement.quantity * settlement.productPrice}</td>
               <td>
                 <c:choose>
-                  <c:when test="${receiving.settlementStatus == 4}">정산 대기</c:when>
-                  <c:when test="${receiving.settlementStatus == 6}">정산 완료</c:when>
+                  <c:when test="${settlement.settlementStatus == 6}">
+                    완료
+                  </c:when>
+                  <c:otherwise>
+                    대기
+                  </c:otherwise>
                 </c:choose>
               </td>
-              <!-- 정산 확정 버튼 (정산 대기 상태일 때만 활성화) -->
               <td>
-                <c:if test="${receiving.settlementStatus == 4}">
-                  <button type="submit" name="settlementId" value="${receiving.settlementId}">완료</button>
+                <c:if test="${settlement.settlementStatus != 6}">
+                  <button type="submit" name="settlementId" value="${settlement.settlementId}" >완료</button>
                 </c:if>
               </td>
             </tr>
@@ -146,9 +152,46 @@
         </tbody>
       </table>
     </form>
+     <!-- 페이징 부분 -->
+        <div style="text-align: center;">
+          <!-- 이전 페이지 링크 -->
+          <c:choose>
+            <c:when test="${pager != null && pager.startPage > 1}">
+              <a href="<c:url value='/purchase/settlement/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
+            </c:when>
+            <c:otherwise>
+              [이전]
+            </c:otherwise>
+          </c:choose>
+          
+          <!-- 페이지 번호 링크 -->
+          <c:if test="${pager != null}">
+            <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+              <c:choose>
+                <c:when test="${pager.pageNum != i}">
+                  <a href="<c:url value='/purchase/settlement/list'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
+                </c:when>
+                <c:otherwise>
+                  [${i}]
+                </c:otherwise>
+              </c:choose>        
+            </c:forEach>
+          </c:if>
+          
+          <!-- 다음 페이지 링크 -->
+          <c:choose>
+            <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+              <a href="<c:url value='/purchase/settlement/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
+            </c:when>
+            <c:otherwise>
+              [다음]
+            </c:otherwise>
+          </c:choose>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-</div>
+ 
   <script>
     $(document).ready(function() {
       // 조회 버튼 클릭 이벤트 추가
@@ -168,13 +211,12 @@
       $('#settlementForm').submit(); // 폼 전송 (검색 또는 전체 조회)
     }
 
- 	// 폼을 초기화하고 전체 목록 조회
+    // 폼을 초기화하고 전체 목록 조회
     function resetFields() {
-    $('#settlementForm')[0].reset(); // 전체 폼 초기화
-    $('#settlementStatus').val('');  // 상태 필드 초기화
-    searchOrder(); // 전체 목록 조회
-	}
- 	
+      $('#settlementForm')[0].reset(); // 전체 폼 초기화
+      $('#status').val('');  // 상태 필드 초기화
+      searchOrder(); // 전체 목록 조회
+    }
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

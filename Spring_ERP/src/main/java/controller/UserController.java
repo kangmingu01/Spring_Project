@@ -51,7 +51,6 @@ public class UserController {
         model.addAttribute("check", (erpUser == null ? 0 : 1));
         model.addAttribute("userid", userid);
 
-
         // View Resolver 우회
         return "idCheck";
     }

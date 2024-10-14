@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Bootstrap</title>
+    <title>user</title>
     <style>
         .content {
             background-color: #6571ff;
@@ -134,8 +134,6 @@
                             </button>
                         </div>
                         <div id="passwdMsg" class="error">랜덤생성 버튼을 눌러주세요</div>
-
-
                     </div>
                     <!-- 이름 -->
                     <div class="col-md-4">
@@ -207,12 +205,12 @@
                             <option value="0">비활성화</option>
                         </select>
                     </div>
-                    <!-- 부서 ID -->
+                    <!-- 조직 ID -->
                     <div class="col-md-4">
-                        <label for="orgId" class="form-label">부서 ID</label>
+                        <label for="orgId" class="form-label">조직 ID</label>
                         <input type="text" class="form-control" id="orgId" name="orgId">
-                        <%-- 여기가 문제임 부서명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 --%>
-                        <div id="orgIdMsg" class="error">부서 ID를 입력해주세요. 입력값이 없다면 null로 입력해주세요</div>
+                        <%-- 여기가 문제임 조직명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 --%>
+                        <div id="orgIdMsg" class="error">조직 ID를 입력해주세요. 입력값이 없다면 null로 입력해주세요</div>
                     </div>
                 </div>
 
@@ -236,7 +234,7 @@
                     <select name="column" class="form-select">
                         <option value="userid">유저 ID</option>
                         <option value="name" selected>이름</option>
-                        <option value="org_Id">부서 ID</option>
+                        <option value="org_Id">조직 ID</option>
                     </select>
                 </div>
                 <div class="col-5">
@@ -272,7 +270,7 @@
                 <th scope="col" class="text-center fs-6">생일</th>
                 <th scope="col" class="text-center fs-6">가입일</th>
                 <th scope="col" class="text-center fs-6">유저상태</th>
-                <th scope="col" class="text-center fs-6">부서 ID</th>
+                <th scope="col" class="text-center fs-6">조직 ID</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
@@ -286,13 +284,13 @@
                 <c:otherwise>
                     <c:forEach var="erpUser" items="${resultMap.erpUserList}">
                         <tr>
-                            <td class="align-middle">${erpUser.userid}</td>
+                            <td class="align-middle text-center">${erpUser.userid}</td>
                                 <%--<td>${erpUser.passwd}</td>--%>
-                            <td class="align-middle">${erpUser.name}</td>
-                            <td class="align-middle">${erpUser.phone}</td>
-                            <td class="align-middle">${erpUser.address}</td>
-                            <td class="align-middle">${erpUser.email}</td>
-                            <td class="align-middle">
+                            <td class="align-middle text-center">${erpUser.name}</td>
+                            <td class="align-middle text-center">${erpUser.phone}</td>
+                            <td class="align-middle text-center">${erpUser.address}</td>
+                            <td class="align-middle text-center">${erpUser.email}</td>
+                            <td class="align-middle text-center">
                                 <c:choose>
                                     <c:when test="${erpUser.gender == 1}">
                                         남자
@@ -303,8 +301,8 @@
                                 </c:choose>
 
                             </td>
-                            <td class="align-middle">${erpUser.birthday}</td>
-                            <td class="align-middle">${erpUser.joindate}</td>
+                            <td class="align-middle text-center">${erpUser.birthday}</td>
+                            <td class="align-middle text-center">${erpUser.joindate}</td>
                             <td class="text-center align-middle">
                                 <c:choose>
                                     <c:when test="${erpUser.enabled == 0}">
@@ -420,7 +418,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="orgId_modal" class="form-label">부서 ID</label>
+                            <label for="orgId_modal" class="form-label">조직 ID</label>
                             <input type="text" class="form-control" id="orgId_modal" name="orgId">
                         </div>
                         <sec:csrfInput/>
@@ -713,7 +711,7 @@
         }
     });
 
-    // 부서 ID 입력 시 is-invalid 클래스 제거
+    // 조직 ID 입력 시 is-invalid 클래스 제거
     $("#orgId").on("keyup", function () {
         if ($(this).val().trim() !== "") {
             $("#orgIdMsg").css("display", "none").css("visibility", "hidden");
@@ -738,8 +736,20 @@
         }
         $("#userid").removeClass("is-invalid");
 
-        // 중복 검사할 수 있는 창을 띄움
-        window.open('<c:url value="/admin/idCheck"/>?userid=' + $("#userid").val(), 'idCheck', 'width=600,height=400,left=700,top=400');
+        // 화면 크기 및 브라우저 창 크기 계산
+        var screenWidth = window.screen.width;
+        var screenHeight = window.screen.height;
+
+        var popupWidth = 500;
+        var popupHeight = 300;
+
+        // 창을 화면 가운데에 위치시키기 위한 좌표 계산
+        var left = (screenWidth / 2) - (popupWidth / 2);
+        var top = (screenHeight / 2) - (popupHeight / 2);
+
+        // 새 창 열기
+        window.open('<c:url value="/admin/idCheck"/>?userid=' + $("#userid").val(), 'idCheck', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top);
+
     });
 
     /* 아이디 바꾸면 다시 중복검사할 수 있게 */
@@ -800,7 +810,6 @@
     function submitEditForm() {
         $("#userid_modal").prop("disabled", false);
         $("#passwd_modal").prop("disabled", false);
-
         $("#editUserModal").submit();
     }
 </script>

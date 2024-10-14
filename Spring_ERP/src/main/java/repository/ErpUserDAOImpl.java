@@ -35,10 +35,10 @@ public class ErpUserDAOImpl implements ErpUserDAO {
         return sqlSession.getMapper(ErpUserMapper.class).selectErpUserByUserid(userid);
     }
 
-    @Override
+/*    @Override
     public int insertErpAuth(ErpAuth erpAuth) {
         return sqlSession.getMapper(ErpUserMapper.class).insertErpAuth(erpAuth);
-    }
+    }*/
 
     @Override
     public int selectUserCount(Map<String, Object> map) {

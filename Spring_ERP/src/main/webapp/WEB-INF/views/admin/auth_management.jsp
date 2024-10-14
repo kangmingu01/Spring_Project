@@ -367,6 +367,8 @@
         $("#searchId").removeClass("is-invalid");
         $("#auth").removeClass("is-invalid");
 
+        $("#searchId").prop("disabled", false);
+
 
         if ($("#searchId").val() == "") {
             $("#searchMsg").css("display", "block").css("visibility", "visible");

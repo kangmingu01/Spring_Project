@@ -43,7 +43,7 @@ public class TimeCardDAOImpl implements TimeCardDAO{
 
 	@Override
 	public List<TimeCard> selectAllTimeCard(Map<String, Object> map) {
-		return sqlSession.getMapper(TimeCardMapper.class).selectAllTimeCard(null);
+		return sqlSession.getMapper(TimeCardMapper.class).selectAllTimeCard(map);
 	}
 
 	

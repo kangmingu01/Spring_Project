@@ -22,7 +22,7 @@ import service.InventoryService;
 @RequiredArgsConstructor
 public class InventoryController {
 	private final InventoryService inventoryService;
-	 
+	
 	@GetMapping("/inventory_list")
 	public Map<String, Object> inventoryProductList(@RequestParam Map<String, Object> map){
 		return inventoryService.getselectProductInventoryPageList(map);

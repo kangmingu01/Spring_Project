@@ -448,6 +448,10 @@
                 contentType : "application/json",
                 data: JSON.stringify({"warehouseName":warehouseName,"warehouseLocation":warehouseLocation,"warehouseCapacity":warehouseCapacity }),
                 dataType:"text",
+                beforeSend: function(xhr) {
+                    // CSRF 토큰을 HTTP 요청 헤더에 추가
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
                 success: function(){
                     init();
                     $(".content_body_list").empty();

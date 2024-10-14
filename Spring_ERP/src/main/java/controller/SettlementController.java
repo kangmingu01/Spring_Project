@@ -23,7 +23,7 @@ public class SettlementController {
 
     private final SettlementService settlementService;
 
- // 구매정산 목록 페이지 - 구매팀 ROLE만 접근 가능
+    // 구매정산 목록 페이지 - 구매팀 ROLE만 접근 가능
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listSettlement(@RequestParam Map<String, Object> map, Model model, Principal principal) {
@@ -39,7 +39,7 @@ public class SettlementController {
             map.put("pageSize", "10");
         }
 
-        // 검색 필드 기본값 설정
+        // 검색 필드 기본값 설정 (기타 검색 조건들은 유지)
         map.putIfAbsent("settlementId", "");
         map.putIfAbsent("settlementDate", "");
         map.putIfAbsent("receivingId", "");
@@ -48,14 +48,9 @@ public class SettlementController {
         map.putIfAbsent("productName", "");
         map.putIfAbsent("supplierId", "");
 
-        if (!map.containsKey("receivingStatus") || map.get("receivingStatus").equals("")) {
-            map.put("receivingStatus", 4); // 입고 완료 상태 기본값
-        }
-
-        if (!map.containsKey("settlementStatus") || map.get("settlementStatus").equals("")) {
-            map.put("settlementStatus", 6); // 정산 완료 상태 기본값
-        }
-
+        // receivingStatus = 4, settlementStatus = 6은 무조건 설정 (기본 필터)
+        map.put("receivingStatus", 4); // 입고 완료 상태
+        map.put("settlementStatus", 6); // 정산 완료 상태
 
         // 구매정산 목록 조회 (페이징 처리 및 검색 포함)
         Map<String, Object> resultMap = settlementService.getSettlementList(map);
@@ -73,19 +68,21 @@ public class SettlementController {
         return "purchase/settlement/settlement_list"; // 구매정산 목록 페이지 뷰로 이동
     }
 
-
-    // 구매정산 확정 - 구매정산 대기 상태에서 구매정산 완료 상태로 변경
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/complete", method = RequestMethod.POST)
-    public String completeSettlement(@RequestParam("settlementId") int settlementId, @RequestParam Map<String, Object> map, Model model, Principal principal) {
+    public String completeSettlement(@RequestParam("settlementId") int settlementId,
+                                     @RequestParam("receivingId") int receivingId, // receivingId를 추가합니다.
+                                     @RequestParam Map<String, Object> map, Model model, Principal principal) {
         // 로그인한 사용자 아이디 추가
         String userId = principal.getName();
         model.addAttribute("userId", userId);
 
-        // 구매정산 상태 수정 처리 (구매정산 대기 -> 구매정산 완료)
+        // 구매정산 상태 수정 처리
         Settlement settlement = new Settlement();
-        settlement.setSettlementId(settlementId);
-        settlement.setSettlementStatus(6); // 상태를 완료(6)로 변경
+        settlement.setSettlementId(settlementId); // 기존의 settlementId 사용
+        settlement.setUserid(userId); // 현재 사용자 ID
+        settlement.setReceivingId(receivingId); // 매개변수로 전달받은 receivingId 사용
+        settlement.setSettlementStatus(6); // 새 정산 상태 (완료)
 
         // 정산 상태 업데이트
         settlementService.addSettlement(settlement);
@@ -94,7 +91,8 @@ public class SettlementController {
         String pageNum = map.get("pageNum") != null ? (String) map.get("pageNum") : "1";
         String pageSize = map.get("pageSize") != null ? (String) map.get("pageSize") : "10";
 
-        
         return "redirect:/purchase/settlement/list?pageNum=" + pageNum + "&pageSize=" + pageSize;
     }
+
+
 }

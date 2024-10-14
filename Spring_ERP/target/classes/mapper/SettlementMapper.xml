@@ -100,7 +100,8 @@
         <selectKey resultType="int" keyProperty="settlementId" order="BEFORE">
             select settlement_seq.nextval from dual
         </selectKey>
-        insert into settlement values (#{settlementId}, sysdate, #{userid}, #{receivingId}, 6, #{auth})
+        INSERT INTO settlement (settlement_id, settlement_date, userid, receiving_id, settlement_status, auth)
+    	VALUES (#{settlementId}, SYSDATE, #{userid}, #{receivingId}, 6, 1) 
     </insert>
 
 </mapper>

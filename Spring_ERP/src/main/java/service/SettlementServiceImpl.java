@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dto.Settlement;
 import dto.Supplier;
@@ -63,7 +64,7 @@ public class SettlementServiceImpl implements SettlementService {
     }
 
    
-
+    @Transactional
     @Override
     public void addSettlement(Settlement settlement) {
         settlementDAO.insertSettlement(settlement);

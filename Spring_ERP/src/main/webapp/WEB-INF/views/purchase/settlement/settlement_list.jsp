@@ -55,7 +55,7 @@
           </div>
           <div>
             <label>입고번호</label>
-            <input type="text" id="receivingId" name="receivingId"/>
+            <input type="text" id="receivingId" name="receivingId" required/>
           </div>
           <div>
             <label>담당자</label>
@@ -80,15 +80,7 @@
               </c:forEach>
             </select>
           </div>           
-          <div>
-            <label>상태</label>
-            <select id="status" name="status">
-			  <option value="">상태 선택</option>
-			  <option value="4" ${param.status == '4' ? 'selected' : ''}>정산 대기</option>
-			  <option value="6" ${param.status == '6' ? 'selected' : ''}>정산 완료</option>
-			</select>
-
-         
+          <div>   
           </div>
         </div>    
       </div>
@@ -102,6 +94,7 @@
   <div class="content_body_list">
     <form id="completeForm" action="<c:url value='/purchase/settlement/complete'/>" method="post">
       <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+       <input type="hidden" name="receivingId" value="${settlement.receivingId}"/> 
       <table>
         <thead>
           <tr>
@@ -121,34 +114,35 @@
         </thead>
         <tbody id="settlementTable" class="sty">
           <c:forEach var="settlement" items="${settlementList}">
-            <tr>
-              <td>${settlement.settlementId}</td>
-              <td>${fn:substring(settlement.settlementDate, 0, 10)}</td>
-              <td>${settlement.receivingId}</td>
-              <td>${settlement.name}</td>
-              <td>${settlement.productId}</td>
-              <td>${settlement.productName}</td>
-              <td>${settlement.supplierName}</td>
-              <td>${settlement.quantity}</td>
-              <td>${settlement.productPrice}</td>
-              <td>${settlement.quantity * settlement.productPrice}</td>
-              <td>
-                <c:choose>
-                  <c:when test="${settlement.settlementStatus == 6}">
-                    완료
-                  </c:when>
-                  <c:otherwise>
-                    대기
-                  </c:otherwise>
-                </c:choose>
-              </td>
-              <td>
-                <c:if test="${settlement.settlementStatus != 6}">
-                  <button type="submit" name="settlementId" value="${settlement.settlementId}" >완료</button>
-                </c:if>
-              </td>
-            </tr>
-          </c:forEach>
+    <tr>
+        <td>${settlement.settlementId}</td>
+        <td>${fn:substring(settlement.settlementDate, 0, 10)}</td>
+        <td>${settlement.receivingId}</td>
+        <td>${settlement.name}</td>
+        <td>${settlement.productId}</td>
+        <td>${settlement.productName}</td>
+        <td>${settlement.supplierName}</td>
+        <td>${settlement.quantity}</td>
+        <td>${settlement.productPrice}</td>
+        <td>${settlement.quantity * settlement.productPrice}</td>
+        <td>
+            <c:choose>
+                <c:when test="${settlement.settlementStatus == 6}">
+                    정산 완료
+                </c:when>
+                <c:otherwise>
+                    정산 대기
+                </c:otherwise>
+            </c:choose>
+        </td>
+        <td>
+            <c:if test="${settlement.settlementStatus != 6}">
+                <button type="submit" name="settlementId" value="${settlement.settlementId}">완료</button>
+            </c:if>
+        </td>
+    </tr>
+</c:forEach>
+
         </tbody>
       </table>
     </form>

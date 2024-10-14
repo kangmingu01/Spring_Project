@@ -15,12 +15,13 @@
     <!-- 조건 권한 추가 -->
     <insert id="insertErpAuth">
         INSERT INTO erp_auth (userid, orgId, auth)
-        SELECT #{userid}, #{orgId}, #{auth} FROM DUAL
+        SELECT #{userid}, #{orgId}, #{auth}
+        FROM DUAL
         WHERE NOT EXISTS (
         SELECT 1
         FROM erp_auth
-        WHERE (userid = #{userid} AND auth = #{auth})
-        OR (orgId = #{orgId} AND auth = #{auth})
+        WHERE (userid = #{userid} AND auth = #{auth} AND #{userid} IS NOT NULL)
+        OR (orgId = #{orgId} AND auth = #{auth} AND #{orgId} IS NOT NULL)
         )
     </insert>
 

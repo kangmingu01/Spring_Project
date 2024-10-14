@@ -21,7 +21,7 @@ import service.ProductService;
 @RequiredArgsConstructor
 public class ProductController {
 	private final ProductService productService;
-	
+	 
 //	@GetMapping("/product_list")
 //	public List<Product> productListAll() {
 //		return productService.getProductListAll();
@@ -69,6 +69,6 @@ public class ProductController {
 		productService.removeProduct(idx);
 		return "success";
 	}
-	
+	 
 	
 }

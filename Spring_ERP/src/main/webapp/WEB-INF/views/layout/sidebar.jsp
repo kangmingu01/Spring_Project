@@ -109,10 +109,10 @@
                             <a href="<c:url value="/inventory/register"/>" class="nav-link">상품/창고 등록</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<c:url value="/inventory"/>" class="nav-link">재고 관리</a>
+                            <a href="<c:url value="/inventory/list"/>" class="nav-link">재고 관리</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<c:url value="/inventory"/>" class="nav-link">출입고 관리</a>
+                            <a href="<c:url value="/inventory/history"/>" class="nav-link">출입고 관리</a>
                         </li>
                     </ul>
                 </div>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.ErpUserService;
+import service.OrganizationService;
 
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 public class UserController {
     private final ErpUserService erpUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final OrganizationService organizationService;
 
     @RequestMapping("/html")
     public String user(Model model) {
@@ -79,5 +81,13 @@ public class UserController {
         erpUser.setPasswd(encodedPassword);
         erpUserService.updateErpUser(erpUser);
         return "redirect:/admin/user";
+    }
+
+    /* 부서 찾는 컨트롤러 */
+    @RequestMapping(value = "/searchOrgId")
+    public String searchOrgId(Map<String, Object> map ,Model model) {
+        model.addAttribute("resultMap", organizationService.getOrganizationList(map));
+        model.addAttribute("searchMap", map);;
+        return "searchOrgId";
     }
 }

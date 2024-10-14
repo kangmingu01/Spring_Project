@@ -206,11 +206,21 @@
                         </select>
                     </div>
                     <!-- 조직 ID -->
-                    <div class="col-md-4">
+                    <%--<div class="col-md-4">
                         <label for="orgId" class="form-label">조직 ID</label>
                         <input type="text" class="form-control" id="orgId" name="orgId">
-                        <%-- 여기가 문제임 조직명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 --%>
+                        &lt;%&ndash; 여기가 문제임 조직명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 &ndash;%&gt;
                         <div id="orgIdMsg" class="error">조직 ID를 입력해주세요. 입력값이 없다면 null로 입력해주세요</div>
+                    </div>--%>
+                    <%-- 대상 ID --%>
+                    <div class="col-md-4">
+                        <label for="searchOrgId" class="form-label">조직 ID</label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control" id="searchOrgId" name="orgId" disabled>
+                            <button type="button" id="orgIdCheck" class="btn btn-secondary btn-sm text-nowrap">검색
+                            </button>
+                        </div>
+                        <div id="searchMsg" class="error">조직ID를 검색해주세요</div>
                     </div>
                 </div>
 
@@ -750,6 +760,22 @@
         // 새 창 열기
         window.open('<c:url value="/admin/idCheck"/>?userid=' + $("#userid").val(), 'idCheck', 'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top);
 
+    });
+
+    $("#orgIdCheck").click(function () {
+        // 화면 크기 및 브라우저 창 크기 계산
+        var screenWidth = window.screen.width;
+        var screenHeight = window.screen.height;
+
+        var popupWidth = 700;
+        var popupHeight = 500;
+
+        // 창을 화면 가운데에 위치시키기 위한 좌표 계산
+        var left = (screenWidth / 2) - (popupWidth / 2);
+        var top = (screenHeight / 2) - (popupHeight / 2);
+
+        // 새 창 열기
+        window.open('<c:url value="/admin/searchOrgId"/>','orgIdCheck' ,'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top);
     });
 
     /* 아이디 바꾸면 다시 중복검사할 수 있게 */

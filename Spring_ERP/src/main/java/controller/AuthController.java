@@ -84,7 +84,6 @@ public class AuthController {
 
     @RequestMapping(value = "/deleteAuth", method = RequestMethod.POST)
     public String deleteAuth(@ModelAttribute ErpAuth erpAuth) {
-        System.out.println(erpAuth);
         erpAuthService.deleteErpAuth(erpAuth);
 
         return "redirect:/admin/auth";

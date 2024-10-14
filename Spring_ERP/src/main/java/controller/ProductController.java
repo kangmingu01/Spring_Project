@@ -69,6 +69,6 @@ public class ProductController {
 		productService.removeProduct(idx);
 		return "success";
 	}
-	 
+	
 	
 }

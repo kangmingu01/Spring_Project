@@ -155,4 +155,11 @@ public class ReceivingServiceImpl implements ReceivingService {
 	public List<Supplier> getSupplierList() {
 		return receivingDAO.selectSupplierList();
 	}
+	
+	@Transactional 
+	@Override
+	public void modifyReceivingStatus(int receivingId) {
+	    // 상태를 5로 변경
+	    receivingDAO.confirmReceiving(receivingId);
+	}
 }

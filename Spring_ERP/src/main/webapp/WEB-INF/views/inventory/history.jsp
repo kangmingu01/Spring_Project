@@ -6,6 +6,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="_csrf" content="${_csrf.token}" />
+  <meta name="_csrf_header" content="${_csrf.headerName}" />
   <link href="<c:url value="/css/reset.css"/>" type="text/css" rel="stylesheet">
   <link href="<c:url value="/css/history.css"/>" type="text/css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -18,16 +20,6 @@
     <div class="content_header">
       <div class="content_header_title">입출고현황</div>
       <div class="content_header_btn">
-      	<div>
-      		<select class="search" name="search">
-      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
-      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
-      			<option value="inv_warehouse_id" <c:if test="${search }=='inv_warehouse_id' "> selected </c:if>>창고번호</option>
-      		</select>
-      	</div>
-      	<div>
-      		<input type="text" name="keyword" class="keyword" value="${ keyword}">
-      	</div> 
         <div class="content_header_search_btn" data-bs-toggle="modal" data-bs-target="#newModal">
           <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -106,7 +98,11 @@
             </div>
             <div>
             	<label>창고</label>
-            	<input type="text" name="historyWarehouseId" class="historyWarehouseId"/>
+            	<select class="inventoryWarehouseId">
+            		<c:forEach var="warehouseNum" items="${warehouseNum}">
+	            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
+            		</c:forEach>
+            	</select>
             </div>
             <div>
             	<label>입출고일자</label>
@@ -115,8 +111,6 @@
           </div>
         </div>
         <div class="content_search_two">
-
-
         </div>
       </div>
       <!-- 추가사항 태그 -->
@@ -155,6 +149,25 @@
       	</div>
       </div>
       <!-- 테이블 부분 -->
+      <div class="content_body_search_sty">
+      	<div>
+      		<select class="search" name="search">
+      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
+      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
+      			<option value="warehouse_name" <c:if test="${search }=='warehouse.warehouse_name' "> selected </c:if>>창고이름</option>
+      		</select>
+      	</div>
+      	<div>
+      		<input type="text" name="keyword" class="keyword" value="${ keyword}">
+      	</div>
+      	<div class="content_body_search_btn" >
+          <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+          </svg></div>
+          <span>검색</span>
+        </div>
+      </div>
+      
       <div class="content_body_list">
       </div>
       <div class="pageNumDiv"></div>
@@ -166,34 +179,34 @@
 	  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h1 class="modal-title fs-5" id="staticBackdropLabel">재고수정</h1>
+	        <h1 class="modal-title fs-5" id="staticBackdropLabel">입출고수정</h1>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
 	      	<input type="hidden" class="updateId">
 	        <div>
 	        	<label>제품명</label>
-	        	<input type="text" class="updateCode" >
+	        	<input type="text" class="updateName" >
 	        </div>
 	        <div>
 	        	<label>제품코드</label>
-	        	<input type="text"  class="updateName">
+	        	<input type="text"  class="updateCode">
 	        </div>
 	        <div>
 	        	<label>수량</label>
-	        	<input type="text"  class="updateName">
+	        	<input type="text"  class="updateQty">
 	        </div>
 	        <div>
 	        	<label>입출고</label>
-	        	<input type="text"  class="updatePrice">
+	        	<input type="text"  class="updateType">
 	        </div>
 	        <div>
 	        	<label>창고</label>
-	        	<input type="text"  class="updateDelivery">
+	        	<input type="text"  class="updateWarehouse">
 	        </div>
 	        <div>
 	        	<label>입출고일자</label>
-	        	<input type="text"  class="updateDelivery">
+	        	<input type="text"  class="updateDate">
 	        </div>
 	      </div>
 	      <div class="modal-footer">
@@ -227,6 +240,9 @@
 	</div>
 	</div>
   <script>
+	var csrfToken = $('meta[name="_csrf"]').attr('content');
+  	var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+  	
   	historyDisplay(pageNum=1);
  
     // 추가 정보 클릭 이벤트
@@ -312,7 +328,7 @@
     	});
     }
 
-    //상품정보 삽입 이벤트
+    //상품정보 삽입 이벤트 (등록을 위한 삽입)
     function addProductTitle(productId) {
     	$.ajax({
     		type:"get",
@@ -361,6 +377,10 @@
 	    		contentType : "application/json",
 	    		data: JSON.stringify({"historyProductId":historyProductId,"historyQty":historyQty,"historyType":historyType,"historyWarehouseId":historyWarehouseId,"historyDate":historyDate }),
 	    		dataType:"text",
+	    		beforeSend: function(xhr) {
+                    // CSRF 토큰을 HTTP 요청 헤더에 추가
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
 	    		success: function(){
 	    			//init();
 	    			$(".content_body_list").empty();
@@ -462,8 +482,8 @@
 				html+="<thead>";
 				html+="<tr>";
 				html+="<th>No</th>";
-				html+="<th>상품명</th>";				
 				html+="<th>제품코드</th>";
+				html+="<th>상품명</th>";				
 				html+="<th>브랜드</th>";
 				html+="<th>종류</th>";
 				html+="<th>색갈</th>";
@@ -480,8 +500,8 @@
 				$(result.historyList).each(function(index){
 					html+="<tr>";					
 					html+="<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-					html+="<td>"+this.product.productName+"</td>";
 					html+="<td>"+this.product.productCategory+"</td>";
+					html+="<td>"+this.product.productName+"</td>";
 					html+="<td>"+this.product.productCategory+"</td>";
 					html+="<td>"+this.product.productCategory+"</td>";
 					html+="<td>"+this.product.productCategory+"</td>";
@@ -516,19 +536,27 @@
 			}
     	});
     }
- 
-    //inventory 정보 선택 함수 (update 전)
+    
+   	//history 검색 창 조회
+    document.querySelector(".content_body_search_btn").addEventListener("click",function(){
+	    historyDisplay();    		   	
+    });
+    
+    //history 정보 선택 함수 (update 전)
     function modify(historyId){
     	$.ajax({
     		type:"get",
     		url:"<c:url value="/inventory/history_modify_view"/>/"+historyId,
     		dataType:"json",
     		success:function(result){    			
-    			console.log(result);
-    			//$(".warehouseUpdateId").val(result.warehouseId);
-    			//$(".warehouseUpdateCode").val(result.warehouseName);
-				//$(".warehouseUpdateLocation").val(result.warehouseLocation);
-				//$(".warehouseUpdateCapacity").val(result.warehouseCapacity);
+    			$(".updateId").val(result.historyId);
+    			$(".updateName").val(result.product.productName);
+    			$(".updateCode").val(result.product.productCategory);
+    			$(".updateQty").val(result.historyQty);
+    			$(".updateType").val(result.historyType);
+    			$(".updateWarehouse").val(result.historyWarehouseId);
+				$(".updateDate").val(result.historyDate.substring(0, 10));
+				
     		},
     		error:function(xhr){
     			alert("검색된 정보가 없습니다.")
@@ -536,18 +564,21 @@
     	});
     }
     
-    //inventory 삭제 함수
-    function remove(inventoryId, pageNum) {
+    //history 삭제 함수
+    function remove(historyId, pageNum) {
     	if(confirm("삭제 하시겠습니까?")){
     		$.ajax({
     			type:"delete",
-    			url: "<c:url value="/inventory/inventory_remove"/>/"+inventoryId,
+    			url: "<c:url value="/inventory/history_remove"/>/"+historyId,
     			dataType: "text",
+    			beforeSend: function(xhr) {
+                    // CSRF 토큰을 HTTP 요청 헤더에 추가
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
     			success: function(result){
     				if(result=="success"){
     					//init();
-    					//console.log(pageNum);
-    					inventoryDisplay(pageNum);
+    					historyDisplay(pageNum);
     					alert("삭제 하였습니다.");
     				}
     			},
@@ -558,27 +589,6 @@
     	}
     }
     
-    //파손수량 삭제 함수
-    function removeDamage(inventoryId,pageNum){
-    	if(confirm("삭제 하시겠습니까?")){
-    		$.ajax({
-    			type:"delete",
-    			url: "<c:url value="/inventory/inventory_remove"/>/"+inventoryId,
-    			dataType: "text",
-    			success: function(result){
-    				if(result=="success"){
-    					//init();
-    					//console.log(pageNum);
-    					inventoryDamageDisplay(pageNum);
-    					alert("삭제 하였습니다.");
-    				}
-    			},
-    			error:function(xhr){
-    				alert("삭제하지 못하였습니다.");
-    			}
-    		});
-    	}
-    }
      
     
   </script>

@@ -94,7 +94,12 @@
             </div>
             <div>
             	<label>창고</label>
-            	<input type="text" class="inventoryWarehouseId"/>
+            	<select class="inventoryWarehouseId">
+            		<c:forEach var="warehouseNum" items="${warehouseNum}">
+	            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
+            		</c:forEach>
+            	</select>
+            	<!-- <input type="text" class="inventoryWarehouseId"/> -->
             </div>
             <div>
             	<label>입출고일자</label>
@@ -402,7 +407,6 @@
     	var inventoryDamagedQty=$(".inventoryDamagedQty").val();
     	console.log(inventoryDamagedQty);
     	var lastDate=$(".lastDate").val();
-    	console.log(lastDate);
     		
     	
     	if(confirm("재고를 등록 하시겠습니까?")){

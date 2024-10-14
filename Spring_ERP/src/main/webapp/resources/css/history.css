@@ -40,31 +40,11 @@
     height: 30px;
     align-items: center;
     justify-content: center;
+
 }
-/* .content_header_search_btn{
-    padding: 10px 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-weight: 500;
-    font-size: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-} */
-.content_header_search_btn:hover{
+.content_header_search_btn:hover ,.content_header_plus_btn:hover, .content_header_reset_btn:hover{
     background-color: #7782f8;
 }
-/* .content_header_search_btn >div{
-    width: 30px;
-    height: 30px;
-} */
-.content_header_reset_btn:hover{
-    background-color: #7782f8;
-}
-/* .content_header_excel_btn >div{
-    width: 30px;
-    height: 30px;
-} */
 .content_body{
     padding: 5px;
     background-color: #e2e2e2;
@@ -90,8 +70,6 @@
     background-color: #fff;
     
 }
-
-/* content_body_search �븞�뿉 div �깭洹� �겕湲곗꽕�젙 */
 .content_search_one > div{
     margin: 5px auto;
     display: flex;
@@ -102,7 +80,6 @@
     display: flex;
     justify-content: right;
     align-items: center;
-    /* text-align: right; */
     width: 280px;
     height: 30px;
 }
@@ -260,11 +237,33 @@
 .excel_btn{
 	margin-left: 5px;
 }
-.excel_btn:hover, .upload_btn:hover , .product_btn:hover, .warehouse_btn:hover, .inventory_qty_btn:hover {
+.excel_btn:hover, .upload_btn:hover , .product_btn:hover, .warehouse_btn:hover, .inventory_qty_btn:hover, .content_body_search_btn:hover {
     background-color: #7782f8;
 }
 
-
+.content_body_search_sty{
+	display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-right: 30px;
+    height: 50px;
+    margin: 5px -5px;
+    color:#fff;
+    background-color: #6571ff;
+}
+.content_body_search_sty > div:nth-child(1), .content_body_search_sty > div:nth-child(2) {
+	margin-right: 5px;
+}
+.content_body_search_btn{
+	padding: 10px 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 500;
+    font-size: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}
 .content_body_list{
     overflow: auto;
     margin-top: 5px;

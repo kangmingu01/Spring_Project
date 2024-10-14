@@ -123,7 +123,7 @@
                     <!-- 비밀번호 -->
                     <div class="col-md-4">
                         <label for="passwd" class="form-label">비밀번호</label>
-                        <div class="d-flex form-control-position">
+                        <%--<div class="d-flex form-control-position">
                             <input type="password" class="form-control" id="passwd" name="passwd" disabled
                                    readonly>
                             <span class="toggle-password" onclick="togglePassword()">
@@ -132,8 +132,15 @@
                             <button type="button" class="btn btn-secondary btn-sm text-nowrap"
                                     onclick="generateRandomPassword()">랜덤생성
                             </button>
+                        </div>--%>
+                        <div class="d-flex form-control-position">
+                            <input type="text" class="form-control" id="passwd" name="passwd"
+                                   >
+                            <button type="button" class="btn btn-secondary btn-sm text-nowrap"
+                                    onclick="generateRandomPassword()">랜덤생성
+                            </button>
                         </div>
-                        <div id="passwdMsg" class="error">랜덤생성 버튼을 눌러주세요</div>
+                        <div id="passwdMsg" class="error">비밀번호를 입력해주세요</div>
                     </div>
                     <!-- 이름 -->
                     <div class="col-md-4">
@@ -519,15 +526,14 @@
         for (let i = 0; i < 10; i++) {
             password += characters.charAt(Math.floor(Math.random() * characters.length));
         }
-        // Check if we are in the modal context or normal context
-        let passwdField = document.getElementById("passwd");  // Normal form
-        let passwdModalField = document.getElementById("passwd_modal");  // Modal form
 
-        // Set the generated password to the appropriate field
+        let passwdField = document.getElementById("passwd");
+        let passwdModalField = document.getElementById("passwd_modal");
+
         if (passwdModalField && passwdModalField.offsetParent !== null) {
-            passwdModalField.value = password;  // Modal password field
+            passwdModalField.value = password;
         } else if (passwdField) {
-            passwdField.value = password;  // Normal password field
+            passwdField.value = password;
         }
 
         $("#passwd").removeClass("is-invalid");
@@ -586,11 +592,7 @@
                 $("#passwdMsg").css("display", "block").css("visibility", "visible");
                 $("#passwd").addClass("is-invalid");
                 submitResult = false;
-            }/* else if (!passwdReg.test($("passwd").val())) {
-            $("#passwdMsg").css("display", "block").css("visibility", "visible");
-            $("#passwd").addClass("is-invalid");
-            submitResult = false;
-        }*/
+            }
 
             if ($("#name").val() == "") {
                 $("#nameMsg").css("display", "block").css("visibility", "visible");
@@ -775,7 +777,15 @@
         var top = (screenHeight / 2) - (popupHeight / 2);
 
         // 새 창 열기
-        window.open('<c:url value="/admin/searchOrgId"/>','orgIdCheck' ,'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top);
+        var popup = window.open(
+            '<c:url value="/admin/searchOrgId"/>?type=all',
+            'orgIdCheck',
+            'width=' + popupWidth + ',height=' + popupHeight + ',left=' + left + ',top=' + top
+        );
+        if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+            alert('팝업 차단이 활성화되어 있습니다. 브라우저 설정을 확인해주세요.');
+        }
+
     });
 
     /* 아이디 바꾸면 다시 중복검사할 수 있게 */

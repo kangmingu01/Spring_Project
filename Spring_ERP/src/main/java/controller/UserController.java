@@ -85,9 +85,11 @@ public class UserController {
 
     /* 부서 찾는 컨트롤러 */
     @RequestMapping("/searchOrgId")
-    public String searchOrgId(@RequestParam Map<String, Object> map, Model model) {
+    public String searchOrgId(@RequestParam Map<String, Object> map, @RequestParam("type") String type, Model model) {
+        map.put("type", type);
         model.addAttribute("resultMap", organizationService.getOrganizationList(map));
         model.addAttribute("searchMap", map);
+        model.addAttribute("type", type);
 
         return "searchOrgId";
     }

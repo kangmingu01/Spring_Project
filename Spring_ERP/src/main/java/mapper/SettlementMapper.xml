@@ -46,52 +46,47 @@
     </select>
 
 <select id="selectSettlementList" resultType="Settlement">
-    SELECT * FROM (
-        SELECT settlementData.*, ROWNUM AS rn
-        FROM (
-            SELECT r.receiving_id, t.settlement_id, t.settlement_date, t.userid, u.name,
-                   o.product_id, p.product_name, s.supplier_name, r.quantity, o.product_price,
-                   t.settlement_status, o.supplier_id, r.receiving_status
-            FROM receiving r
-            LEFT JOIN settlement t ON t.receiving_id = r.receiving_id
-            JOIN orders o ON r.orders_id = o.orders_id
-            JOIN product p ON o.product_id = p.product_id
-            JOIN supplier s ON o.supplier_id = s.supplier_id
-            LEFT JOIN erp_user u ON t.userid = u.userid
-            <where>
-                <if test="receivingStatus != null and receivingStatus != ''">
-                    AND r.receiving_status = #{receivingStatus}
-                </if>
-                <if test="settlementStatus != null and settlementStatus != ''">
-                    AND (t.settlement_status IS NULL OR t.settlement_status = #{settlementStatus})
-                </if>
-                <if test="settlementId != null and settlementId != ''">
-                    AND t.settlement_id = #{settlementId}
-                </if>
-                <if test="settlementDate != null and settlementDate != ''">
-                    AND to_char(t.settlement_date, 'YYYY-MM-DD') = #{settlementDate}
-                </if>
-                <if test="receivingId != null and receivingId != ''">
-                    AND r.receiving_id = #{receivingId}
-                </if>
-                <if test="name != null and name != ''">
-                    AND u.name = #{name}
-                </if>
-                <if test="productId != null and productId != ''">
-                    AND o.product_id = #{productId}
-                </if>
-                <if test="productName != null and productName != ''">
-                    AND p.product_name LIKE '%' || #{productName} || '%'
-                </if>
-                <if test="supplierId != null and supplierId != ''">
-                    AND o.supplier_id = #{supplierId}
-                </if>
-            </where>
-            ORDER BY r.receiving_id DESC
-        ) settlementData
-    )
-    WHERE rn BETWEEN #{startRow} AND #{endRow}
+    SELECT r.receiving_id, t.settlement_id, t.settlement_date, t.userid, u.name,
+           o.product_id, p.product_name, s.supplier_name, r.quantity, o.product_price,
+           t.settlement_status, o.supplier_id, r.receiving_status
+    FROM receiving r
+    LEFT JOIN settlement t ON t.receiving_id = r.receiving_id
+    JOIN orders o ON r.orders_id = o.orders_id
+    JOIN product p ON o.product_id = p.product_id
+    JOIN supplier s ON o.supplier_id = s.supplier_id
+    LEFT JOIN erp_user u ON t.userid = u.userid
+    <where>
+        <if test="receivingStatus != null and receivingStatus != ''">
+            AND r.receiving_status = #{receivingStatus}
+        </if>
+        <if test="settlementStatus != null and settlementStatus != ''">
+            AND (t.settlement_status IS NULL OR t.settlement_status = #{settlementStatus})
+        </if>
+        <if test="settlementId != null and settlementId != ''">
+            AND t.settlement_id = #{settlementId}
+        </if>
+        <if test="settlementDate != null and settlementDate != ''">
+            AND to_char(t.settlement_date, 'YYYY-MM-DD') = #{settlementDate}
+        </if>
+        <if test="receivingId != null and receivingId != ''">
+            AND r.receiving_id = #{receivingId}
+        </if>
+        <if test="name != null and name != ''">
+            AND u.name = #{name}
+        </if>
+        <if test="productId != null and productId != ''">
+            AND o.product_id = #{productId}
+        </if>
+        <if test="productName != null and productName != ''">
+            AND p.product_name LIKE '%' || #{productName} || '%'
+        </if>
+        <if test="supplierId != null and supplierId != ''">
+            AND o.supplier_id = #{supplierId}
+        </if>
+    </where>
+    ORDER BY r.receiving_id DESC
 </select>
+
 
 
 

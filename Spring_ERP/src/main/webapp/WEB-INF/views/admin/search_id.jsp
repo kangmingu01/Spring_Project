@@ -69,7 +69,7 @@
 <body>
 <header class="content d-md-flex justify-content-between pt-2 pb-2 ps-4 pe-4 align-items-center">
     <div class="container title fw-bold">
-        대상 검색 ${searchType}
+        대상 검색
     </div>
 </header>
 <section class="">
@@ -100,7 +100,7 @@
             </div>
             <main style="overflow-x: auto" class="flex-fill">
                     <%-- 값 넘어오는지 테스트 --%>
-                <c:out value="${resultMap.erpAuthList}"/>
+                    <%--<c:out value="${resultMap.erpAuthList}"/>--%>
                     <%-- 유저 정보를 볼 수 있는 테이블 --%>
                 <table class="table table-striped table-hover">
                     <thead>
@@ -122,7 +122,9 @@
                                     <td class="align-middle text-center">${erpUser.name}</td>
                                     <td class="align-middle text-center">${erpUser.userid}</td>
                                     <td>
-                                        <button type="button" class="btn btn-warning" onclick="selectId('${erpUser.userid}')">선택</button>
+                                        <button type="button" class="btn btn-warning"
+                                                onclick="selectId('${erpUser.userid}')">선택
+                                        </button>
 
                                     </td>
                                 </tr>
@@ -177,7 +179,9 @@
                                     <td class="align-middle text-center">${organization.orgName}</td>
                                     <td class="align-middle text-center">${organization.orgId}</td>
                                     <td>
-                                        <button type="button" class="btn btn-warning" onclick="selectId('${organization.orgId}')">선택</button>
+                                        <button type="button" class="btn btn-warning"
+                                                onclick="selectId('${organization.orgId}')">선택
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>

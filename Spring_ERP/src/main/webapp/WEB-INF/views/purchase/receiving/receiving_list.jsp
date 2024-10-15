@@ -222,38 +222,38 @@
         <!-- 페이징 부분 -->
         <div style="text-align: center;">
           <!-- 이전 페이지 링크 -->
-          <c:choose>
-            <c:when test="${pager != null && pager.startPage > 1}">
-              <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
-            </c:when>
-            <c:otherwise>
-              [이전]
-            </c:otherwise>
-          </c:choose>
-          
-          <!-- 페이지 번호 링크 -->
-          <c:if test="${pager != null}">
-            <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-              <c:choose>
-                <c:when test="${pager.pageNum != i}">
-                  <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
-                </c:when>
-                <c:otherwise>
-                  [${i}]
-                </c:otherwise>
-              </c:choose>        
-            </c:forEach>
-          </c:if>
-          
-          <!-- 다음 페이지 링크 -->
-          <c:choose>
-            <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-              <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
-            </c:when>
-            <c:otherwise>
-              [다음]
-            </c:otherwise>
-          </c:choose>
+		<c:choose>
+		    <c:when test="${pager != null && pager.startPage > 1}">
+		        <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&productName=${param.productName}&supplierId=${param.supplierId}&receivingStatus=${param.receivingStatus}">[이전]</a>
+		    </c:when>
+		    <c:otherwise>
+		        [이전]
+		    </c:otherwise>
+		</c:choose>
+		
+		<!-- 페이지 번호 링크 -->
+		<c:if test="${pager != null}">
+		    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+		        <c:choose>
+		            <c:when test="${pager.pageNum != i}">
+		                <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&productName=${param.productName}&supplierId=${param.supplierId}&receivingStatus=${param.receivingStatus}">[${i}]</a>
+		            </c:when>
+		            <c:otherwise>
+		                [${i}]
+		            </c:otherwise>
+		        </c:choose>
+		    </c:forEach>
+		</c:if>
+		
+		<!-- 다음 페이지 링크 -->
+		<c:choose>
+		    <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+		        <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&productName=${param.productName}&supplierId=${param.supplierId}&receivingStatus=${param.receivingStatus}">[다음]</a>
+		    </c:when>
+		    <c:otherwise>
+		        [다음]
+		    </c:otherwise>
+		</c:choose>
         </div>
       </div>
     </div>
@@ -408,10 +408,10 @@ function saveReceivingChanges(receivingId) {
     });
 }
 
-// 폼 초기화 및 첫 페이지로 이동
+//폼 초기화 및 첫 페이지로 이동
 function resetForm() {
     $('#receivingForm')[0].reset();
-    window.location.href = '<c:url value="/purchase/receiving/list"/>';
+    window.location.href = '<c:url value="/purchase/receiving/list"/>?pageNum=1';
 }
 
 // 모든 필드를 읽기 전용으로 설정하는 함수
@@ -441,10 +441,14 @@ function setAllFieldsReadOnly(readOnly) {
     });
 }
 
-// 입고 조회 폼 제출
+//조회 버튼 클릭 시 검색 폼 제출
 function searchOrder() {
-    $('#receivingForm').submit();
+    const form = $('#receivingForm');
+    const pageNum = 1; // 조회 시 첫 페이지로 이동
+    form.find('input[name="pageNum"]').val(pageNum);
+    form.submit();
 }
+
 
 $(document).ready(function() {
     // 확정 버튼 클릭 이벤트 추가

@@ -114,7 +114,7 @@
             <input type="hidden" id="ordersQuantity" name="ordersQuantity" value="${receiving.ordersQuantity}" />
             <div>
               <label>통과수량</label>
-              <input type="number" name="quantity" id="quantity" style="background-color: #f0f0f0" readonly/>
+              <input type="number" name="quantity" id="quantity" style="background-color: #f0f0f0" readonly min="0"/>
             </div>
             <div>
               <!-- 에러 메시지 -->
@@ -147,50 +147,66 @@
               <th style="color: red;">총액</th>
               <th style="color: red;">납기일</th>
               <th>창고</th>
-              <th>상태</th>              
-              <th>수정</th>
+              <th style="color: red;">상태</th>              
+              <th>취소</th>
+              <th>확정</th>
             </tr>
           </thead>
           <tbody id="orderTable" class="sty">
-            <c:forEach var="receiving" items="${receivingList}">
-              <tr>
-                <td>${receiving.receivingId}</td>
-                <td>${fn:substring(receiving.receivingDate, 0, 10)}</td>
-                <td>${receiving.ordersId}</td>
-                <td>${receiving.name}</td>
-                <td>${receiving.productId}</td>
-                <td>${receiving.productName}</td>
-                <td>${receiving.productCategoryDetails.brand}</td>
-                <td>${receiving.productCategoryDetails.type}</td>
-                <td>${receiving.productCategoryDetails.color}</td>
-                <td>${receiving.productCategoryDetails.size}</td>
-                <td>${receiving.productCategoryDetails.gender}</td>
-                <td>${receiving.supplierName}</td>
-                <td>${receiving.ordersQuantity}</td>
-                <td>${receiving.quantity}</td>
-                <td>${receiving.productPrice}</td>
-                <td>${receiving.quantity * receiving.productPrice}</td>
-                <td>${fn:substring(receiving.deliveryDate, 0, 10)}</td>
-                <td>${receiving.warehouseName}</td>
-                <td>
-                  <c:choose>
-                    <c:when test="${receiving.ordersStatus == 2 && receiving.receivingStatus != 4}">
-                      입고 대기
-                    </c:when>
-                    <c:when test="${receiving.receivingStatus == 4}">
-                      입고 완료
-                    </c:when>
-                  </c:choose>
-                </td>
-                <td>
-                  <!-- 입고 완료 상태일 경우 취소 버튼 활성화 -->
-                  <c:if test="${receiving.receivingStatus == 4}">
-                    <button class="cancelButton" data-receiving-id="${receiving.receivingId}">취소</button>
-                  </c:if>
-                </td>
-              </tr>
-            </c:forEach>
-          </tbody>
+		    <c:forEach var="receiving" items="${receivingList}">
+		        <tr>
+		            <td>${receiving.receivingId}</td>
+		            <td>${fn:substring(receiving.receivingDate, 0, 10)}</td>
+		            <td>${receiving.ordersId}</td>
+		            <td>${receiving.name}</td>
+		            <td>${receiving.productId}</td>
+		            <td>${receiving.productName}</td>
+		            <td>${receiving.productCategoryDetails.brand}</td>
+		            <td>${receiving.productCategoryDetails.type}</td>
+		            <td>${receiving.productCategoryDetails.color}</td>
+		            <td>${receiving.productCategoryDetails.size}</td>
+		            <td>${receiving.productCategoryDetails.gender}</td>
+		            <td>${receiving.supplierName}</td>
+		            <td>${receiving.ordersQuantity}</td>
+		            <td>${receiving.quantity}</td>
+		            <td>${receiving.productPrice}</td>
+		            <td>${receiving.quantity * receiving.productPrice}</td>
+		            <td>${fn:substring(receiving.deliveryDate, 0, 10)}</td>
+		            <td>${receiving.warehouseName}</td>
+		             <td>
+		                <c:choose>
+		                    <c:when test="${receiving.receivingStatus == 4}">
+		                        입고 완료
+		                    </c:when>
+		                    <c:when test="${receiving.receivingStatus == 5}">
+		                        입고 확정
+		                    </c:when>
+		                    <c:otherwise>
+		                        입고 대기
+		                    </c:otherwise>
+		                </c:choose>
+		            </td>
+		            <!-- 취소 버튼이 있는 열 -->
+		            <td>
+		                <c:if test="${receiving.receivingStatus == 4}">
+		                    <button class="cancelButton" data-receiving-id="${receiving.receivingId}">취소</button>
+		                </c:if>
+		                <c:if test="${receiving.receivingStatus == 5}">
+		                    <button class="cancelButton" disabled>취소</button>
+		                </c:if>
+		            </td>
+		            <!-- 확정 버튼이 있는 열 -->
+		            <td>
+		                <c:if test="${receiving.receivingStatus == 4}">
+		                    <button class="confirmButton" data-receiving-id="${receiving.receivingId}">확정</button>
+		                </c:if>
+		                <c:if test="${receiving.receivingStatus == 5}">
+		                    <button class="confirmButton" disabled>확정</button>
+		                </c:if>
+		            </td>
+		        </tr>
+		    </c:forEach>
+		</tbody>
         </table>
 
         <!-- 페이징 부분 -->
@@ -410,6 +426,46 @@ function setAllFieldsReadOnly(readOnly) {
 function searchOrder() {
     $('#receivingForm').submit();
 }
+
+$(document).ready(function() {
+    // 확정 버튼 클릭 이벤트 추가
+    $('.confirmButton').on('click', function() {
+        const receivingId = $(this).data('receiving-id');
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        // 서버로 상태 변경 요청
+        $.ajax({
+            url: '<c:url value="/purchase/receiving/confirm"/>',
+            type: 'POST',
+            data: { receivingId: receivingId },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function(response) {
+                alert('입고 확정 되었습니다.');
+
+                // 상태 변경 후 버튼 비활성화 처리 (각각의 버튼을 비활성화)
+                const row = $('button[data-receiving-id="' + receivingId + '"]').closest('tr');
+                
+                // 취소 버튼 비활성화
+                row.find('.cancelButton').prop('disabled', true);
+                
+                // 확정 버튼 비활성화
+                row.find('.confirmButton').prop('disabled', true);
+                
+                // 상태를 '입고 확정'으로 업데이트 (해당 열에 상태 표시)
+                row.find('td').eq(18).text('입고 확정');
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX 요청 중 오류:', xhr, status, error);
+                alert('상태 변경 중 오류가 발생했습니다.');
+            }
+        });
+    });
+});
+
+
 
 </script>
 

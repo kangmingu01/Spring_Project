@@ -112,11 +112,11 @@
                  </div>
                  <div>
                      <label>발주수량</label>
-                     <input type="number" id="ordersQuantity" name="ordersQuantity" required />
+                     <input type="number" id="ordersQuantity" name="ordersQuantity" required min="0" />
                  </div>
                  <div>
                      <label>단가</label>
-                     <input type="number" id=productPrice name="productPrice" required />
+                     <input type="number" id=productPrice name="productPrice" required min="0" />
                  </div>
                  <div>
                      <label>납기일</label>

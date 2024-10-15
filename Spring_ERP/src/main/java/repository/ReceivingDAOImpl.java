@@ -63,4 +63,9 @@ public class ReceivingDAOImpl implements ReceivingDAO {
 		return sqlSession.getMapper(ReceivingMapper.class).selectSupplierList();
 	}
 
+	@Override
+	public int confirmReceiving(int receivingId) {
+		return sqlSession.getMapper(ReceivingMapper.class).confirmReceiving(receivingId);
+	}
+
 }

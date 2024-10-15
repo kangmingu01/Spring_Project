@@ -188,4 +188,9 @@
         select supplier_id, supplier_name from supplier order by supplier_name
     </select>
 	
+	<!-- 입고 완료 상태를 확정으로 변경 -->
+	<update id="confirmReceiving" parameterType="int">
+	    update receiving set receiving_status = 5 where receiving_id = #{receivingId} and receiving_status = 4
+	</update>
+	
 </mapper>

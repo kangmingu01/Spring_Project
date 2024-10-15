@@ -27,5 +27,14 @@ public class Settlement {
     private String userid;           
     private int receivingId;     
     private int settlementStatus;
-    private int auth;            
+    private int auth;  
+    
+    private String name;
+    private int productId;
+    private String productName; 
+    private String supplierName;
+    private int quantity;
+    private int productPrice;
+    
+    private int receivingStatus;
 }

@@ -385,8 +385,33 @@
                             로그인
                         </button>
                         <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION}">
-                            <h3>${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</h3>
+                            <p>${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</p>
                         </c:if>
+                        <c:choose>
+                            <c:when test="${error == 'locked'}">
+                                <div class="alert alert-danger">
+                                    계정이 잠겨 있습니다. 관리자에게 문의하세요.
+                                </div>
+                            </c:when>
+                            <c:when test="${error == 'notfound'}">
+                                <div class="alert alert-danger">
+                                    입력하신 아이디가 존재하지 않습니다. 다시 확인해 주세요.
+                                </div>
+                            </c:when>
+                            <c:when test="${error == 'disabled'}">
+                                <div class="alert alert-danger">
+                                    계정이 비활성화되었습니다. 관리자에게 문의하세요.
+                                </div>
+                            </c:when>
+                            <c:when test="${error == 'failed'}">
+                                <div class="alert alert-danger">
+                                    로그인에 실패했습니다. 아이디와 비밀번호를 확인해 주세요.
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <!-- 로그인 시 다른 에러가 발생할 경우 표시할 기본 메시지 -->
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <sec:csrfInput/>
                 </form>

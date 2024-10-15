@@ -1,4 +1,4 @@
-package util;
+package repository;
 
 /*import lombok.Value;*/
 import org.springframework.beans.factory.annotation.Value;

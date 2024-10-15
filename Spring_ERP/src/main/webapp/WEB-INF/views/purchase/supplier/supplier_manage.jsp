@@ -140,41 +140,48 @@
           </tbody>
         </table>
         <div style="text-align: center;">
-		    <c:choose>
-		        <c:when test="${resultMap.pager.startPage > resultMap.pager.blockSize }">
-		            <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${resultMap.pager.prevPage}&pageSize=${resultMap.pager.pageSize }&column=${searchMap.column}&keyword=${searchMap.keyword}">
-		                [이전]
-		            </a>
-		        </c:when>
-		        <c:otherwise>
-		            [이전]
-		        </c:otherwise>
-		    </c:choose>
-		    
-		    <c:forEach var="i" begin="${resultMap.pager.startPage }" end="${resultMap.pager.endPage }" step="1">
-		        <c:choose>
-		            <c:when test="${resultMap.pager.pageNum != i }">
-		                <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize }&column=${searchMap.column}&keyword=${searchMap.keyword}">
-		                    [${i}]
-		                </a>
-		            </c:when>
-		            <c:otherwise>
-		                [${i}]
-		            </c:otherwise>
-		        </c:choose>				
-		    </c:forEach>
-		    
-		    <c:choose>
-		        <c:when test="${resultMap.pager.endPage != resultMap.pager.totalPage }">
-		            <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${resultMap.pager.nextPage}&pageSize=${resultMap.pager.pageSize }&column=${searchMap.column}&keyword=${searchMap.keyword}">
-		                [다음]
-		            </a>
-		        </c:when>
-		        <c:otherwise>
-		            [다음]
-		        </c:otherwise>
-		    </c:choose>
+    <!-- 이전 페이지 링크 -->
+    <c:choose>
+        <c:when test="${resultMap.pager.startPage > resultMap.pager.blockSize}">
+            <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${resultMap.pager.prevPage}&pageSize=${resultMap.pager.pageSize }&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}">
+                [이전]
+            </a>
+        </c:when>
+        <c:otherwise>
+            [이전]
+        </c:otherwise>
+    </c:choose>
+
+    <!-- 페이지 번호 링크 반복문 -->
+    <c:forEach var="i" begin="${resultMap.pager.startPage }" end="${resultMap.pager.endPage }" step="1">
+        <c:choose>
+            <c:when test="${resultMap.pager.pageNum != i}">
+                <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize }&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}">
+                    [${i}]
+                </a>
+            </c:when>
+            <c:otherwise>
+                [${i}]
+            </c:otherwise>
+        </c:choose>
+    </c:forEach>
+
+    <!-- 다음 페이지 링크 -->
+    <c:choose>
+        <c:when test="${resultMap.pager.endPage != resultMap.pager.totalPage}">
+            <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${resultMap.pager.nextPage}&pageSize=${resultMap.pager.pageSize }&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}">
+                [다음]
+            </a>
+        </c:when>
+        <c:otherwise>
+            [다음]
+        </c:otherwise>
+    </c:choose>
+</div>
+
 		</div>
+		</div>
+	
 
 
 <script type="text/javascript">

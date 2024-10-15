@@ -176,7 +176,8 @@ public class ReceivingController {
         map.putIfAbsent("brand", "");        
         map.putIfAbsent("supplierId", "");
         map.putIfAbsent("deliveryDate", "");
-        map.putIfAbsent("wareHouseId", "");
+        map.putIfAbsent("warehouseId", "");
+        map.putIfAbsent("warehouseName", "");
         
         map.put("receivingStatus", receivingStatus != null ? receivingStatus : "");
  
@@ -199,7 +200,6 @@ public class ReceivingController {
         return "purchase/receiving/receiving_list"; // 입고 목록 페이지 뷰로 이동
     }
     
-	// 입고 수정 후 목록으로 이동 - 페이징 및 검색 조건 유지
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public String modifyReceiving(@RequestBody Map<String, Object> params, Principal principal, Model model) 
@@ -227,14 +227,35 @@ public class ReceivingController {
         // 페이징 정보와 검색 조건 유지
         String pageNum = params.get("pageNum") != null ? params.get("pageNum").toString() : "1";
         String pageSize = params.get("pageSize") != null ? params.get("pageSize").toString() : "10";
-        String searchKeyword = params.containsKey("searchKeyword") ? URLEncoder.encode(params.get("searchKeyword").toString(), "UTF-8") : "";
+
+        // 개별 검색 조건 추출
+        String receivingIdParam = params.containsKey("receivingId") ? URLEncoder.encode(params.get("receivingId").toString(), "UTF-8") : "";
+        String receivingDate = params.containsKey("receivingDate") ? URLEncoder.encode(params.get("receivingDate").toString(), "UTF-8") : "";
+        String ordersId = params.containsKey("ordersId") ? URLEncoder.encode(params.get("ordersId").toString(), "UTF-8") : "";
+        String name = params.containsKey("name") ? URLEncoder.encode(params.get("name").toString(), "UTF-8") : "";
+        String productId = params.containsKey("productId") ? URLEncoder.encode(params.get("productId").toString(), "UTF-8") : "";
+        String productName = params.containsKey("productName") ? URLEncoder.encode(params.get("productName").toString(), "UTF-8") : "";
+        String brand = params.containsKey("brand") ? URLEncoder.encode(params.get("brand").toString(), "UTF-8") : "";
+        String supplierId = params.containsKey("supplierId") ? URLEncoder.encode(params.get("supplierId").toString(), "UTF-8") : "";
+        String deliveryDate = params.containsKey("deliveryDate") ? URLEncoder.encode(params.get("deliveryDate").toString(), "UTF-8") : "";
+        String warehouseId = params.containsKey("warehouseId") ? URLEncoder.encode(params.get("warehouseId").toString(), "UTF-8") : "";
+        String warehouseName = params.containsKey("warehouseName") ? URLEncoder.encode(params.get("warehouseName").toString(), "UTF-8") : "";
+        String receivingStatus = params.containsKey("receivingStatus") ? URLEncoder.encode(params.get("receivingStatus").toString(), "UTF-8") : "";
 
         // 리다이렉트할 URL을 구성
-        String redirectUrl = "/purchase/receiving/list?pageNum=" + pageNum + "&pageSize=" + pageSize;
-        
-        if (!searchKeyword.isEmpty()) {
-            redirectUrl += "&searchKeyword=" + searchKeyword;
-        }
+        String redirectUrl = "/purchase/receiving/list?pageNum=" + pageNum + "&pageSize=" + pageSize
+                + "&receivingId=" + receivingIdParam
+                + "&receivingDate=" + receivingDate
+                + "&ordersId=" + ordersId
+                + "&name=" + name
+                + "&productId=" + productId
+                + "&productName=" + productName
+                + "&brand=" + brand
+                + "&supplierId=" + supplierId
+                + "&deliveryDate=" + deliveryDate
+                + "&warehouseId=" + warehouseId
+                + "&warehouseName=" + warehouseName
+                + "&receivingStatus=" + receivingStatus;
 
         // 리다이렉트 처리
         return "redirect:" + redirectUrl;

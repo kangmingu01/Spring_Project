@@ -372,7 +372,9 @@
                 xhr.setRequestHeader(header, token); 
             },
             success: function(response) {
-                window.location.href = '<c:url value="/purchase/orders/list"/>' + '?pageNum=' + data.pageNum + '&pageSize=' + data.pageSize;
+                // 수정 후 현재 페이지 새로고침하여 변경 사항 반영
+                //alert('수정이 완료되었습니다.');
+                location.reload();  // 페이지 새로 고침
             },
             error: function(xhr, status, error) {
                 alert('수정 중 오류가 발생했습니다.');

@@ -112,7 +112,6 @@
               <label>상태</label>
               <select name="receivingStatus" id="Status">
                 <option value="">상태 선택</option>
-                <option value="2">입고 대기</option> 
                 <option value="4">입고 완료</option>                         
                 <option value="5">입고 확정</option>                         
               </select>
@@ -194,10 +193,7 @@
 		                    </c:when>
 		                    <c:when test="${receiving.receivingStatus == 5}">
 		                        입고 확정
-		                    </c:when>
-		                    <c:otherwise>
-		                        입고 대기
-		                    </c:otherwise>
+		                    </c:when>		                    
 		                </c:choose>
 		            </td>
 		            <!-- 취소 버튼이 있는 열 -->

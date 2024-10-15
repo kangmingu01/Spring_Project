@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.EmailService;
 import service.ErpUserService;
 import service.OrganizationService;
 
@@ -22,6 +23,7 @@ public class UserController {
     private final ErpUserService erpUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final OrganizationService organizationService;
+    private final EmailService emailService;
 
     @RequestMapping("/html")
     public String user(Model model) {
@@ -60,8 +62,18 @@ public class UserController {
     /* 사용자 추가 */
     @RequestMapping(value ="/addUser", method = RequestMethod.POST)
     public String addUser(@ModelAttribute ErpUser erpUser, Model model) {
-        String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
-        erpUser.setPasswd(encodedPassword);
+        String userPassword = erpUser.getPasswd();
+
+        erpUser.setPasswd(bCryptPasswordEncoder.encode(erpUser.getPasswd()));
+
+        /* 추후 이메일이 실제로 존재하는지 API를 사용하여 로직 처리 */
+        try {
+            emailService.sendRegistrationEmail(erpUser.getEmail(), erpUser.getUserid(), userPassword);
+        } catch (Exception e) {
+            model.addAttribute("error", "이메일 발송에 실패하였습니다. 다시 시도해 주세요.");
+            return "redirect:/admin/user?error=emailFailed";
+        }
+
         erpUserService.addErpUser(erpUser);
 
         return "redirect:/admin/user";

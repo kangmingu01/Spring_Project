@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.EmailService;
 import service.ErpUserService;
 import service.OrganizationService;
 
@@ -22,6 +23,7 @@ public class UserController {
     private final ErpUserService erpUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final OrganizationService organizationService;
+    private final EmailService emailService;
 
     @RequestMapping("/html")
     public String user(Model model) {
@@ -62,7 +64,10 @@ public class UserController {
     public String addUser(@ModelAttribute ErpUser erpUser, Model model) {
         String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
         erpUser.setPasswd(encodedPassword);
+
         erpUserService.addErpUser(erpUser);
+
+        emailService.sendRegistrationEmail(erpUser.getEmail(), erpUser.getUserid(), erpUser.getPasswd());
 
         return "redirect:/admin/user";
     }

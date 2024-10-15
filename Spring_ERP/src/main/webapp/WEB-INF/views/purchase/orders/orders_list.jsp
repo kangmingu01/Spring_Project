@@ -102,6 +102,15 @@
         <!-- 페이지 번호와 페이지 크기를 히든 필드로 추가 -->
         <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
         <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+        <!-- 기존 검색 폼의 검색 필드들을 히든 필드로 추가 -->
+		<input type="hidden" name="ordersId" value="${param.ordersId}"/>
+		<input type="hidden" name="ordersDate" value="${param.ordersDate}"/>
+		<input type="hidden" name="name" value="${param.name}"/>
+		<input type="hidden" name="productId" value="${param.productId}"/>
+		<input type="hidden" name="productName" value="${param.productName}"/>
+		<input type="hidden" name="brand" value="${param.brand}"/>
+		<input type="hidden" name="supplierId" value="${param.supplierId}"/>
+		<input type="hidden" name="ordersStatus" value="${param.ordersStatus}"/>
       </form>
 
       <!-- 발주 추가 정보 -->
@@ -195,37 +204,37 @@
         <div style="text-align: center;">
           <!-- 이전 페이지 링크 -->
           <c:choose>
-            <c:when test="${pager != null && pager.startPage > 1}">
-              <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
-            </c:when>
-            <c:otherwise>
-              [이전]
-            </c:otherwise>
-          </c:choose>
-          
-          <!-- 페이지 번호 링크 -->
-          <c:if test="${pager != null}">
-            <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-              <c:choose>
-                <c:when test="${pager.pageNum != i}">
-                  <a href="<c:url value='/purchase/orders/list'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
-                </c:when>
-                <c:otherwise>
-                  [${i}]
-                </c:otherwise>
-              </c:choose>        
-            </c:forEach>
-          </c:if>
-          
-          <!-- 다음 페이지 링크 -->
-          <c:choose>
-            <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-              <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
-            </c:when>
-            <c:otherwise>
-              [다음]
-            </c:otherwise>
-          </c:choose>
+		    <c:when test="${pager != null && pager.startPage > 1}">
+		        <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[이전]</a>
+		    </c:when>
+		    <c:otherwise>
+		        [이전]
+		    </c:otherwise>
+		</c:choose>
+		
+		<!-- 페이지 번호 링크 -->
+		<c:if test="${pager != null}">
+		    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+		        <c:choose>
+		            <c:when test="${pager.pageNum != i}">
+		                <a href="<c:url value='/purchase/orders/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[${i}]</a>
+		            </c:when>
+		            <c:otherwise>
+		                [${i}]
+		            </c:otherwise>
+		        </c:choose>
+		    </c:forEach>
+		</c:if>
+		
+		<!-- 다음 페이지 링크 -->
+		<c:choose>
+		    <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+		        <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[다음]</a>
+		    </c:when>
+		    <c:otherwise>
+		        [다음]
+		    </c:otherwise>
+		</c:choose>
         </div>
       </div>
     </div>

@@ -271,14 +271,22 @@ $(document).ready(function() {
         resetForm();
     });
 
-    // 통과수량이 발주수량을 초과하지 않도록 검증하는 로직 추가
+ 	// 통과수량이 발주수량을 초과하지 않도록 검증하는 로직 추가
     $('#quantity').on('input', function() {
         const ordersQuantity = parseInt($('#ordersQuantity').val());  // 숨겨진 발주수량 필드에서 가져옴
-        const quantity = $(this).val();  // 입력된 통과수량
+        let quantity = $(this).val().replace(/[^0-9]/g, ''); // 숫자가 아닌 값 제거
+        $(this).val(quantity); // 숫자만 남긴 값을 다시 설정
         const errorSpan = $('#quantity-error');  // 에러 메시지 표시할 span
 
         // 빈 값이거나 NaN인 경우에는 에러 메시지를 숨김
         if (quantity === '' || isNaN(quantity)) {
+            errorSpan.hide();  // 에러 메시지 숨김
+            return;
+        }
+
+        // 음수 값 방지
+        if (parseInt(quantity) < 0) {
+            $(this).val(''); // 음수값 제거
             errorSpan.hide();  // 에러 메시지 숨김
             return;
         }

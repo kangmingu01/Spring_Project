@@ -375,6 +375,28 @@
       $('#ordersForm').attr('action', '<c:url value="/purchase/orders/list"/>').attr('method', 'get').submit();
       $('.editButton').prop('disabled', false);
     }
+    
+    document.getElementById("ordersQuantity").addEventListener("input", function() {
+        const ordersQuantity = document.getElementById("ordersQuantity");
+
+        // 음수 입력 방지
+        if (ordersQuantity.value < 0) {
+            ordersQuantity.value = 0; // 음수 입력 시 값을 0으로 고정
+        }
+
+        // 숫자가 아닌 입력 방지
+        const sanitizedValue = ordersQuantity.value.replace(/[^0-9]/g, ''); // 숫자가 아닌 모든 것을 제거
+        ordersQuantity.value = sanitizedValue;
+
+        // 발주수량이 빈 값이거나 0 이하일 때 0으로 고정
+        if (ordersQuantity.value === '' || parseInt(ordersQuantity.value, 10) < 0) {
+            ordersQuantity.value = 0;
+        }
+
+        // 필드 검증
+        checkFields(); // 필드가 모두 입력되었는지 확인하는 기존 함수 호출
+    });
+
 
   </script>
 

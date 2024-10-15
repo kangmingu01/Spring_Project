@@ -268,6 +268,23 @@ document.addEventListener("DOMContentLoaded", function () {
     // 납기일 필드의 최소값을 현재 날짜로 설정
     const deliveryDateInput = document.getElementById("deliveryDate");
     deliveryDateInput.setAttribute('min', today); // 현재 날짜 이후만 선택 가능하게 설정
+    
+ 	// 발주수량 입력 시 숫자 및 범위 형식 입력 방지
+    document.getElementById("ordersQuantity").addEventListener("input", function() {
+        const ordersQuantity = document.getElementById("ordersQuantity");
+
+        // 음수 입력 방지
+        if (ordersQuantity.value < 0) {
+            ordersQuantity.value = 0; // 음수 입력 시 값을 0으로 고정
+        }
+
+        // 숫자가 아닌 입력 방지 및 "0-2" 형식 방지
+        // 정규식을 사용하여 숫자 이외의 값이나 잘못된 형식이 입력되지 않도록 필터링
+        const sanitizedValue = ordersQuantity.value.replace(/[^0-9]/g, ''); // 숫자가 아닌 모든 것을 제거
+        ordersQuantity.value = sanitizedValue;
+
+        checkFields(); // 필드가 모두 입력되었는지 확인하는 기존 함수 호출
+    });
 
     // 모든 필드가 입력되었는지 확인하는 함수
     function checkFields() {

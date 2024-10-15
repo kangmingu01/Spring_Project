@@ -340,14 +340,12 @@
     }
 
     $("#idCheck").click(function () {
-        // 화면 크기 및 브라우저 창 크기 계산
         var screenWidth = window.screen.width;
         var screenHeight = window.screen.height;
 
         var popupWidth = 700;
         var popupHeight = 500;
 
-        // 창을 화면 가운데에 위치시키기 위한 좌표 계산
         var left = (screenWidth / 2) - (popupWidth / 2);
         var top = (screenHeight / 2) - (popupHeight / 2);
 
@@ -368,6 +366,8 @@
         $(".error").css("display", "none").css("visibility", "hidden").removeClass("is-invalid");
         $("#searchId").removeClass("is-invalid");
         $("#auth").removeClass("is-invalid");
+
+        $("#searchId").prop("disabled", false);
 
 
         if ($("#searchId").val() == "") {

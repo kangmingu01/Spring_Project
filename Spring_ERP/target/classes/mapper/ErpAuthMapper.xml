@@ -15,12 +15,13 @@
     <!-- 조건 권한 추가 -->
     <insert id="insertErpAuth">
         INSERT INTO erp_auth (userid, orgId, auth)
-        SELECT #{userid}, #{orgId}, #{auth} FROM DUAL
+        SELECT #{userid}, #{orgId}, #{auth}
+        FROM DUAL
         WHERE NOT EXISTS (
         SELECT 1
         FROM erp_auth
-        WHERE (userid = #{userid} AND auth = #{auth})
-        OR (orgId = #{orgId} AND auth = #{auth})
+        WHERE (userid = #{userid} AND auth = #{auth} AND #{userid} IS NOT NULL)
+        OR (orgId = #{orgId} AND auth = #{auth} AND #{orgId} IS NOT NULL)
         )
     </insert>
 
@@ -85,4 +86,12 @@
             </when>
         </choose>
     </select>
+    
+    <!-- 해당 부서 권한 가져오는 쿼리 -->
+    <select id="findAuthByOrgId" resultType="ErpAuth">
+        SELECT auth
+        FROM erp_auth
+        WHERE orgId = #{orgId}
+    </select>
+    
 </mapper>

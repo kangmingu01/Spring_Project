@@ -52,8 +52,8 @@
                 ${column} like #{word}
             </if>
             <if test="type == 'all'">
-                org_type in (0, 1)  <!-- 본사(0), 지점(1) 전체 조회 -->
-            </if>
+            org_type in (0, 1)  <!-- 본사(0), 지점(1) 전체 조회 -->
+        </if>
             <if test="type == 'headquarters'">
                 org_type = 0  <!-- 본사만 조회 -->
             </if>

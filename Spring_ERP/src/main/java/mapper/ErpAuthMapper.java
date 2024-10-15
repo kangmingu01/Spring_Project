@@ -2,6 +2,7 @@ package mapper;
 
 import dto.ErpAuth;
 import dto.ErpUser;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -17,4 +18,6 @@ public interface ErpAuthMapper {
 
     /* 검색 값 */
     List<ErpUser> selectErpAuthById(Map<String, Object> map);
+
+    List<ErpAuth> findAuthByOrgId(String orgId);
 }

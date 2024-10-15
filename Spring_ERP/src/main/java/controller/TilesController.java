@@ -25,4 +25,11 @@ public class TilesController {
         }
         return "login";
     }
+
+    @RequestMapping("/change-password")
+    public String changePassword(Model model) {
+
+
+        return "changePassword";
+    }
 }

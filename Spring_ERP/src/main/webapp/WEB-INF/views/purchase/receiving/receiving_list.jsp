@@ -219,42 +219,42 @@
 		</tbody>
         </table>
 
-        <!-- 페이징 부분 -->
-        <div style="text-align: center;">
-          <!-- 이전 페이지 링크 -->
-		<c:choose>
-		    <c:when test="${pager != null && pager.startPage > 1}">
-		        <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&productName=${param.productName}&supplierId=${param.supplierId}&receivingStatus=${param.receivingStatus}">[이전]</a>
-		    </c:when>
-		    <c:otherwise>
-		        [이전]
-		    </c:otherwise>
-		</c:choose>
-		
-		<!-- 페이지 번호 링크 -->
-		<c:if test="${pager != null}">
-		    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-		        <c:choose>
-		            <c:when test="${pager.pageNum != i}">
-		                <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&productName=${param.productName}&supplierId=${param.supplierId}&receivingStatus=${param.receivingStatus}">[${i}]</a>
-		            </c:when>
-		            <c:otherwise>
-		                [${i}]
-		            </c:otherwise>
-		        </c:choose>
-		    </c:forEach>
-		</c:if>
-		
-		<!-- 다음 페이지 링크 -->
-		<c:choose>
-		    <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-		        <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&productName=${param.productName}&supplierId=${param.supplierId}&receivingStatus=${param.receivingStatus}">[다음]</a>
-		    </c:when>
-		    <c:otherwise>
-		        [다음]
-		    </c:otherwise>
-		</c:choose>
-        </div>
+       <!-- 페이징 부분 -->
+		<div style="text-align: center;">
+		    <!-- 이전 페이지 링크 -->
+		    <c:choose>
+		        <c:when test="${pager != null && pager.startPage > 1}">
+		            <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.wareHouseId}&receivingStatus=${param.receivingStatus}">[이전]</a>
+		        </c:when>
+		        <c:otherwise>
+		            [이전]
+		        </c:otherwise>
+		    </c:choose>
+		    
+		    <!-- 페이지 번호 링크 -->
+		    <c:if test="${pager != null}">
+		        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+		            <c:choose>
+		                <c:when test="${pager.pageNum != i}">
+		                    <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.wareHouseId}&receivingStatus=${param.receivingStatus}">[${i}]</a>
+		                </c:when>
+		                <c:otherwise>
+		                    [${i}]
+		                </c:otherwise>
+		            </c:choose>
+		        </c:forEach>
+		    </c:if>
+		    
+		    <!-- 다음 페이지 링크 -->
+		    <c:choose>
+		        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+		            <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.wareHouseId}&receivingStatus=${param.receivingStatus}">[다음]</a>
+		        </c:when>
+		        <c:otherwise>
+		            [다음]
+		        </c:otherwise>
+		    </c:choose>
+		</div>
       </div>
     </div>
   </div>
@@ -331,7 +331,15 @@ function loadReceivingDetails(receivingId) {
     $('#ordersQuantity').val($.trim(row.children().eq(12).text())); // 발주수량 필드에 값 채움
     $('#quantity').val($.trim(row.children().eq(13).text()));
     $('#deliveryDate').val($.trim(row.children().eq(16).text()));
-
+	
+	 // 상태 설정
+    const statusText = $.trim(row.children().eq(18).text());
+    if (statusText === '입고 완료') {
+        $('#Status').val(4);  // 입고 완료
+    } else if (statusText === '입고 확정') {
+        $('#Status').val(5);  // 입고 확정
+    }
+    
     // 공급업체 설정
     const supplierName = $.trim(row.children().eq(11).text());
     $('#supplier option').each(function() {
@@ -419,7 +427,7 @@ function setAllFieldsReadOnly(readOnly) {
     const fields = [
         '#receivingId', '#receivingDate', '#ordersId', 
         '#name', '#productId', '#productName', '#brand', 
-        '#supplier', '#wareHouse', '#deliveryDate'
+        '#supplier', '#wareHouse', '#deliveryDate', '#Status'
     ];
 
     fields.forEach(fieldId => {

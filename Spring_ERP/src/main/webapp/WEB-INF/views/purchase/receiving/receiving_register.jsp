@@ -112,19 +112,19 @@
             <label>성별</label>
            <input type="text" id="gender" name="gender" readonly class="read-only-field"/>
           </div>
+          <div>
+              <label>단가</label>
+              <input type="number" id=productPrice name="productPrice" readonly class="read-only-field" min="0"/>
+            </div>
              <div>
               <label>공급업체</label>
               <input type="text" id="supplier" name="supplier" readonly class="read-only-field" />
             </div>
+            </div>
+            <div>
             <div>
               <label>발주수량</label>
               <input type="number" id="ordersQuantity" name="ordersQuantity" readonly class="read-only-field" min="0"/>
-            </div>
-            </div>
-            <div>
-            <div>
-              <label>단가</label>
-              <input type="number" id=productPrice name="productPrice" readonly class="read-only-field" min="0"/>
             </div>
             <div>
               <label>납기일</label>

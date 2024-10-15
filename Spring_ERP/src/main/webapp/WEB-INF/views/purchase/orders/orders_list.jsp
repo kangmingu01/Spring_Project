@@ -378,12 +378,17 @@
         });
     }
 
-    // 폼을 초기화하고 전체 목록 조회
     function resetForm() {
-      $('#ordersForm')[0].reset();
-      $('#ordersForm').attr('action', '<c:url value="/purchase/orders/list"/>').attr('method', 'get').submit();
-      $('.editButton').prop('disabled', false);
+        // 폼 필드 모두 초기화
+        $('#ordersForm')[0].reset(); // 모든 입력 필드 초기화
+        
+        // 페이지 번호를 1로 설정
+        $('#pageNum').val(1);
+        
+        // 첫 페이지로 리다이렉트
+        window.location.href = '<c:url value="/purchase/orders/list"/>'; // 처음 페이지로 이동
     }
+
     
     document.getElementById("ordersQuantity").addEventListener("input", function() {
         const ordersQuantity = document.getElementById("ordersQuantity");

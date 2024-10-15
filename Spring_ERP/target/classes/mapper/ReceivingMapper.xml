@@ -18,7 +18,7 @@
 	    left join receiving r on o.orders_id = r.orders_id  <!-- receiving 테이블과 조인 -->
 	    <where>
 	        o.orders_status = 2 <!-- 발주 상태가 2인 항목만 필터링 -->
-	        and (r.receiving_status is null or r.receiving_status != 4)  <!-- 입고 등록 완료 항목 제외 -->
+	        and (r.receiving_status is null or r.receiving_status not in (4, 5))  <!-- 입고 완료 및 확정된 항목 제외 -->
 	        <!-- 제품명 검색 조건 -->
 	        <if test="productName != null and productName != ''">
 	            and product_name like '%' || #{productName} || '%'
@@ -43,7 +43,7 @@
 	        left join receiving r on o.orders_id = r.orders_id  <!-- receiving 테이블과 조인 -->
 	        <where>
 	            o.orders_status = 2
-	            and (r.receiving_status is null or r.receiving_status != 4)  <!-- 입고 등록 완료 항목 제외 -->
+	            and (r.receiving_status is null or r.receiving_status not in (4, 5))  <!-- 입고 완료 및 확정된 항목 제외 -->
 	            <if test="productName != null and productName != ''">
 	                and p.product_name like '%' || #{productName} || '%'
 	            </if>

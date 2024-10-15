@@ -316,7 +316,7 @@ function loadReceivingDetails(receivingId) {
     const row = $('tr').has('button[data-receiving-id="' + receivingId + '"]');
 
     if (!row.length) {
-        alert('해당 입고 항목을 찾을 수 없습니다.');
+        //alert('해당 입고 항목을 찾을 수 없습니다.');
         return;
     }
 
@@ -373,14 +373,14 @@ function loadReceivingDetails(receivingId) {
     });
 }
 
-// 통과 수량 저장 로직
+//통과 수량 저장 로직
 function saveReceivingChanges(receivingId) {
     const ordersQuantity = parseInt($('#ordersQuantity').val());
     const quantity = parseInt($('#quantity').val());
 
     // 수량 검증 - 통과수량이 발주수량을 초과하면 저장 중단
     if (quantity > ordersQuantity || isNaN(quantity)) {
-        alert('통과 수량이 발주 수량을 초과할 수 없으며, 유효한 숫자를 입력해야 합니다.');
+        //alert('통과 수량이 발주 수량을 초과할 수 없으며, 유효한 숫자를 입력해야 합니다.');
         return;  // 저장하지 않음
     }
 
@@ -390,8 +390,8 @@ function saveReceivingChanges(receivingId) {
     // 수정된 값 가져오기
     const data = {
         receivingId: receivingId,
-        pageNum: $('#pageNum').val(),
-        pageSize: $('#pageSize').val(),
+        pageNum: $('#pageNum').val(), // 현재 페이지 번호 유지
+        pageSize: $('#pageSize').val(), // 페이지 크기 유지
         quantity: quantity,  // 통과 수량 수정 가능
         receivingStatus: 4   // 입고 완료 상태로 업데이트
     };
@@ -406,14 +406,34 @@ function saveReceivingChanges(receivingId) {
             xhr.setRequestHeader(header, token);
         },
         success: function(response) {
-            alert('수정이 완료되었습니다.');
-            window.location.href = '<c:url value="/purchase/receiving/list"/>' + '?pageNum=' + data.pageNum + '&pageSize=' + data.pageSize;
+            // 수정 후 현재 페이지 새로고침하여 변경 사항 반영
+            //alert('수정이 완료되었습니다.');
+            location.reload();  // 페이지 새로 고침
         },
         error: function(xhr, status, error) {
             console.error('AJAX 요청 중 오류:', xhr, status, error);
-            alert('수정 중 오류가 발생했습니다.');
+            //alert('수정 중 오류가 발생했습니다.');
         }
     });
+}
+
+
+//테이블 데이터 업데이트 함수
+function updateRowData(receivingId, quantity) {
+    const row = $('tr').has('button[data-receiving-id="' + receivingId + '"]');
+
+    // 통과 수량 업데이트
+    row.children().eq(13).text(quantity);
+
+    // 상태를 '입고 완료'로 변경
+    row.find('td').eq(18).text('입고 완료');
+
+    // 완료 후 버튼 상태 복원
+    row.find('.cancelButton').text('취소').prop('disabled', false);
+    row.find('.confirmButton').prop('disabled', false);
+
+    // 다른 취소 버튼 활성화
+    $('button.cancelButton').prop('disabled', false);
 }
 
 //폼 초기화 및 첫 페이지로 이동
@@ -474,7 +494,7 @@ $(document).ready(function() {
                 xhr.setRequestHeader(header, token);
             },
             success: function(response) {
-                alert('입고 확정 되었습니다.');
+                //alert('입고 확정 되었습니다.');
 
                 // 상태 변경 후 버튼 비활성화 처리 (각각의 버튼을 비활성화)
                 const row = $('button[data-receiving-id="' + receivingId + '"]').closest('tr');
@@ -490,7 +510,7 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 console.error('AJAX 요청 중 오류:', xhr, status, error);
-                alert('상태 변경 중 오류가 발생했습니다.');
+                //alert('상태 변경 중 오류가 발생했습니다.');
             }
         });
     });

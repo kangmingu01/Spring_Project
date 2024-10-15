@@ -259,9 +259,11 @@
       });
     });
 
-    // 발주 조회 폼 제출
+ 	// 발주 조회 폼 제출
     function searchOrders() {
-      $('#ordersForm').submit();
+        // 조회할 때 페이지 번호를 1로 설정
+        $('#pageNum').val(1);
+        $('#ordersForm').submit();
     }
 
     // 모든 필드를 읽기 전용으로 설정하는 함수

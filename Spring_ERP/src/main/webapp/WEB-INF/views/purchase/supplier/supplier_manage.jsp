@@ -255,12 +255,6 @@ function validateFields() {
 
     let isValid = true;
 
-    // 이름 검증: 한글, 알파벳, 공백만 허용
-    const namePattern = /^[a-zA-Z가-힣\s]+$/;
-    if (!namePattern.test(name)) {
-        isValid = false;
-    }
-
     // 연락처 검증: 숫자와 하이픈만 허용, 최소 10자 이상
     const phonePattern = /^[0-9-]{10,}$/;
     if (!phonePattern.test(phone)) {

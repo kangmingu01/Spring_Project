@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -237,6 +238,18 @@ public class ReceivingController {
 
         // 리다이렉트 처리
         return "redirect:" + redirectUrl;
+    }
+   
+    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @RequestMapping(value = "/confirm", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> confirmReceiving(@RequestParam("receivingId") int receivingId) {
+        
+        // 입고 상태를 5로 변경하는 서비스 호출
+        receivingService.modifyReceivingStatus(receivingId);
+
+        // 상태 변경이 성공하면 OK 응답을 반환
+        return ResponseEntity.ok("상태가 5로 변경되었습니다.");
     }
 
 }

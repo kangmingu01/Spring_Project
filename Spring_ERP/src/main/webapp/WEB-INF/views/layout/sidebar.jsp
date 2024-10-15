@@ -82,10 +82,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="<c:url value="/purchase/receiving/list"/>" class="nav-link">입고 조회</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<c:url value="/purchase/settlement/list"/>" class="nav-link">구매정산 조회</a>
-                        </li>
+                        </li>                        
                     </ul>
                 </div>
             </li>

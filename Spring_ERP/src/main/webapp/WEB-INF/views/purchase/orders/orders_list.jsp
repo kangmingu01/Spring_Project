@@ -103,11 +103,11 @@
         <div>
           <div>
             <label>발주수량</label>
-            <input type="number" id="ordersQuantity" name="ordersQuantity" style="background-color: #f0f0f0" readonly/>
+            <input type="number" id="ordersQuantity" name="ordersQuantity" style="background-color: #f0f0f0" readonly min="0"/>
           </div>
           <div>
             <label>단가</label>
-            <input type="number" id="productPrice" name="productPrice" style="background-color: #f0f0f0" readonly/>
+            <input type="number" id="productPrice" name="productPrice" style="background-color: #f0f0f0" readonly min="0"/>
           </div>
           <div>
             <label>납기일</label>

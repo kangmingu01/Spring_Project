@@ -152,6 +152,7 @@ public class OrdersController {
         map.putIfAbsent("brand", "");        
         map.putIfAbsent("supplierId", "");
         map.putIfAbsent("ordersStatus", "");
+        map.putIfAbsent("productPrice", "");
 
         // 발주 목록 조회 (페이징 처리 및 검색 포함)
         Map<String, Object> resultMap = ordersService.getOrdersList(map);
@@ -185,9 +186,6 @@ public class OrdersController {
         }
         if (map.containsKey("ordersQuantity")) {
             orders.setOrdersQuantity(Integer.parseInt(map.get("ordersQuantity").toString()));
-        }
-        if (map.containsKey("productPrice")) {
-            orders.setProductPrice(Integer.parseInt(map.get("productPrice").toString()));
         }
         if (map.containsKey("deliveryDate")) {
             orders.setDeliveryDate(map.get("deliveryDate").toString());

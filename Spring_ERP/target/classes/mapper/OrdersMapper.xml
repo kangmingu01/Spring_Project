@@ -92,6 +92,9 @@
 	        <if test="brand != null and brand != ''">
 	            and SUBSTR(p.product_category, 1, 2) = #{brand}
 	        </if>
+	        <if test="productPrice != null and productPrice != ''">
+	            and o.product_price = #{productPrice}
+	        </if>
 	        <if test="supplierId != null and supplierId != ''">
 	            and o.supplier_id = #{supplierId}
 	        </if>
@@ -133,6 +136,9 @@
 	                <if test="brand != null and brand != ''">
 	                    and SUBSTR(p.product_category, 1, 2) = #{brand}
 	                </if>
+	                <if test="productPrice != null and productPrice != ''">
+			            and o.product_price = #{productPrice}
+			        </if>
 	                <if test="supplierId != null and supplierId != ''">
 	                    and o.supplier_id = #{supplierId}
 	                </if>
@@ -152,10 +158,7 @@
 	    <set>
 	        <if test="ordersQuantity != null">
 	            orders_quantity = #{ordersQuantity},
-	        </if>
-	        <if test="productPrice != null">
-	            product_price = #{productPrice},
-	        </if>
+	        </if>	        
 	        <if test="deliveryDate != null">
 	            delivery_date = #{deliveryDate}
 	        </if>

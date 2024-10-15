@@ -345,3 +345,7 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
 	border-bottom-left-radius: 10px;
 	border-top-left-radius: 10px;
 }
+.btn-danger {
+    background-color: #ff3366 !important; /* 원하는 색상 */
+    border-color: #ff3366 !important; 
+}

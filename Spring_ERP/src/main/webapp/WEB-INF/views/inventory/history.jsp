@@ -528,9 +528,9 @@
 					var historyTime=this.historyDate.split(" ");
 					html+="<td>"+historyTime[0]+"</td>";
 					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.historyId+');">수정</button>'; 
+					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.historyId+');">수정</button>'; 
 					html+="<button type='button' class='btn btn-danger' onclick='remove("+this.historyId+","+pageNum+");'>삭제</button>"
-					html+="</td>"
+					html+="</td>";
 					html+="</tr>";
 				});
 				html+="</tbody>";

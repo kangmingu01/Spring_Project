@@ -539,7 +539,7 @@
 					var inventoryTime=this.lastDate.split(" ");
 					html+="<td>"+inventoryTime[0]+"</td>";
 					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
+					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
 					html+="<button type='button' class='btn btn-danger' onclick='remove("+this.inventoryId+","+pageNum+");'>삭제</button>"
 					html+="</td>"
 					html+="</tr>";
@@ -619,7 +619,7 @@
 					var inventoryTime=this.lastDate.split(" ");
 					html+="<td>"+inventoryTime[0]+"</td>";
 					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
+					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
 					html+="<button type='button'  class='btn btn-danger' onclick='removeDamage("+this.inventoryId+","+pageNum+");'>삭제</button>"
 					html+="</td>"
 					html+="</tr>";
@@ -695,7 +695,7 @@
 					var inventoryTime=this.lastDate.split(" ");
 					html+="<td>"+inventoryTime[0]+"</td>";
 					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
+					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
 					html+="<button type='button' class='btn btn-danger' onclick='removeDamage("+this.inventoryId+","+pageNum+");'>삭제</button>"
 					html+="</td>"
 					html+="</tr>";

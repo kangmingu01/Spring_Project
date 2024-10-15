@@ -507,7 +507,7 @@
                     html+="<td>"+this.warehouseLocation+"</td>";
                     html+="<td>"+this.warehouseCapacity+"</td>";
                     html+="<td>";
-                    html+='<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customModal" onclick="modifyhouse('+this.warehouseId+');">수정</button>'
+                    html+='<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#customModal" onclick="modifyhouse('+this.warehouseId+');">수정</button>'
                     html+="<button type='button' class='btn btn-danger' onclick='remove("+this.warehouseId+");'>삭제</button>"
                     html+="</td>"
                     html+="</tr>";
@@ -682,7 +682,7 @@
                     html+="<td>"+this.productPrice+"</td>";
                     html+="<td>"+this.deliveryPrice+"</td>";
                     html+="<td>";
-                    html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.productId+');">수정</button>';
+                    html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.productId+');">수정</button>';
                     html+="<button type='button' class='btn btn-danger' onclick='remove("+this.productId+","+pageNum+");'>삭제</button>"
                     html+="</td>"
                     html+="</tr>";

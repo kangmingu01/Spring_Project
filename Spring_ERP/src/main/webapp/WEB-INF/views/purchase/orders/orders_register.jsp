@@ -97,6 +97,12 @@
                      <input type="text" id="gender" name="gender" readonly class="read-only-field"/>
                  </div>
              </div>
+             <div>
+             	<div>
+                     <label>단가</label>
+                     <input type="number" id=productPrice name="productPrice" readonly class="read-only-field" />
+                 </div>
+             </div>
          </div>
          
          <div class="content_body_search_price">
@@ -114,10 +120,7 @@
                      <label>발주수량</label>
                      <input type="number" id="ordersQuantity" name="ordersQuantity" required min="0" />
                  </div>
-                 <div>
-                     <label>단가</label>
-                     <input type="number" id=productPrice name="productPrice" required min="0" />
-                 </div>
+                 
                  <div>
                      <label>납기일</label>
                      <input type="date" id="deliveryDate" name="deliveryDate" style="text-align: left;" required />
@@ -193,6 +196,7 @@
                          <th>색상</th>
                          <th>사이즈</th>
                          <th>성별</th>
+                         <th>단가</th>
                          <th>선택</th>
                      </tr>
                      </thead>
@@ -206,8 +210,12 @@
 					        <td>${product.productCategoryDetails.color}</td>
 					        <td>${product.productCategoryDetails.size}</td>
 					        <td>${product.productCategoryDetails.gender}</td>
+					        <td>${product.productPrice}</td>
 					        <td>
-					            <button type="button" onclick="selectProduct('${product.productId}', '${product.productName}', '${product.productCategoryDetails.brand}', '${product.productCategoryDetails.type}', '${product.productCategoryDetails.color}', '${product.productCategoryDetails.size}', '${product.productCategoryDetails.gender}')">선택</button>
+					            <button type="button" onclick="selectProduct('${product.productId}', '${product.productName}', 
+					            '${product.productCategoryDetails.brand}', '${product.productCategoryDetails.type}',
+					             '${product.productCategoryDetails.color}', '${product.productCategoryDetails.size}', 
+					             '${product.productCategoryDetails.gender}', '${product.productPrice}')">선택</button>
 					        </td>
 					    </tr>
 					</c:forEach>
@@ -260,17 +268,33 @@ document.addEventListener("DOMContentLoaded", function () {
     // 납기일 필드의 최소값을 현재 날짜로 설정
     const deliveryDateInput = document.getElementById("deliveryDate");
     deliveryDateInput.setAttribute('min', today); // 현재 날짜 이후만 선택 가능하게 설정
+    
+ 	// 발주수량 입력 시 숫자 및 범위 형식 입력 방지
+    document.getElementById("ordersQuantity").addEventListener("input", function() {
+        const ordersQuantity = document.getElementById("ordersQuantity");
+
+        // 음수 입력 방지
+        if (ordersQuantity.value < 0) {
+            ordersQuantity.value = 0; // 음수 입력 시 값을 0으로 고정
+        }
+
+        // 숫자가 아닌 입력 방지 및 "0-2" 형식 방지
+        // 정규식을 사용하여 숫자 이외의 값이나 잘못된 형식이 입력되지 않도록 필터링
+        const sanitizedValue = ordersQuantity.value.replace(/[^0-9]/g, ''); // 숫자가 아닌 모든 것을 제거
+        ordersQuantity.value = sanitizedValue;
+
+        checkFields(); // 필드가 모두 입력되었는지 확인하는 기존 함수 호출
+    });
 
     // 모든 필드가 입력되었는지 확인하는 함수
     function checkFields() {
         const productId = document.getElementById("productId").value; 
         const ordersQuantity = document.getElementById("ordersQuantity").value; 
-        const productPrice = document.getElementById("productPrice").value; 
         const supplier = document.getElementById("supplier").value;
         const deliveryDate = document.getElementById("deliveryDate").value; 
 
         // 모든 필드가 비어있지 않으면 등록 버튼 활성화
-        if (productId && ordersQuantity && productPrice && supplier && deliveryDate) {
+        if (productId && ordersQuantity && supplier && deliveryDate) {
             document.querySelector(".content_header_registers_btn").classList.remove("disabled"); 
             document.querySelector(".content_header_registers_btn").onclick = function() {
                 submitForm('registerForm'); 
@@ -281,15 +305,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 제품 선택 함수 - 선택한 제품 정보를 폼에 채우고, 등록 버튼 활성화 확인
-    function selectProduct(code, name, brand, type, color, size, gender) {
+    function selectProduct(code, name, brand, type, color, size, gender, price) {
         document.getElementById("productId").value = code;   
         document.getElementById("productName").value = name; 
         document.getElementById("brand").value = brand;      
         document.getElementById("type").value = type;       
         document.getElementById("color").value = color;     
         document.getElementById("size").value = size;        
-        document.getElementById("gender").value = gender;    
+        document.getElementById("gender").value = gender;   
+        document.getElementById("productPrice").value = price; // 단가를 올바르게 입력
 
         // 모달 닫기
         var productModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('productModal'));
@@ -299,9 +323,9 @@ document.addEventListener("DOMContentLoaded", function () {
         checkFields();
     }
 
+
     // 입력 필드에 이벤트 리스너 추가 (필드 값이 변경될 때마다 등록 버튼 상태 확인)
     document.getElementById("ordersQuantity").addEventListener("input", checkFields); 
-    document.getElementById("productPrice").addEventListener("input", checkFields); 
     document.getElementById("supplier").addEventListener("change", checkFields); 
     document.getElementById("deliveryDate").addEventListener("input", checkFields); 
     document.getElementById("productId").addEventListener("input", checkFields); 

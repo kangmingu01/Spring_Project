@@ -108,6 +108,15 @@
                 </c:forEach>
               </select>
             </div>
+            <div>
+              <label>상태</label>
+              <select name="receivingStatus" id="Status">
+                <option value="">상태 선택</option>
+                <option value="2">입고 대기</option> 
+                <option value="4">입고 완료</option>                         
+                <option value="5">입고 확정</option>                         
+              </select>
+            </div>
             <!-- 발주수량을 숨겨진 필드로 저장 -->
             <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
             <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
@@ -116,6 +125,11 @@
               <label>통과수량</label>
               <input type="number" name="quantity" id="quantity" style="background-color: #f0f0f0" readonly min="0"/>
             </div>
+            </div>
+            <div>
+            <div></div>
+            <div></div>
+            <div></div>
             <div>
               <!-- 에러 메시지 -->
               <span id="quantity-error" style="color:red; display:none; font-size: 12px">통과수량은 발주수량을 초과할 수 없습니다.</span>

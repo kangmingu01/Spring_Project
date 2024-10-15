@@ -66,9 +66,15 @@ public class UserController {
 
         erpUser.setPasswd(bCryptPasswordEncoder.encode(erpUser.getPasswd()));
 
-        erpUserService.addErpUser(erpUser);
+        /* 추후 이메일이 실제로 존재하는지 API를 사용하여 로직 처리 */
+        try {
+            emailService.sendRegistrationEmail(erpUser.getEmail(), erpUser.getUserid(), userPassword);
+        } catch (Exception e) {
+            model.addAttribute("error", "이메일 발송에 실패하였습니다. 다시 시도해 주세요.");
+            return "redirect:/admin/user?error=emailFailed";
+        }
 
-        emailService.sendRegistrationEmail(erpUser.getEmail(), erpUser.getUserid(), userPassword);
+        erpUserService.addErpUser(erpUser);
 
         return "redirect:/admin/user";
     }

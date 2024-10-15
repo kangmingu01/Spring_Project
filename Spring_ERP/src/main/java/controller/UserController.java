@@ -62,12 +62,13 @@ public class UserController {
     /* 사용자 추가 */
     @RequestMapping(value ="/addUser", method = RequestMethod.POST)
     public String addUser(@ModelAttribute ErpUser erpUser, Model model) {
-        String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
-        erpUser.setPasswd(encodedPassword);
+        String userPassword = erpUser.getPasswd();
+
+        erpUser.setPasswd(bCryptPasswordEncoder.encode(erpUser.getPasswd()));
 
         erpUserService.addErpUser(erpUser);
 
-        emailService.sendRegistrationEmail(erpUser.getEmail(), erpUser.getUserid(), erpUser.getPasswd());
+        emailService.sendRegistrationEmail(erpUser.getEmail(), erpUser.getUserid(), userPassword);
 
         return "redirect:/admin/user";
     }

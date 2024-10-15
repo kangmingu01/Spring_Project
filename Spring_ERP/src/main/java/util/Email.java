@@ -7,12 +7,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.Properties;
 
 /* Spring에서 해당 클래스가 설정 파일인걸 나타내는 어노테이션 */
 @Configuration
 @PropertySource("classpath:application.properties")
+@EnableAsync
 public class Email {
 
     @Value("${mail.host}")

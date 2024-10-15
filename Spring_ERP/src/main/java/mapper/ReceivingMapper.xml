@@ -115,9 +115,13 @@
 	        <if test="deliveryDate != null and deliveryDate != ''">
 	            and o.delivery_date = #{deliveryDate}
 	        </if>
-	        <if test="wareHouseId != null and wareHouseId != ''">
-	            and r.warehouse_id = #{wareHouseId}
-	        </if>        
+	        <if test="warehouseId != null and warehouseId != ''">
+	            and r.warehouse_id = #{warehouseId}
+	        </if> 
+         	<!-- 창고 이름으로 검색 -->
+	        <if test="warehouseName != null and warehouseName != ''">
+	            and w.warehouse_name like '%' || #{warehouseName} || '%'
+	        </if>         
 	    </where>
 	</select>
 	
@@ -168,9 +172,13 @@
 	                <if test="deliveryDate != null and deliveryDate != ''">
 	                    and o.delivery_date = #{deliveryDate}
 	                </if>
-	                <if test="wareHouseId != null and wareHouseId != ''">
-	                    and r.warehouse_id = #{wareHouseId}
-	                </if>                
+	                <if test="warehouseId != null and warehouseId != ''">
+	                    and r.warehouse_id = #{warehouseId}
+	                </if>
+	                <!-- 창고 이름으로 검색 -->
+			        <if test="warehouseName != null and warehouseName != ''">
+			            and w.warehouse_name like '%' || #{warehouseName} || '%'
+			        </if>                 
 	            </where>
 	            order by r.receiving_id desc  
 	        ) receivingData

@@ -320,6 +320,7 @@ function loadReceivingDetails(receivingId) {
     $('#brand').val($.trim(row.children().eq(6).text()));
     $('#ordersQuantity').val($.trim(row.children().eq(12).text())); // 발주수량 필드에 값 채움
     $('#quantity').val($.trim(row.children().eq(13).text()));
+    $('#deliveryDate').val($.trim(row.children().eq(16).text()));
 
     // 공급업체 설정
     const supplierName = $.trim(row.children().eq(11).text());

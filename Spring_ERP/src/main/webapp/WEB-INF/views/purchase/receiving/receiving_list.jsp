@@ -443,7 +443,7 @@ $(document).ready(function() {
                 xhr.setRequestHeader(header, token);
             },
             success: function(response) {
-                alert('상태가 5로 변경되었습니다.');
+                alert('입고 확정 되었습니다.');
 
                 // 상태 변경 후 버튼 비활성화 처리 (각각의 버튼을 비활성화)
                 const row = $('button[data-receiving-id="' + receivingId + '"]').closest('tr');

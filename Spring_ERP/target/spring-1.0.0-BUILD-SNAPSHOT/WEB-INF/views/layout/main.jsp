@@ -40,6 +40,8 @@
             <li>${loginUser.birthday}</li>
             <li>${loginUser.joindate}</li>
             <li>${loginUser.enabled}</li>
+            <li>${loginUser.isInitialPassword}</li>
+            <li>${loginUser.failedAttempts}</li>
             <li>
                 <c:choose>
                     <c:when test="${loginUser.enabled == null}">

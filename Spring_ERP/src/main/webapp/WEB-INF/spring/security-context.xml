@@ -59,6 +59,17 @@
          <intercept-url pattern="/**" access="permitAll"/>
          -->
 
+        <!-- 프로젝트 미리 설정해봄 -->
+        <!--<intercept-url pattern="/**" access="isAuthenticated()" />
+        <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_SUPER_ADMINISTRATOR ')"/>
+        ROLE_PURCHASING_TEAM
+        ROLE_SALES_TEAM
+        ROLE_INVENTORY_TEAM
+        ROLE_STORE_OWNER
+        ROLE_PART_TIME_JOB
+        <intercept-url pattern="/user/**" access="hasRole('ROLE_USER')"/>-->
+
+
         <!-- form-login : form 태그를 사용한 로그인 페이지를 설정하기 위한 엘리먼트 -->
         <!-- => form-login 엘리먼트를 설정하지 않은 경우 Spring Security에서 제공하는
         로그인 페이지(/login) 및 뷰 사용 -->
@@ -80,7 +91,8 @@
         <form-login login-page="/login" login-processing-url="/login"
                     username-parameter="userid" password-parameter="passwd"
                     default-target-url="/"
-                    authentication-failure-handler-ref="customLoginFailureHandler"/>
+                    authentication-failure-handler-ref="customLoginFailureHandler"
+                    authentication-success-handler-ref="customLoginSuccessHandler"/>
 
 
         <!-- logout : 로그아웃 처리 기능을 설정하기 위한 엘리먼트 -->

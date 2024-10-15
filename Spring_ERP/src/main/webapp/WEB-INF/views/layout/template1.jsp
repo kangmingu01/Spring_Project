@@ -28,20 +28,7 @@
 		font-family: 'Roboto', 'Noto Sans KR', 'sans-serif';
 	}
 
-	#sidebar {
-		z-index: 9999;
-	}
-
-	#header {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		z-index: 100;
-	}
-
 	#content {
-		margin-top: 60px;
 		overflow-y: auto;
 		overflow-x: auto;
 	}

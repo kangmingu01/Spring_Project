@@ -102,6 +102,15 @@
         <!-- 페이지 번호와 페이지 크기를 히든 필드로 추가 -->
         <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
         <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+        <!-- 기존 검색 폼의 검색 필드들을 히든 필드로 추가 -->
+		<input type="hidden" name="ordersId" value="${param.ordersId}"/>
+		<input type="hidden" name="ordersDate" value="${param.ordersDate}"/>
+		<input type="hidden" name="name" value="${param.name}"/>
+		<input type="hidden" name="productId" value="${param.productId}"/>
+		<input type="hidden" name="productName" value="${param.productName}"/>
+		<input type="hidden" name="brand" value="${param.brand}"/>
+		<input type="hidden" name="supplierId" value="${param.supplierId}"/>
+		<input type="hidden" name="ordersStatus" value="${param.ordersStatus}"/>
       </form>
 
       <!-- 발주 추가 정보 -->
@@ -195,37 +204,37 @@
         <div style="text-align: center;">
           <!-- 이전 페이지 링크 -->
           <c:choose>
-            <c:when test="${pager != null && pager.startPage > 1}">
-              <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
-            </c:when>
-            <c:otherwise>
-              [이전]
-            </c:otherwise>
-          </c:choose>
-          
-          <!-- 페이지 번호 링크 -->
-          <c:if test="${pager != null}">
-            <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-              <c:choose>
-                <c:when test="${pager.pageNum != i}">
-                  <a href="<c:url value='/purchase/orders/list'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
-                </c:when>
-                <c:otherwise>
-                  [${i}]
-                </c:otherwise>
-              </c:choose>        
-            </c:forEach>
-          </c:if>
-          
-          <!-- 다음 페이지 링크 -->
-          <c:choose>
-            <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-              <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
-            </c:when>
-            <c:otherwise>
-              [다음]
-            </c:otherwise>
-          </c:choose>
+		    <c:when test="${pager != null && pager.startPage > 1}">
+		        <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[이전]</a>
+		    </c:when>
+		    <c:otherwise>
+		        [이전]
+		    </c:otherwise>
+		</c:choose>
+		
+		<!-- 페이지 번호 링크 -->
+		<c:if test="${pager != null}">
+		    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+		        <c:choose>
+		            <c:when test="${pager.pageNum != i}">
+		                <a href="<c:url value='/purchase/orders/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[${i}]</a>
+		            </c:when>
+		            <c:otherwise>
+		                [${i}]
+		            </c:otherwise>
+		        </c:choose>
+		    </c:forEach>
+		</c:if>
+		
+		<!-- 다음 페이지 링크 -->
+		<c:choose>
+		    <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+		        <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[다음]</a>
+		    </c:when>
+		    <c:otherwise>
+		        [다음]
+		    </c:otherwise>
+		</c:choose>
         </div>
       </div>
     </div>
@@ -250,9 +259,11 @@
       });
     });
 
-    // 발주 조회 폼 제출
+ 	// 발주 조회 폼 제출
     function searchOrders() {
-      $('#ordersForm').submit();
+        // 조회할 때 페이지 번호를 1로 설정
+        $('#pageNum').val(1);
+        $('#ordersForm').submit();
     }
 
     // 모든 필드를 읽기 전용으로 설정하는 함수
@@ -361,7 +372,9 @@
                 xhr.setRequestHeader(header, token); 
             },
             success: function(response) {
-                window.location.href = '<c:url value="/purchase/orders/list"/>' + '?pageNum=' + data.pageNum + '&pageSize=' + data.pageSize;
+                // 수정 후 현재 페이지 새로고침하여 변경 사항 반영
+                //alert('수정이 완료되었습니다.');
+                location.reload();  // 페이지 새로 고침
             },
             error: function(xhr, status, error) {
                 alert('수정 중 오류가 발생했습니다.');
@@ -369,12 +382,17 @@
         });
     }
 
-    // 폼을 초기화하고 전체 목록 조회
     function resetForm() {
-      $('#ordersForm')[0].reset();
-      $('#ordersForm').attr('action', '<c:url value="/purchase/orders/list"/>').attr('method', 'get').submit();
-      $('.editButton').prop('disabled', false);
+        // 폼 필드 모두 초기화
+        $('#ordersForm')[0].reset(); // 모든 입력 필드 초기화
+        
+        // 페이지 번호를 1로 설정
+        $('#pageNum').val(1);
+        
+        // 첫 페이지로 리다이렉트
+        window.location.href = '<c:url value="/purchase/orders/list"/>'; // 처음 페이지로 이동
     }
+
     
     document.getElementById("ordersQuantity").addEventListener("input", function() {
         const ordersQuantity = document.getElementById("ordersQuantity");

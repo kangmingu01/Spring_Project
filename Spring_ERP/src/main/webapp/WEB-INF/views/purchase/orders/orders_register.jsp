@@ -341,6 +341,9 @@ function resetForm() {
 $(".content_header_search_btn").click(function(){
 	productDisplay();
 });
+$(".modalSearch_btn").click(function(){
+	productDisplay();
+});
 
 //제품조회 함수
 function productDisplay(pageNum=1) {

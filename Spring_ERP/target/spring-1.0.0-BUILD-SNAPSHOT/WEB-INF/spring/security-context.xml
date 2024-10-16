@@ -62,7 +62,10 @@
         <!-- 프로젝트 미리 설정해봄 -->
         <!--
         <intercept-url pattern="/**" access="isAuthenticated()" />
-        <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_SUPER_ADMINISTRATOR ')"/>
+        <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_SUPER_ADMINISTRATOR')"/>
+        <intercept-url pattern="/purchase/**" access="hasAnyRole('ROLE_SUPER_ADMINISTRATOR', 'ROLE_PURCHASING_TEAM')"/>
+        <intercept-url pattern="/inventory/**" access="hasAnyRole('ROLE_SUPER_ADMINISTRATOR', 'ROLE_INVENTORY_TEAM', 'ROLE_PURCHASING_TEAM', 'ROLE_SALES_TEAM')"/>
+
         ROLE_PURCHASING_TEAM
         ROLE_SALES_TEAM
         ROLE_INVENTORY_TEAM

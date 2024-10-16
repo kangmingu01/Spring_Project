@@ -25,7 +25,7 @@
  <div class="content_header">
      <div class="content_header_title">발주 등록</div>
      <div class="content_header_btn">
-         <div class="content_header_search_btn" onclick="searchOrder()">
+         <div class="content_header_search_btn" data-bs-toggle="modal" data-bs-target="#newModal">
              <div>
                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -173,90 +173,33 @@
 </div>
 
  <!-- 제품 목록 모달 -->
- <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-lg">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="productModalLabel">제품 목록</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-             </div>
-             <div class="modal-body">
-                 <!-- 검색 필드 통합 -->
-                 <div class="input-group mb-3">
-                     <input type="text" class="form-control" id="productSearch" placeholder="제품명 또는 브랜드 검색" aria-label="검색">
-                     <button type="button" onclick="filterProducts()">검색</button>
-                 </div>
-                 <table class="table" id="productTable">
-                     <thead>
-                     <tr>
-                         <th>제품번호</th>
-                         <th>제품명</th>
-                         <th>브랜드</th>
-                         <th>종류</th>
-                         <th>색상</th>
-                         <th>사이즈</th>
-                         <th>성별</th>
-                         <th>단가</th>
-                         <th>선택</th>
-                     </tr>
-                     </thead>
-                     <tbody>
-					   <c:forEach var="product" items="${productList}">
-					    <tr>
-					        <td>${product.productId}</td>
-					        <td>${product.productName}</td>
-					        <td>${product.productCategoryDetails.brand}</td>
-					        <td>${product.productCategoryDetails.type}</td>
-					        <td>${product.productCategoryDetails.color}</td>
-					        <td>${product.productCategoryDetails.size}</td>
-					        <td>${product.productCategoryDetails.gender}</td>
-					        <td>${product.productPrice}</td>
-					        <td>
-					            <button type="button" onclick="selectProduct('${product.productId}', '${product.productName}', 
-					            '${product.productCategoryDetails.brand}', '${product.productCategoryDetails.type}',
-					             '${product.productCategoryDetails.color}', '${product.productCategoryDetails.size}', 
-					             '${product.productCategoryDetails.gender}', '${product.productPrice}')">선택</button>
-					        </td>
-					    </tr>
-					</c:forEach>
-					</tbody>
-                 </table>
-                 <div class="pagination">                   
-                <div style="text-align: center;">
-                    <c:choose>
-                        <c:when test="${pager.startPage > pager.blockSize}">
-                            <button type="button" onclick="loadProductPage(${pager.prevPage})" class="btn btn-link">[이전]</button>
-                        </c:when>
-                        <c:otherwise>
-                            <span>[이전]</span>
-                        </c:otherwise>
-                    </c:choose>
-
-                    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-                        <c:choose>
-                            <c:when test="${pager.pageNum != i}">
-                                <button type="button" onclick="loadProductPage(${i})" class="btn btn-link">[${i}]</button>
-                            </c:when>
-                            <c:otherwise>
-                                <span>[${i}]</span>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-
-                    <c:choose>
-                        <c:when test="${pager.endPage != pager.totalPage}">
-                            <button type="button" onclick="loadProductPage(${pager.nextPage})" class="btn btn-link">[다음]</button>
-                        </c:when>
-                        <c:otherwise>
-                            <span>[다음]</span>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-                </div>
-             </div>
-         </div>
-     </div>
- </div>
+	<div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<h1 class="modal-title fs-5" id="newModalLabel">제품목록</h1>
+	        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      		</div>
+	      		<div class="modal-body">
+			        <div class="input-group mb-3 selectSearch">
+			        	<select class="modalsearch" name="modalsearch">
+			      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
+			      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
+		      			</select>
+					  	<input type="text"  name="keyword" value="${ keyword}" class="form-control modalkeyword" placeholder="상품명 또는 제품코드를 입력해주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
+					  	<button class="btn btn-outline-secondary modalSearch_btn" type="button" id="button-addon2">검색</button>
+					</div>
+					<div class="product_brand_search"></div>
+					<div class="modalpage"></div>
+			      	<div class="modal-footer">
+		        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		        		<button type="button" class="btn btn-primary" id="newModal_btn">확인</button>
+		      		</div>
+	    		</div>
+	  		</div>
+		</div>
+	</div>
+ 
  
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function () {
@@ -393,6 +336,129 @@ function resetForm() {
     // 초기화 후 등록 버튼 상태 업데이트
     checkFields(); 
 }
+
+//제품조회 클릭이벤트
+$(".content_header_search_btn").click(function(){
+	productDisplay();
+});
+
+//제품조회 함수
+function productDisplay(pageNum=1) {
+	var pageSize=10;
+	var search = document.querySelector(".modalsearch").value;
+	var keyword = document.querySelector(".modalkeyword").value;
+	$.ajax({
+		type:"get",
+		url: "<c:url value="/inventory/product_list"/>", 
+		//data: JSON.stringify({"pageNum":pageNum, "pageSize":pageSize}),
+		data: {"pageNum":pageNum, "pageSize":pageSize, "search":search,"keyword":keyword},
+		dataType: "json",  		
+		success: function(result){
+			//console.log(result.productList.length);
+			if(result.productList.length == 0){
+				var html="<table>";
+				html+="<tr>";
+				html+="<th>검색된 상품이 없습니다.</th>";
+				html+="</tr>";
+				html+="</table>";
+				$(".product_brand_search").html(html);
+				return;
+			}
+			var html="<table>";
+			html+="<thead>";
+			html+="<tr>";
+			html+="<th>No</th>";		
+			html+="<th>제품코드</th>";
+			html+="<th>제품명</th>";
+			html+="<th>브랜드</th>";
+			html+="<th>색상</th>";
+			html+="<th>사이즈</th>";
+			html+="<th>종류</th>";
+			html+="<th>성별</th>";
+			html+="<th></th>"; 
+			html+="</tr>";
+			html+="</thead>";
+			html+="<tbody class='sty'>";
+			$(result.productList).each(function(index){
+				html+="<tr>";					
+				html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+				html+="<td>"+this.productCategory+"</td>";
+				html+="<td>"+this.productName+"</td>";
+				html+="<td>"+this.productCategory+"</td>";
+				html+="<td>"+this.productCategory+"</td>";
+				html+="<td>"+this.productCategory+"</td>";
+				html+="<td>"+this.productCategory+"</td>";
+				html+="<td>"+this.productCategory+"</td>";
+				html+="<td>"; 
+				html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+this.productId+');">선택</button>'; 
+				html+="</td>"
+				html+="</tr>";
+			});
+			html+="</tbody>";
+			html+="</table>";
+			$(".product_brand_search").html(html);
+
+			//페이지 번호를 출력하는 함수 호출
+			modalpageNumberDisplay(result.pager);
+        },
+		error:function(xhr){
+			alert("상품 리스트를 불러오지 못했습니다.");
+		}
+	});
+}
+
+//모달 페이징 처리
+function modalpageNumberDisplay(pager) {
+    var html = "";
+
+    // 이전 페이지 링크
+    if (pager.startPage > pager.blockSize) {
+        html += "<a href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>[이전]</a>";
+    } else {
+        html += "[이전]";
+    }
+
+    // 페이지 번호 링크
+    for (var i = pager.startPage; i <= pager.endPage; i++) {
+        if (pager.pageNum != i) {
+            html += "<a href='javascript:productDisplay(" + i + ","+pager.pageSize+");'>[" + i + "]</a>";
+        } else {
+            html += "[" + i + "]";
+        }
+    }
+
+    // 다음 페이지 링크
+    if (pager.endPage != pager.totalPage) {
+        html += "<a href='javascript:productDisplay(" + pager.nextPage + ","+pager.pageSize+");'>[다음]</a>";
+    } else {
+        html += "[다음]";
+    }
+
+    // 페이지 번호 HTML 업데이트
+    $(".modalpage").html(html);
+}
+ 
+//상품정보 삽입 이벤트
+function addProductTitle(productId) {
+	$.ajax({
+		type:"get",
+		url:"<c:url value="/inventory/product_modify_view"/>/"+productId,
+		dataType:"json",
+		success:function(result){    			
+			$(".productId").val(result.productId);
+			$(".updateId").val(result.productId);
+			$(".productCategory").val(result.productCategory);
+			$(".updateCode").val(result.productCategory);
+			$(".productName").val(result.productName);
+			$(".updateName").val(result.productName);
+		},
+		error:function(xhr){
+			alert("검색된 정보가 없습니다.")
+		}
+	});    	
+}
+
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

@@ -130,7 +130,6 @@ public class ReceivingController {
     // 발주 목록 조회 - 모달 창에서 페이징 및 검색 처리
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/ordersList", method = RequestMethod.GET)
-    @ResponseBody
     public Map<String, Object> getOrdersList(@RequestParam Map<String, Object> map, Model model, Principal principal) {
     	// 로그인한 사용자 아이디 추가
         String userId = principal.getName(); 
@@ -142,6 +141,7 @@ public class ReceivingController {
         if (!map.containsKey("pageSize")) {
             map.put("pageSize", "10");
         }
+        map.put("userId", userId);
         
         map.putIfAbsent("productId", "");
         map.putIfAbsent("productName", "");
@@ -151,9 +151,9 @@ public class ReceivingController {
         // 발주 목록과 페이징 정보를 조회
         Map<String, Object> resultMap = receivingService.getOrdersList(map);
         
-        // 조회된 입고 목록과 페이징 정보를 모델에 추가
+        // 조회된 발주 목록과 페이징 정보를 모델에 추가
         model.addAttribute("pager", resultMap.get("pager"));
-        model.addAttribute("receivingList", resultMap.get("receivingList"));
+        model.addAttribute("ordersList", resultMap.get("ordersList"));
         model.addAttribute("searchMap", map);
         
         return resultMap;  

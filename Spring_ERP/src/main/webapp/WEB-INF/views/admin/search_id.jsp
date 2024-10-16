@@ -197,7 +197,7 @@
                 <c:when test="${resultMap.pager.pageNum > 1}">
                     <a class="btn btn-primary"
                        href="<c:url value='/admin/searchId'/>?pageNum=${resultMap.pager.pageNum - 1}&pageSize=${resultMap.pager.pageSize}&column=${searchMap.column}&keyword=${searchMap.keyword}&searchType=${searchType}">
-                        &laquo; 이전
+                        &laquo; 이전 정해일
                     </a>
                 </c:when>
                 <c:otherwise>

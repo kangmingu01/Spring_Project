@@ -214,9 +214,13 @@
     <div class="modal-dialog" style="max-width: 61%;">
           <div class="modal-content">
            <form id="ordersModalForm" method="get" action="<c:url value='/purchase/receiving/ordersList'/>">
-                <input type="hidden" name="modalOpen" value="true">
-                <input type="hidden" id="pageNum" name="pageNum" value="${param.pageNum != null ? param.pageNum : 1}">
-                <input type="hidden" id="pageSize" name="pageSize" value="${param.pageSize != null ? param.pageSize : 10}">
+            <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
+            <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+            <input type="hidden" id="productId" name="productId" value="${param.productId}">
+            <input type="hidden" id="productName" name="productName" value="${param.productName}">
+			<input type="hidden" id="supplierId" name="supplierId" value="${param.supplierId}">
+			<input type="hidden" id="supplierName" name="supplierName" value="${param.supplierName}">
+            
         <div class="modal-header">
           <h5 class="modal-title" id="ordersModalLabel">발주 목록</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -305,40 +309,41 @@
 					</tbody>
                  </table>
 			             <!-- 페이징 부분 -->
-                    <div style="text-align: center;">
-                        <!-- 이전 페이지 링크 -->
-                        <c:choose>
-                            <c:when test="${pager != null && pager.startPage > 1}">
-                                <a href="javascript:submitModalForm(${pager.prevPage});">[이전]</a>
-                            </c:when>
-                            <c:otherwise>
-                                [이전]
-                            </c:otherwise>
-                        </c:choose>
-                        <!-- 페이지 번호 링크 -->
-						<c:if test="${pager != null}">
-						    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-						        <c:choose>
-						            <c:when test="${pager.pageNum != i}">
-						                <a href="javascript:submitModalForm('${i}');">[${i}]</a>
-						            </c:when>
-						            <c:otherwise>
-						                [${i}]
-						            </c:otherwise>
-						        </c:choose>
-						    </c:forEach>
-						</c:if>
-
-                        <!-- 다음 페이지 링크 -->
-                        <c:choose>
-                            <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-                                <a href="javascript:submitModalForm(${pager.nextPage});">[다음]</a>
-                            </c:when>
-                            <c:otherwise>
-                                [다음]
-                            </c:otherwise>
-                        </c:choose>
-						</div>
+		<div style="text-align: center;">
+		    <!-- 이전 페이지 링크 -->
+		    <c:choose>
+		        <c:when test="${pager != null && pager.startPage > 1}">
+		            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[이전]</a>
+		        </c:when>
+		        <c:otherwise>
+		            [이전]
+		        </c:otherwise>
+		    </c:choose>
+		    
+		    <!-- 페이지 번호 링크 -->
+		    <c:if test="${pager != null}">
+		        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+		            <c:choose>
+		                <c:when test="${pager.pageNum != i}">
+		                    <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[${i}]</a>
+		                </c:when>
+		                <c:otherwise>
+		                    [${i}]
+		                </c:otherwise>
+		            </c:choose>
+		        </c:forEach>
+		    </c:if>
+		    
+		    <!-- 다음 페이지 링크 -->
+		    <c:choose>
+		        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+		            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[다음]</a>
+		        </c:when>
+		        <c:otherwise>
+		            [다음]
+		        </c:otherwise>
+		    </c:choose>
+		</div>
 				             </div>
 				             </form>
 				           </div>
@@ -402,18 +407,16 @@
 	    checkFields();
 	});
  
+	// 발주 조회 버튼 클릭 시 발주 목록 모달 열기
+	function searchOrders() {
+	    openOrdersModal();
+	}
 
   // 발주 목록 모달 열기
   function openOrdersModal() {
       var ordersModal = new bootstrap.Modal(document.getElementById('ordersModal'));
       ordersModal.show();
   }
-
-
-	// 발주 조회 버튼 클릭 시 발주 목록 모달 열기
-	function searchOrders() {
-	    openOrdersModal();
-	}
 
 	// 발주 목록 검색 필터 함수 (제품명과 공급업체로 검색 가능)
 	function filterOrders() {

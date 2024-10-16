@@ -130,6 +130,7 @@ public class ReceivingController {
     // 발주 목록 조회 - 모달 창에서 페이징 및 검색 처리
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/ordersList", method = RequestMethod.GET)
+    @ResponseBody
     public Map<String, Object> getOrdersList(@RequestParam Map<String, Object> map, Model model, Principal principal) {
     	// 로그인한 사용자 아이디 추가
         String userId = principal.getName(); 

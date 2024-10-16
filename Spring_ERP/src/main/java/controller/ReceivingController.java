@@ -146,17 +146,15 @@ public class ReceivingController {
         map.putIfAbsent("productName", "");
         map.putIfAbsent("supplierId", "");
         map.putIfAbsent("supplierName", "");
-
-        // 발주 목록과 페이징 정보를 조회
-        Map<String, Object> resultMap = receivingService.getOrdersList(map);
         
-        // 조회된 발주 목록과 페이징 정보를 모델에 추가
-        model.addAttribute("pager", resultMap.get("pager"));
-        model.addAttribute("ordersResult", resultMap.get("ordersList"));
-      //System.out.println(ordersResult);
-        model.addAttribute("searchMap", map);
-        System.out.println("Pager: " + resultMap.get("pager"));
+        // 서비스로 검색 조건과 페이징 정보가 담긴 map 전달
+        Map<String, Object> ordersResult = receivingService.getOrdersList(map);
 
+        // 조회된 발주 목록과 페이징 정보를 모델에 추가
+        model.addAttribute("ordersResult", ordersResult.get("ordersList")); // 발주 목록
+        model.addAttribute("pager", ordersResult.get("pager")); // 페이징 정보
+        model.addAttribute("searchMap", map); // 검색 조건
+        
         return "purchase/receiving/receiving_ordersList";  
     }
     

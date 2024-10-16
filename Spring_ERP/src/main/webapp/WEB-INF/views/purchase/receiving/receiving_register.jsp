@@ -407,16 +407,22 @@
 	    checkFields();
 	});
  
-	// 발주 조회 버튼 클릭 시 발주 목록 모달 열기
-	function searchOrders() {
-	    openOrdersModal();
-	}
-
-  // 발주 목록 모달 열기
-  function openOrdersModal() {
-      var ordersModal = new bootstrap.Modal(document.getElementById('ordersModal'));
-      ordersModal.show();
-  }
+	//발주 목록에서 선택된 발주를 ordersModalForm으로 전달하여 처리
+	  function selectOrderForModal(order) {
+	      document.getElementById('ordersModalForm').action = '/purchase/receiving/ordersList';
+	      document.getElementById('productId').value = order.productId;
+	      document.getElementById('productName').value = order.productName;
+	      document.getElementById('supplierId').value = order.supplierId;
+	      document.getElementById('supplierName').value = order.supplierName;
+	
+	      document.getElementById('ordersModalForm').submit(); // 폼 제출
+	  }
+  
+	//발주 조회 버튼 클릭 시 발주 목록 모달 열기
+	  function searchOrders() {
+	      var ordersModal = new bootstrap.Modal(document.getElementById('ordersModal'));
+	      ordersModal.show();
+	  }
 
 	// 발주 목록 검색 필터 함수 (제품명과 공급업체로 검색 가능)
 	function filterOrders() {

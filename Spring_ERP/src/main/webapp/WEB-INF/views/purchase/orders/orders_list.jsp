@@ -75,10 +75,6 @@
               <input type="text" name="brand" id="brand"/>
             </div>
             <div>
-            <label>단가</label>
-            <input type="number" id="productPrice" name="productPrice" />
-            </div>
-            <div>
               <label>공급업체</label>
               <select name="supplierId" id="supplier">
                 <option value="">공급 업체 선택</option>
@@ -87,8 +83,6 @@
                 </c:forEach>
               </select>
             </div>
-            </div>
-            <div>
             <div>
               <label>상태</label>
               <select name="ordersStatus" id="ordersStatus">

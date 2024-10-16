@@ -183,25 +183,25 @@
           </thead>
           <tbody id="receivingTable" class="sty">
              <c:if test="${not empty newReceiving}">
-		                <tr>
-		                    <td>${newReceiving.ordersId}</td>
-		                    <td>${newReceiving.productId}</td>
-		                    <td>${newReceiving.productName}</td>
-		                    <td>${productCode}</td>
-		                    <td>${productCategory.brand}</td>                            
-                            <td>${productCategory.type}</td>
-                            <td>${productCategory.color}</td>
-                            <td>${productCategory.size}</td>
-                            <td>${productCategory.gender}</td>
-		                    <td>${newReceiving.supplierName}</td>
-		                    <td>${newReceiving.ordersQuantity}</td>
-		                    <td>${newReceiving.quantity}</td>
-		                    <td>${newReceiving.productPrice}</td>
-		                    <td>${newReceiving.quantity * newReceiving.productPrice}</td>
-		                    <td>${fn:substring(newReceiving.deliveryDate, 0, 10)}</td>
-		                    <td>${newReceiving.warehouseName}</td>
-		                </tr>
-		            </c:if>
+                <tr>
+                    <td>${newReceiving.ordersId}</td>
+                    <td>${newReceiving.productId}</td>
+                    <td>${newReceiving.productName}</td>
+                    <td>${productCode}</td>
+                    <td>${productCategory.brand}</td>                            
+                          <td>${productCategory.type}</td>
+                          <td>${productCategory.color}</td>
+                          <td>${productCategory.size}</td>
+                          <td>${productCategory.gender}</td>
+                    <td>${newReceiving.supplierName}</td>
+                    <td>${newReceiving.ordersQuantity}</td>
+                    <td>${newReceiving.quantity}</td>
+                    <td>${newReceiving.productPrice}</td>
+                    <td>${newReceiving.quantity * newReceiving.productPrice}</td>
+                    <td>${fn:substring(newReceiving.deliveryDate, 0, 10)}</td>
+                    <td>${newReceiving.warehouseName}</td>
+                </tr>
+            </c:if>
           </tbody>
         </table>
       </div>
@@ -213,6 +213,14 @@
   <div class="modal fade" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="max-width: 61%;">
           <div class="modal-content">
+           <form id="ordersModalForm" method="get" action="<c:url value='/purchase/receiving/ordersList'/>">
+            <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
+            <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+            <input type="hidden" id="productId" name="productId" value="${param.productId}">
+            <input type="hidden" id="productName" name="productName" value="${param.productName}">
+			<input type="hidden" id="supplierId" name="supplierId" value="${param.supplierId}">
+			<input type="hidden" id="supplierName" name="supplierName" value="${param.supplierName}">
+            
         <div class="modal-header">
           <h5 class="modal-title" id="ordersModalLabel">발주 목록</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -300,13 +308,47 @@
 					</c:forEach>
 					</tbody>
                  </table>
-			              <div id="pagination" style="text-align:center;">
-			    <!-- Ajax로 페이징 번호가 동적으로 여기에 추가됩니다 -->
-			</div>
-             </div>
-         </div>
-     </div>
- </div>
+			             <!-- 페이징 부분 -->
+		<div style="text-align: center;">
+		    <!-- 이전 페이지 링크 -->
+		    <c:choose>
+		        <c:when test="${pager != null && pager.startPage > 1}">
+		            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[이전]</a>
+		        </c:when>
+		        <c:otherwise>
+		            [이전]
+		        </c:otherwise>
+		    </c:choose>
+		    
+		    <!-- 페이지 번호 링크 -->
+		    <c:if test="${pager != null}">
+		        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+		            <c:choose>
+		                <c:when test="${pager.pageNum != i}">
+		                    <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[${i}]</a>
+		                </c:when>
+		                <c:otherwise>
+		                    [${i}]
+		                </c:otherwise>
+		            </c:choose>
+		        </c:forEach>
+		    </c:if>
+		    
+		    <!-- 다음 페이지 링크 -->
+		    <c:choose>
+		        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+		            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[다음]</a>
+		        </c:when>
+		        <c:otherwise>
+		            [다음]
+		        </c:otherwise>
+		    </c:choose>
+		</div>
+				             </div>
+				             </form>
+				           </div>
+				         </div>
+				     </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -364,17 +406,23 @@
 	    // 초기 상태에서 버튼 비활성화
 	    checkFields();
 	});
-
-	// 발주 목록 모달 열기
-	function openOrdersModal() {
-	    var ordersModal = new bootstrap.Modal(document.getElementById('ordersModal'));
-	    ordersModal.show();
-	}
-
-	// 발주 조회 버튼 클릭 시 발주 목록 모달 열기
-	function searchOrders() {
-	    openOrdersModal();
-	}
+ 
+	//발주 목록에서 선택된 발주를 ordersModalForm으로 전달하여 처리
+	  function selectOrderForModal(order) {
+	      document.getElementById('ordersModalForm').action = '/purchase/receiving/ordersList';
+	      document.getElementById('productId').value = order.productId;
+	      document.getElementById('productName').value = order.productName;
+	      document.getElementById('supplierId').value = order.supplierId;
+	      document.getElementById('supplierName').value = order.supplierName;
+	
+	      document.getElementById('ordersModalForm').submit(); // 폼 제출
+	  }
+  
+	//발주 조회 버튼 클릭 시 발주 목록 모달 열기
+	  function searchOrders() {
+	      var ordersModal = new bootstrap.Modal(document.getElementById('ordersModal'));
+	      ordersModal.show();
+	  }
 
 	// 발주 목록 검색 필터 함수 (제품명과 공급업체로 검색 가능)
 	function filterOrders() {
@@ -485,84 +533,7 @@
 	        document.querySelector(".content_header_registers_btn").classList.add("disabled");
 	        document.querySelector(".content_header_registers_btn").onclick = null;
 	    }
-	}
-	
-	function loadOrdersPage(pageNum, productSearchQuery = '', supplierSearchQuery = '') {
-	    var csrfToken = $('meta[name="_csrf"]').attr('content');
-	    var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-	    $.ajax({
-	        url: '/purchase/receiving/ordersList', 
-	        type: 'GET',
-	        data: {
-	            pageNum: pageNum,
-	            pageSize: 10,
-	            productName: productSearchQuery,  // 제품 검색어
-	            supplierName: supplierSearchQuery  // 공급업체 검색어
-	        },
-	        beforeSend: function(xhr) {
-	            // CSRF 토큰을 헤더에 추가
-	            xhr.setRequestHeader(csrfHeader, csrfToken);
-	        },
-	        success: function(response) {
-	            if (response.ordersList) {
-	                var ordersTableBody = $('#productTable tbody');
-	                ordersTableBody.empty();  // 기존 내용을 지우고
-
-	                $.each(response.ordersList, function(index, order) {
-	                    var newRow = `
-	                        <tr>
-	                            <td>${order.ordersId}</td>
-	                            <td>${order.productId}</td>
-	                            <td>${order.productName}</td>
-	                            <td>${order.productCategoryDetails.brand} ${order.productCategoryDetails.type} ${order.productCategoryDetails.color} ${order.productCategoryDetails.size} ${order.productCategoryDetails.gender}</td>
-	                            <td>${order.supplierName}</td>
-	                            <td>${order.ordersQuantity}</td>
-	                            <td>${order.productPrice}</td>
-	                            <td>${order.deliveryDate.substring(0, 10)}</td>
-	                            <td><button type="button" onclick="selectOrders(${order})">선택</button></td>
-	                        </tr>`;
-	                    ordersTableBody.append(newRow);
-	                });
-
-	                // 페이징 업데이트
-	                updatePagination(response.pager);
-	            }
-	        },
-	        error: function(xhr, status, error) {
-	            console.log("상태: " + status);
-	            console.log("오류: " + error);
-	            console.log("응답 텍스트: " + xhr.responseText);
-	        }
-	    });
-	}
-
-	function updatePagination(pager) {
-	    var pagination = $('#pagination');
-	    pagination.empty();  // 기존 페이지 링크 삭제
-
-	    // 이전 페이지 링크
-	    if (pager.startPage > 1) {
-	        pagination.append(`<a href="#" onclick="loadOrdersPage(${pager.prevPage})">[이전]</a>`);
-	    }
-
-	    // 페이지 번호 링크
-	    for (var i = pager.startPage; i <= pager.endPage; i++) {
-	        if (i === pager.pageNum) {
-	            pagination.append(`<span>[${i}]</span>`);
-	        } else {
-	            pagination.append(`<a href="#" onclick="loadOrdersPage(${i})">[${i}]</a>`);
-	        }
-	    }
-
-	    // 다음 페이지 링크
-	    if (pager.endPage < pager.totalPage) {
-	        pagination.append(`<a href="#" onclick="loadOrdersPage(${pager.nextPage})">[다음]</a>`);
-	    }
-	}
-	$(document).ready(function() {
-	    loadOrdersPage(1);  // 첫 번째 페이지 로드
-	});
-
+	}	
 
 </script>
 

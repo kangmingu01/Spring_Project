@@ -29,21 +29,9 @@
             />
         </div>
 
-        <form class="search-form">
-            <div class="input-group">
-                <div class="input-group-text">
-                    <i data-feather="search"></i>
-                </div>
-                <input
-                        type="text"
-                        class="form-control"
-                        id="navbarForm"
-                        placeholder="Search here..."
-                />
-            </div>
-        </form>
 
         <ul class="navbar-nav">
+            <%--
             <li class="theme-switcher-wrapper nav-item">
                 <input type="checkbox" value="" id="theme-switcher"/>
                 <label for="theme-switcher">
@@ -375,11 +363,11 @@
                             <div
                                     class="w-30px h-30px d-flex align-items-center justify-content-center bg-primary rounded-circle me-3"
                             >
-                                <%--<img
+                                &lt;%&ndash;<img
                                         class="w-30px h-30px rounded-circle"
                                         src="<c:url value="/images/faces/face1.jpg"/>"
                                         alt="userr"
-                                />--%>
+                                />&ndash;%&gt;
                                 <i
                                         class="icon-sm text-white"
                                         data-feather="alert-circle"
@@ -428,7 +416,7 @@
                         <a href="javascript:;">View all</a>
                     </div>
                 </div>
-            </li>
+            </li>--%>
 
 
             <li class="nav-item dropdown">
@@ -445,7 +433,7 @@
                             aria-haspopup="true"
                             aria-expanded="false"
                     >
-                            ${loginUser.name}님
+                            ${loginUser.name}님 환영합니다
                     </a>
                     <div
                             class="dropdown-menu p-0"
@@ -462,22 +450,26 @@
                             </div>
                         </div>
                         <ul class="list-unstyled p-1">
-                            <li class="dropdown-item py-2">
-                                <a
-                                        href="pages/general/profile.html"
-                                        class="text-body ms-0"
-                                >
+
+                            <a
+                                    href="pages/general/profile.html"
+                                    class="text-body ms-0"
+                            >
+                                <li class="dropdown-item py-2">
                                     <i class="me-2 icon-md" data-feather="user"></i>
                                     <span>마이페이지</span>
-                                </a>
-                            </li>
+                                </li>
+                            </a>
+
                             <form action="<c:url value="/logout"/>" method="POST" id="logoutForm">
-                                <li class="dropdown-item py-2">
-                                    <a href="#" onclick="logoutform()" class="text-body ms-0">
+
+                                <a href="#" onclick="logoutform()" class="text-body ms-0">
+                                    <li class="dropdown-item py-2">
                                         <i class="me-2 icon-md" data-feather="log-out"></i>
                                         <span>로그아웃</span>
-                                    </a>
-                                </li>
+                                    </li>
+                                </a>
+
                                 <sec:csrfInput/>
                             </form>
                         </ul>

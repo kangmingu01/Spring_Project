@@ -314,7 +314,6 @@ tr > th:nth-child(1) , tr > td:nth-child(1){
 }
 tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
 	width: 150px;	
-
 }
 .sty button {
 	font-size: 12px;
@@ -322,8 +321,9 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     height: 30px;
 	margin-right: 5px;
 }
-.sty tr:hover{
+.sty tr:hover td{
     background-color: #6571ff;
+    color:white;
     cursor: pointer;
 }
 .pageNumDiv{
@@ -374,4 +374,26 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
 .modal-body {
     max-height: 500px; /* 본문의 최대 높이 (고정 높이보다 작아야 함) */
     overflow-y: auto; /* 내용이 넘칠 경우 스크롤 표시 */
+}
+.product_brand_search > tr > th:nth-last-child(1){
+	width: 80px;	
+}
+#newModal .modal-dialog {
+	min-width:900px;
+	z-index: 100;
+	overflow: auto;
+}
+.product_brand_search tr > td:nth-last-child(1), .product_brand_search tr > th:nth-last-child(1){
+	width: 100px;	
+}
+.selectSearch  select{
+	border: var(--bs-border-width) solid var(--bs-border-color);
+	width: 100px;
+	text-align: center;
+	border-bottom-left-radius: 10px;
+	border-top-left-radius: 10px;
+}
+.btn-danger {
+    background-color: #ff3366 !important; /* 원하는 색상 */
+    border-color: #ff3366 !important; 
 }

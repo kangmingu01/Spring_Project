@@ -289,3 +289,25 @@ select {
     background-color: #f0f0f0;
     pointer-events: none; /* 클릭 금지 */
 }
+.product_brand_search > tr > th:nth-last-child(1){
+	width: 80px;	
+}
+#newModal .modal-dialog {
+	min-width:900px;
+	z-index: 100;
+	overflow: auto;
+}
+.product_brand_search tr > td:nth-last-child(1), .product_brand_search tr > th:nth-last-child(1){
+	width: 100px;	
+}
+.modalpage{
+	margin:10px;
+	text-align: center;	
+}
+.selectSearch  select{
+	border: var(--bs-border-width) solid var(--bs-border-color);
+	width: 100px;
+	text-align: center;
+	border-bottom-left-radius: 10px;
+	border-top-left-radius: 10px;
+}

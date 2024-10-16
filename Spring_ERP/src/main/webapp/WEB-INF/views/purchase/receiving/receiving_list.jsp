@@ -199,19 +199,19 @@
 		            <!-- 취소 버튼이 있는 열 -->
 		            <td>
 		                <c:if test="${receiving.receivingStatus == 4}">
-		                    <button class="cancelButton" data-receiving-id="${receiving.receivingId}">취소</button>
+		                    <button class="cancelButton btn btn-danger btn-sm" style="background-color: #FF3366" data-receiving-id="${receiving.receivingId}">취소</button>
 		                </c:if>
 		                <c:if test="${receiving.receivingStatus == 5}">
-		                    <button class="cancelButton" disabled>취소</button>
+		                    <button class="cancelButton btn btn-danger btn-sm" style="background-color: #FF3366" disabled>취소</button>
 		                </c:if>
 		            </td>
 		            <!-- 확정 버튼이 있는 열 -->
 		            <td>
 		                <c:if test="${receiving.receivingStatus == 4}">
-		                    <button class="confirmButton" data-receiving-id="${receiving.receivingId}">확정</button>
+		                    <button class="confirmButton btn btn-success btn-sm" data-receiving-id="${receiving.receivingId}">확정</button>
 		                </c:if>
 		                <c:if test="${receiving.receivingStatus == 5}">
-		                    <button class="confirmButton" disabled>확정</button>
+		                    <button class="confirmButton btn btn-success btn-sm" disabled>확정</button>
 		                </c:if>
 		            </td>
 		        </tr>
@@ -220,14 +220,14 @@
         </table>
 
        <!-- 페이징 부분 -->
-		<div style="text-align: center;">
+		<div style="text-align: center;" class="pagination-container text-center mt-4">
 		    <!-- 이전 페이지 링크 -->
 		    <c:choose>
 		        <c:when test="${pager != null && pager.startPage > 1}">
-		            <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">[이전]</a>
+		            <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">[이전]</a>
 		        </c:when>
 		        <c:otherwise>
-		            [이전]
+		            <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">&laquo; 이전</span>
 		        </c:otherwise>
 		    </c:choose>
 		    
@@ -236,10 +236,10 @@
 		        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
 		            <c:choose>
 		                <c:when test="${pager.pageNum != i}">
-		                    <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">[${i}]</a>
+		                    <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}"><span class="btn btn-outline-primary mx-1 btn-sm">${i}</span></a>
 		                </c:when>
 		                <c:otherwise>
-		                    [${i}]
+		                    <span class="btn btn-primary mx-1 active btn-sm" style="background-color: #6571FF">${i}</span>
 		                </c:otherwise>
 		            </c:choose>
 		        </c:forEach>
@@ -248,10 +248,10 @@
 		    <!-- 다음 페이지 링크 -->
 		    <c:choose>
 		        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-		            <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">[다음]</a>
+		            <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">다음 &raquo;</a>
 		        </c:when>
 		        <c:otherwise>
-		            [다음]
+		            <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">다음 &raquo;</span>
 		        </c:otherwise>
 		    </c:choose>
 		</div>
@@ -361,7 +361,7 @@ function loadReceivingDetails(receivingId) {
     $('#quantity').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
 
     // 완료 버튼으로 변경
-    $('.cancelButton').text('완료').off('click').on('click', function() {
+    $('.cancelButton').css('background-color', '#6571FF').text('완료').off('click').on('click', function() {
         saveReceivingChanges(receivingId);
     });
 

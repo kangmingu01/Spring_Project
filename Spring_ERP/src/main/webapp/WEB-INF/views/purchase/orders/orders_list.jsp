@@ -174,7 +174,8 @@
                 <!-- 수정 버튼 (발주 대기 상태일 때만 활성화) -->
                 <td>
                   <c:if test="${orders.ordersStatus == 1}">
-                    <button class="editButton" data-orders-id="${orders.ordersId}">수정</button>
+                    <button class="editButton btn btn-secondary btn-sm" data-orders-id="${orders.ordersId}" 
+				  style="background-color: #7987A1">수정</button>
                   </c:if>
                 </td>
                 <!-- 발주 확정 버튼 (발주 대기 상태일 때만 활성화) -->
@@ -185,7 +186,7 @@
                       <input type="hidden" name="ordersId" value="${orders.ordersId}"/>
                       <input type="hidden" name="pageNum" value="${pager.pageNum}"/>
                       <input type="hidden" name="pageSize" value="${pager.pageSize}"/>
-                      <button type="submit">확정</button>
+                      <button type="submit" class="btn btn-success btn-sm">확정</button>
                     </form>
                   </c:if>
                 </td>
@@ -195,14 +196,14 @@
         </table>
 
         <!-- 페이징 부분 -->
-        <div style="text-align: center;">
+        <div style="text-align: center;" class="pagination-container text-center mt-4">
           <!-- 이전 페이지 링크 -->
           <c:choose>
 		    <c:when test="${pager != null && pager.startPage > 1}">
-		        <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[이전]</a>
+		        <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[이전]</a>
 		    </c:when>
 		    <c:otherwise>
-		        [이전]
+		        <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">&laquo; 이전</span>
 		    </c:otherwise>
 		</c:choose>
 		
@@ -211,10 +212,10 @@
 		    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
 		        <c:choose>
 		            <c:when test="${pager.pageNum != i}">
-		                <a href="<c:url value='/purchase/orders/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[${i}]</a>
+		                <a href="<c:url value='/purchase/orders/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}"><span class="btn btn-outline-primary mx-1 btn-sm">${i}</span></a>
 		            </c:when>
 		            <c:otherwise>
-		                [${i}]
+		                <span class="btn btn-primary mx-1 active btn-sm" style="background-color: #6571FF">${i}</span>
 		            </c:otherwise>
 		        </c:choose>
 		    </c:forEach>
@@ -223,10 +224,10 @@
 		<!-- 다음 페이지 링크 -->
 		<c:choose>
 		    <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-		        <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[다음]</a>
+		        <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">다음 &raquo;</a>
 		    </c:when>
 		    <c:otherwise>
-		        [다음]
+		        <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">다음 &raquo;</span>
 		    </c:otherwise>
 		</c:choose>
         </div>
@@ -337,6 +338,7 @@
 
         // 버튼을 완료 상태로 변경
         button.text('완료');
+        button.css('background-color', '#6571FF');
         button.off('click').on('click', function() {
             saveOrderChanges(ordersId);
         });

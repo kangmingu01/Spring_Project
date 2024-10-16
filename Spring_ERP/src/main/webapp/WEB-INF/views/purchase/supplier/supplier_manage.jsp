@@ -104,7 +104,8 @@
               <label>이메일</label>
               <input type="text" id="newSupplierEmail" name="supplierEmail" required oninput="validateFields()" />
             </div>
-            <button type="button" id="registerButton" onclick="registerSupplier()" disabled>완료</button>
+            <button type="button" id="registerButton" onclick="registerSupplier()" disabled class="btn btn-secondary"
+            style="background-color: #6571FF; font-size: 12px; width: 55px; height: 30px; margin-right: 5px;">완료</button>
           </div>
           <div>          	
           	<div id="errorMessage" style="color: red; display:none; margin-top:10px;"></div> <!-- 오류 메시지 표시 -->           
@@ -131,37 +132,36 @@
                 <td>${supplier.supplierName}</td>
                 <td>${supplier.supplierPhone}</td>
                 <td>${supplier.supplierEmail}</td>
-                <td>
-                  <button type="button" id="editButton-${supplier.supplierId}" 
-                    onclick="editSupplier('${supplier.supplierId}', '${supplier.supplierName}', '${supplier.supplierPhone}', '${supplier.supplierEmail}')">수정</button>
-                </td>
+                 <td>
+				  <button type="button" id="editButton-${supplier.supplierId}" class="btn btn-secondary"
+				  style="background-color: #7987A1" 
+				  onclick="editSupplier('${supplier.supplierId}', '${supplier.supplierName}', '${supplier.supplierPhone}', '${supplier.supplierEmail}')">
+				    수정
+				  </button>
+				</td>
               </tr>
             </c:forEach>
           </tbody>
         </table>
-        <div style="text-align: center;">
+        <div style="text-align: center;" class="pagination-container text-center mt-4">
     <!-- 이전 페이지 링크 -->
     <c:choose>
         <c:when test="${resultMap.pager.startPage > resultMap.pager.blockSize}">
-            <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${resultMap.pager.prevPage}&pageSize=${resultMap.pager.pageSize }&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}">
-                [이전]
-            </a>
+            <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/supplier/manage'/>?pageNum=${resultMap.pager.prevPage}&pageSize=${resultMap.pager.pageSize}&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}">&laquo; 이전</a>
         </c:when>
         <c:otherwise>
-            [이전]
+            <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">&laquo; 이전</span>
         </c:otherwise>
     </c:choose>
 
     <!-- 페이지 번호 링크 반복문 -->
-    <c:forEach var="i" begin="${resultMap.pager.startPage }" end="${resultMap.pager.endPage }" step="1">
+    <c:forEach var="i" begin="${resultMap.pager.startPage}" end="${resultMap.pager.endPage}" step="1">
         <c:choose>
             <c:when test="${resultMap.pager.pageNum != i}">
-                <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize }&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}">
-                    [${i}]
-                </a>
+                <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${i}&pageSize=${resultMap.pager.pageSize}&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}"><span class="btn btn-outline-primary mx-1 btn-sm">${i}</span></a>
             </c:when>
             <c:otherwise>
-                [${i}]
+                <span class="btn btn-primary mx-1 active btn-sm" style="background-color: #6571FF">${i}</span>
             </c:otherwise>
         </c:choose>
     </c:forEach>
@@ -169,19 +169,16 @@
     <!-- 다음 페이지 링크 -->
     <c:choose>
         <c:when test="${resultMap.pager.endPage != resultMap.pager.totalPage}">
-            <a href="<c:url value='/purchase/supplier/manage'/>?pageNum=${resultMap.pager.nextPage}&pageSize=${resultMap.pager.pageSize }&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}">
-                [다음]
-            </a>
+            <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/supplier/manage'/>?pageNum=${resultMap.pager.nextPage}&pageSize=${resultMap.pager.pageSize}&supplierName=${searchMap.supplierName}&supplierPhone=${searchMap.supplierPhone}&supplierEmail=${searchMap.supplierEmail}">다음 &raquo;</a>
         </c:when>
         <c:otherwise>
-            [다음]
+            <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">다음 &raquo;</span>
         </c:otherwise>
     </c:choose>
 </div>
-
 		</div>
 		</div>
-	
+	</div>
 
 
 <script type="text/javascript">
@@ -307,6 +304,7 @@ function editSupplier(id, name, phone, email) {
     // 현재 클릭한 수정 버튼을 완료 버튼으로 변경
     const editButton = $("#editButton-" + id);
     editButton.text("완료");
+    editButton.css("background-color", "#6571FF"); 
     editButton.removeClass("btn-warning").addClass("btn-success");
     editButton.attr("id", "completeButton-" + id); // ID 변경하여 수정 완료 버튼으로 전환
     editButton.attr("onclick", "completeUpdate('" + id + "')");

@@ -26,4 +26,7 @@ public class Inventory {
 	private int inventoryDamagedQty;	// �ļյ� ����
 	private String lastDate;
 	
+	private Product product;
+	private Warehouse warehouse;
+	
 }

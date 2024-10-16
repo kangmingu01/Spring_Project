@@ -101,11 +101,19 @@
             </div>        
             <div>
               <label>창고</label>
-              <select name="wareHouseId" id="wareHouse" >
+              <select name="warehouseId" id="warehouse" >
                 <option value="">창고 선택</option>
                 <c:forEach var="warehouse" items="${warehouseList}">
                   <option value="${warehouse.warehouseId}">${warehouse.warehouseName}</option>
                 </c:forEach>
+              </select>
+            </div>
+            <div>
+              <label>상태</label>
+              <select name="receivingStatus" id="Status">
+                <option value="">상태 선택</option>
+                <option value="4">입고 완료</option>                         
+                <option value="5">입고 확정</option>                         
               </select>
             </div>
             <!-- 발주수량을 숨겨진 필드로 저장 -->
@@ -114,8 +122,13 @@
             <input type="hidden" id="ordersQuantity" name="ordersQuantity" value="${receiving.ordersQuantity}" />
             <div>
               <label>통과수량</label>
-              <input type="number" name="quantity" id="quantity" style="background-color: #f0f0f0" readonly/>
+              <input type="number" name="quantity" id="quantity" style="background-color: #f0f0f0" readonly min="0"/>
             </div>
+            </div>
+            <div>
+            <div></div>
+            <div></div>
+            <div></div>
             <div>
               <!-- 에러 메시지 -->
               <span id="quantity-error" style="color:red; display:none; font-size: 12px">통과수량은 발주수량을 초과할 수 없습니다.</span>
@@ -147,88 +160,101 @@
               <th style="color: red;">총액</th>
               <th style="color: red;">납기일</th>
               <th>창고</th>
-              <th>상태</th>              
-              <th>수정</th>
+              <th style="color: red;">상태</th>              
+              <th>취소</th>
+              <th>확정</th>
             </tr>
           </thead>
           <tbody id="orderTable" class="sty">
-            <c:forEach var="receiving" items="${receivingList}">
-              <tr>
-                <td>${receiving.receivingId}</td>
-                <td>${fn:substring(receiving.receivingDate, 0, 10)}</td>
-                <td>${receiving.ordersId}</td>
-                <td>${receiving.name}</td>
-                <td>${receiving.productId}</td>
-                <td>${receiving.productName}</td>
-                <td>${receiving.productCategoryDetails.brand}</td>
-                <td>${receiving.productCategoryDetails.type}</td>
-                <td>${receiving.productCategoryDetails.color}</td>
-                <td>${receiving.productCategoryDetails.size}</td>
-                <td>${receiving.productCategoryDetails.gender}</td>
-                <td>${receiving.supplierName}</td>
-                <td>${receiving.ordersQuantity}</td>
-                <td>${receiving.quantity}</td>
-                <td>${receiving.productPrice}</td>
-                <td>${receiving.quantity * receiving.productPrice}</td>
-                <td>${fn:substring(receiving.deliveryDate, 0, 10)}</td>
-                <td>${receiving.warehouseName}</td>
-                <td>
-                  <c:choose>
-                    <c:when test="${receiving.ordersStatus == 2 && receiving.receivingStatus != 4}">
-                      입고 대기
-                    </c:when>
-                    <c:when test="${receiving.receivingStatus == 4}">
-                      입고 완료
-                    </c:when>
-                  </c:choose>
-                </td>
-                <td>
-                  <!-- 입고 완료 상태일 경우 취소 버튼 활성화 -->
-                  <c:if test="${receiving.receivingStatus == 4}">
-                    <button class="cancelButton" data-receiving-id="${receiving.receivingId}">취소</button>
-                  </c:if>
-                </td>
-              </tr>
-            </c:forEach>
-          </tbody>
+		    <c:forEach var="receiving" items="${receivingList}">
+		        <tr>
+		            <td>${receiving.receivingId}</td>
+		            <td>${fn:substring(receiving.receivingDate, 0, 10)}</td>
+		            <td>${receiving.ordersId}</td>
+		            <td>${receiving.name}</td>
+		            <td>${receiving.productId}</td>
+		            <td>${receiving.productName}</td>
+		            <td>${receiving.productCategoryDetails.brand}</td>
+		            <td>${receiving.productCategoryDetails.type}</td>
+		            <td>${receiving.productCategoryDetails.color}</td>
+		            <td>${receiving.productCategoryDetails.size}</td>
+		            <td>${receiving.productCategoryDetails.gender}</td>
+		            <td>${receiving.supplierName}</td>
+		            <td>${receiving.ordersQuantity}</td>
+		            <td>${receiving.quantity}</td>
+		            <td>${receiving.productPrice}</td>
+		            <td>${receiving.quantity * receiving.productPrice}</td>
+		            <td>${fn:substring(receiving.deliveryDate, 0, 10)}</td>
+		            <td>${receiving.warehouseName}</td>
+		             <td>
+		                <c:choose>
+		                    <c:when test="${receiving.receivingStatus == 4}">
+		                        입고 완료
+		                    </c:when>
+		                    <c:when test="${receiving.receivingStatus == 5}">
+		                        입고 확정
+		                    </c:when>		                    
+		                </c:choose>
+		            </td>
+		            <!-- 취소 버튼이 있는 열 -->
+		            <td>
+		                <c:if test="${receiving.receivingStatus == 4}">
+		                    <button class="cancelButton" data-receiving-id="${receiving.receivingId}">취소</button>
+		                </c:if>
+		                <c:if test="${receiving.receivingStatus == 5}">
+		                    <button class="cancelButton" disabled>취소</button>
+		                </c:if>
+		            </td>
+		            <!-- 확정 버튼이 있는 열 -->
+		            <td>
+		                <c:if test="${receiving.receivingStatus == 4}">
+		                    <button class="confirmButton" data-receiving-id="${receiving.receivingId}">확정</button>
+		                </c:if>
+		                <c:if test="${receiving.receivingStatus == 5}">
+		                    <button class="confirmButton" disabled>확정</button>
+		                </c:if>
+		            </td>
+		        </tr>
+		    </c:forEach>
+		</tbody>
         </table>
 
-        <!-- 페이징 부분 -->
-        <div style="text-align: center;">
-          <!-- 이전 페이지 링크 -->
-          <c:choose>
-            <c:when test="${pager != null && pager.startPage > 1}">
-              <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
-            </c:when>
-            <c:otherwise>
-              [이전]
-            </c:otherwise>
-          </c:choose>
-          
-          <!-- 페이지 번호 링크 -->
-          <c:if test="${pager != null}">
-            <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-              <c:choose>
-                <c:when test="${pager.pageNum != i}">
-                  <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
-                </c:when>
-                <c:otherwise>
-                  [${i}]
-                </c:otherwise>
-              </c:choose>        
-            </c:forEach>
-          </c:if>
-          
-          <!-- 다음 페이지 링크 -->
-          <c:choose>
-            <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-              <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
-            </c:when>
-            <c:otherwise>
-              [다음]
-            </c:otherwise>
-          </c:choose>
-        </div>
+       <!-- 페이징 부분 -->
+		<div style="text-align: center;">
+		    <!-- 이전 페이지 링크 -->
+		    <c:choose>
+		        <c:when test="${pager != null && pager.startPage > 1}">
+		            <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">[이전]</a>
+		        </c:when>
+		        <c:otherwise>
+		            [이전]
+		        </c:otherwise>
+		    </c:choose>
+		    
+		    <!-- 페이지 번호 링크 -->
+		    <c:if test="${pager != null}">
+		        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+		            <c:choose>
+		                <c:when test="${pager.pageNum != i}">
+		                    <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">[${i}]</a>
+		                </c:when>
+		                <c:otherwise>
+		                    [${i}]
+		                </c:otherwise>
+		            </c:choose>
+		        </c:forEach>
+		    </c:if>
+		    
+		    <!-- 다음 페이지 링크 -->
+		    <c:choose>
+		        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+		            <a href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">[다음]</a>
+		        </c:when>
+		        <c:otherwise>
+		            [다음]
+		        </c:otherwise>
+		    </c:choose>
+		</div>
       </div>
     </div>
   </div>
@@ -255,14 +281,22 @@ $(document).ready(function() {
         resetForm();
     });
 
-    // 통과수량이 발주수량을 초과하지 않도록 검증하는 로직 추가
+ 	// 통과수량이 발주수량을 초과하지 않도록 검증하는 로직 추가
     $('#quantity').on('input', function() {
         const ordersQuantity = parseInt($('#ordersQuantity').val());  // 숨겨진 발주수량 필드에서 가져옴
-        const quantity = $(this).val();  // 입력된 통과수량
+        let quantity = $(this).val().replace(/[^0-9]/g, ''); // 숫자가 아닌 값 제거
+        $(this).val(quantity); // 숫자만 남긴 값을 다시 설정
         const errorSpan = $('#quantity-error');  // 에러 메시지 표시할 span
 
         // 빈 값이거나 NaN인 경우에는 에러 메시지를 숨김
         if (quantity === '' || isNaN(quantity)) {
+            errorSpan.hide();  // 에러 메시지 숨김
+            return;
+        }
+
+        // 음수 값 방지
+        if (parseInt(quantity) < 0) {
+            $(this).val(''); // 음수값 제거
             errorSpan.hide();  // 에러 메시지 숨김
             return;
         }
@@ -282,7 +316,7 @@ function loadReceivingDetails(receivingId) {
     const row = $('tr').has('button[data-receiving-id="' + receivingId + '"]');
 
     if (!row.length) {
-        alert('해당 입고 항목을 찾을 수 없습니다.');
+        //alert('해당 입고 항목을 찾을 수 없습니다.');
         return;
     }
 
@@ -294,9 +328,18 @@ function loadReceivingDetails(receivingId) {
     $('#productId').val($.trim(row.children().eq(4).text()));
     $('#productName').val($.trim(row.children().eq(5).text()));
     $('#brand').val($.trim(row.children().eq(6).text()));
-    $('#ordersQuantity').val($.trim(row.children().eq(12).text())); // 발주수량 필드에 값 채움
+    $('#ordersQuantity').val($.trim(row.children().eq(12).text())); 
     $('#quantity').val($.trim(row.children().eq(13).text()));
-
+    $('#deliveryDate').val($.trim(row.children().eq(16).text()));
+	
+	 // 상태 설정
+    const statusText = $.trim(row.children().eq(18).text());
+    if (statusText === '입고 완료') {
+        $('#Status').val(4);  // 입고 완료
+    } else if (statusText === '입고 확정') {
+        $('#Status').val(5);  // 입고 확정
+    }
+    
     // 공급업체 설정
     const supplierName = $.trim(row.children().eq(11).text());
     $('#supplier option').each(function() {
@@ -307,7 +350,7 @@ function loadReceivingDetails(receivingId) {
 
     // 창고 설정
     const warehouseName = $.trim(row.children().eq(17).text());
-    $('#wareHouse option').each(function() {
+    $('#warehouse option').each(function() {
         if ($(this).text() === warehouseName) {
             $(this).prop('selected', true);
         }
@@ -330,14 +373,14 @@ function loadReceivingDetails(receivingId) {
     });
 }
 
-// 통과 수량 저장 로직
+//통과 수량 저장 로직
 function saveReceivingChanges(receivingId) {
     const ordersQuantity = parseInt($('#ordersQuantity').val());
     const quantity = parseInt($('#quantity').val());
 
     // 수량 검증 - 통과수량이 발주수량을 초과하면 저장 중단
     if (quantity > ordersQuantity || isNaN(quantity)) {
-        alert('통과 수량이 발주 수량을 초과할 수 없으며, 유효한 숫자를 입력해야 합니다.');
+        //alert('통과 수량이 발주 수량을 초과할 수 없으며, 유효한 숫자를 입력해야 합니다.');
         return;  // 저장하지 않음
     }
 
@@ -347,8 +390,8 @@ function saveReceivingChanges(receivingId) {
     // 수정된 값 가져오기
     const data = {
         receivingId: receivingId,
-        pageNum: $('#pageNum').val(),
-        pageSize: $('#pageSize').val(),
+        pageNum: $('#pageNum').val(), // 현재 페이지 번호 유지
+        pageSize: $('#pageSize').val(), // 페이지 크기 유지
         quantity: quantity,  // 통과 수량 수정 가능
         receivingStatus: 4   // 입고 완료 상태로 업데이트
     };
@@ -363,20 +406,40 @@ function saveReceivingChanges(receivingId) {
             xhr.setRequestHeader(header, token);
         },
         success: function(response) {
-            alert('수정이 완료되었습니다.');
-            window.location.href = '<c:url value="/purchase/receiving/list"/>' + '?pageNum=' + data.pageNum + '&pageSize=' + data.pageSize;
+            // 수정 후 현재 페이지 새로고침하여 변경 사항 반영
+            //alert('수정이 완료되었습니다.');
+            location.reload();  // 페이지 새로 고침
         },
         error: function(xhr, status, error) {
             console.error('AJAX 요청 중 오류:', xhr, status, error);
-            alert('수정 중 오류가 발생했습니다.');
+            //alert('수정 중 오류가 발생했습니다.');
         }
     });
 }
 
-// 폼 초기화 및 첫 페이지로 이동
+
+//테이블 데이터 업데이트 함수
+function updateRowData(receivingId, quantity) {
+    const row = $('tr').has('button[data-receiving-id="' + receivingId + '"]');
+
+    // 통과 수량 업데이트
+    row.children().eq(13).text(quantity);
+
+    // 상태를 '입고 완료'로 변경
+    row.find('td').eq(18).text('입고 완료');
+
+    // 완료 후 버튼 상태 복원
+    row.find('.cancelButton').text('취소').prop('disabled', false);
+    row.find('.confirmButton').prop('disabled', false);
+
+    // 다른 취소 버튼 활성화
+    $('button.cancelButton').prop('disabled', false);
+}
+
+//폼 초기화 및 첫 페이지로 이동
 function resetForm() {
     $('#receivingForm')[0].reset();
-    window.location.href = '<c:url value="/purchase/receiving/list"/>';
+    window.location.href = '<c:url value="/purchase/receiving/list"/>?pageNum=1';
 }
 
 // 모든 필드를 읽기 전용으로 설정하는 함수
@@ -384,7 +447,7 @@ function setAllFieldsReadOnly(readOnly) {
     const fields = [
         '#receivingId', '#receivingDate', '#ordersId', 
         '#name', '#productId', '#productName', '#brand', 
-        '#supplier', '#wareHouse', '#deliveryDate'
+        '#supplier', '#warehouse', '#deliveryDate', '#Status'
     ];
 
     fields.forEach(fieldId => {
@@ -406,10 +469,54 @@ function setAllFieldsReadOnly(readOnly) {
     });
 }
 
-// 입고 조회 폼 제출
+//조회 버튼 클릭 시 검색 폼 제출
 function searchOrder() {
-    $('#receivingForm').submit();
+    const form = $('#receivingForm');
+    const pageNum = 1; // 조회 시 첫 페이지로 이동
+    form.find('input[name="pageNum"]').val(pageNum);
+    form.submit();
 }
+
+
+$(document).ready(function() {
+    // 확정 버튼 클릭 이벤트 추가
+    $('.confirmButton').on('click', function() {
+        const receivingId = $(this).data('receiving-id');
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
+
+        // 서버로 상태 변경 요청
+        $.ajax({
+            url: '<c:url value="/purchase/receiving/confirm"/>',
+            type: 'POST',
+            data: { receivingId: receivingId },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            success: function(response) {
+                //alert('입고 확정 되었습니다.');
+
+                // 상태 변경 후 버튼 비활성화 처리 (각각의 버튼을 비활성화)
+                const row = $('button[data-receiving-id="' + receivingId + '"]').closest('tr');
+                
+                // 취소 버튼 비활성화
+                row.find('.cancelButton').prop('disabled', true);
+                
+                // 확정 버튼 비활성화
+                row.find('.confirmButton').prop('disabled', true);
+                
+                // 상태를 '입고 확정'으로 업데이트 (해당 열에 상태 표시)
+                row.find('td').eq(18).text('입고 확정');
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX 요청 중 오류:', xhr, status, error);
+                //alert('상태 변경 중 오류가 발생했습니다.');
+            }
+        });
+    });
+});
+
+
 
 </script>
 

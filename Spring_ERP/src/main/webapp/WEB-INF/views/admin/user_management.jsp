@@ -135,7 +135,7 @@
                         </div>--%>
                         <div class="d-flex form-control-position">
                             <input type="text" class="form-control" id="passwd" name="passwd"
-                                   >
+                            >
                             <button type="button" class="btn btn-secondary btn-sm text-nowrap"
                                     onclick="generateRandomPassword()">랜덤생성
                             </button>
@@ -230,7 +230,11 @@
                         <div id="searchMsg" class="error">조직ID를 검색해주세요</div>
                     </div>
                 </div>
-
+                <c:if test="${param.error == 'emailFailed'}">
+                    <div class="alert alert-danger">
+                        이메일 발송에 실패하였습니다. 다시 시도해 주세요.
+                    </div>
+                </c:if>
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">유저 추가</button>
                 </div>
@@ -259,7 +263,8 @@
                 </div>
                 <div class="col-3 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary text-white d-flex align-items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                             class="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                         </svg>
                         <span class="ms-2 text-nowrap">조회</span>

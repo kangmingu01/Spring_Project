@@ -112,19 +112,19 @@
             <label>성별</label>
            <input type="text" id="gender" name="gender" readonly class="read-only-field"/>
           </div>
+          <div>
+              <label>단가</label>
+              <input type="number" id=productPrice name="productPrice" readonly class="read-only-field" min="0"/>
+            </div>
              <div>
               <label>공급업체</label>
               <input type="text" id="supplier" name="supplier" readonly class="read-only-field" />
             </div>
+            </div>
+            <div>
             <div>
               <label>발주수량</label>
-              <input type="number" id="ordersQuantity" name="ordersQuantity" readonly class="read-only-field" />
-            </div>
-            </div>
-            <div>
-            <div>
-              <label>단가</label>
-              <input type="number" id=productPrice name="productPrice" readonly class="read-only-field" />
+              <input type="number" id="ordersQuantity" name="ordersQuantity" readonly class="read-only-field" min="0"/>
             </div>
             <div>
               <label>납기일</label>
@@ -146,7 +146,7 @@
           </div>
           <div>
             <label>통과수량</label>
-            <input type="number" id="quantity" name="quantity" required />
+            <input type="number" id="quantity" name="quantity" required min="0"/>
           </div>
         </div>
         <div>
@@ -333,14 +333,22 @@
 	        }
 	    }
 
-	    // 통과 수량 검증 및 경고 메시지 처리
+	 	// 통과 수량 검증 및 음수값, 숫자가 아닌 값 방지
 	    document.getElementById("quantity").addEventListener("input", function() {
 	        const ordersQuantity = parseInt(document.getElementById("ordersQuantity").value); // 발주수량
-	        const quantity = parseInt(this.value); // 입력된 통과수량
+	        let quantity = this.value.replace(/[^0-9]/g, ''); // 숫자가 아닌 값 제거
+	        this.value = quantity; // 숫자만 남긴 값을 다시 설정
+
 	        const errorSpan = document.getElementById("quantity-error"); // 에러 메시지 표시할 span
 
+	        // 음수 값 방지 및 빈 값 방지
+	        if (quantity === "" || parseInt(quantity) < 0) {
+	            this.value = 0; // 음수 값이나 빈 값인 경우 0으로 고정
+	            quantity = 0;
+	        }
+
 	        // 통과수량이 발주수량을 초과하면 경고 메시지 표시
-	        if (quantity > ordersQuantity) {
+	        if (parseInt(quantity) > ordersQuantity) {
 	            errorSpan.style.display = "inline";  // 에러 메시지 표시
 	            this.value = "";  // 잘못된 입력값 제거
 	        } else {

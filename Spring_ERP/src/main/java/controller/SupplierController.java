@@ -80,11 +80,23 @@ public class SupplierController {
         supplierService.modifySupplier(supplier);
 
         // 페이징 및 검색 정보 유지
-        redirectAttributes.addAttribute("pageNum", map.get("pageNum"));
-        redirectAttributes.addAttribute("pageSize", map.get("pageSize"));
-        redirectAttributes.addAttribute("column", map.get("column"));
-        String keyword = map.get("keyword") != null ? URLEncoder.encode((String) map.get("keyword"), "utf-8") : "";
-        redirectAttributes.addAttribute("keyword", keyword);
+        redirectAttributes.addAttribute("pageNum", map.getOrDefault("pageNum", "1"));
+        redirectAttributes.addAttribute("pageSize", map.getOrDefault("pageSize", "10"));
+        redirectAttributes.addAttribute("column", map.getOrDefault("column", ""));
+
+        // 검색 필드에 대한 처리
+        if (map.get("supplierName") != null) {
+            String supplierName = URLEncoder.encode((String) map.get("supplierName"), "utf-8");
+            redirectAttributes.addAttribute("supplierName", supplierName);
+        }
+        if (map.get("supplierPhone") != null) {
+            String supplierPhone = URLEncoder.encode((String) map.get("supplierPhone"), "utf-8");
+            redirectAttributes.addAttribute("supplierPhone", supplierPhone);
+        }
+        if (map.get("supplierEmail") != null) {
+            String supplierEmail = URLEncoder.encode((String) map.get("supplierEmail"), "utf-8");
+            redirectAttributes.addAttribute("supplierEmail", supplierEmail);
+        }
 
         return ResponseEntity.ok("공급업체 정보가 수정되었습니다.");
     }

@@ -18,7 +18,7 @@
 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
 		<property name="url" value="jdbc:oracle:thin:@www.itwill.xyz:1521:xe"/>
 		<property name="username" value="erp"/>
-		<property name="password" value="erp2"/>
+		<property name="password" value="ErpSpring153"/>
 	</bean>
 
 	<!-- SqlSessionFactory 관련 클래스(SqlSessionFactoryBean 클래스)를 Spring Bean으로 등록 -->

@@ -15,4 +15,5 @@ public interface ReceivingService {
 	Map<String, Object> getReceivingList(Map<String, Object> map);
 	void modifyReceiving(Receiving receiving);
 	List<Supplier> getSupplierList();
+	void modifyReceivingStatus(int receivingId);
 }

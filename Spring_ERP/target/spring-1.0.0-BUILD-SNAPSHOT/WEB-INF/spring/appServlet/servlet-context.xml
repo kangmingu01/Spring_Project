@@ -67,6 +67,8 @@
     <context:component-scan base-package="controller"/>
     <!-- Service Spring Bean으로 등록 -->
     <context:component-scan base-package="service"/>
+    
+    <context:component-scan base-package="util"/>
 
     <security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"/>
 </beans:beans>

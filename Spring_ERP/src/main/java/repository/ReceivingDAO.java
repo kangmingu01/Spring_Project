@@ -18,4 +18,5 @@ public interface ReceivingDAO {
 	List<Receiving> selectReceivingList(Map<String, Object> map);
 	int updateReceiving(Receiving receiving);
 	List<Supplier> selectSupplierList();
+	int confirmReceiving(int receivingId);
 }

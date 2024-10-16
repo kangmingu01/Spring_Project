@@ -100,16 +100,16 @@ public class ReceivingServiceImpl implements ReceivingService {
     // 전체 입고 목록 조회 (페이징 처리 및 검색 기능 포함)
 	@Override
 	public Map<String, Object> getReceivingList(Map<String, Object> map) {
-		// 페이지 번호 설정 (기본값: 1)
+		 // 페이지 번호 설정 (기본값: 1)
         int pageNum = 1;
         if (map.get("pageNum") != null && !map.get("pageNum").equals("")) {
-            pageNum = Integer.parseInt((String) map.get("pageNum"));
+            pageNum = Integer.parseInt(((String) map.get("pageNum")).trim());  // 공백 제거
         }
 
         // 페이지 크기 설정 (기본값: 10)
         int pageSize = 10;
         if (map.get("pageSize") != null && !map.get("pageSize").equals("")) {
-            pageSize = Integer.parseInt((String) map.get("pageSize"));
+            pageSize = Integer.parseInt(((String) map.get("pageSize")).trim());  // 공백 제거
         }
 
         // 전체 발주 개수 조회
@@ -154,5 +154,12 @@ public class ReceivingServiceImpl implements ReceivingService {
 	@Override
 	public List<Supplier> getSupplierList() {
 		return receivingDAO.selectSupplierList();
+	}
+	
+	@Transactional 
+	@Override
+	public void modifyReceivingStatus(int receivingId) {
+	    // 상태를 5로 변경
+	    receivingDAO.confirmReceiving(receivingId);
 	}
 }

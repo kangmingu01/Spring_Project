@@ -75,6 +75,10 @@
               <input type="text" name="brand" id="brand"/>
             </div>
             <div>
+            <label>단가</label>
+            <input type="number" id="productPrice" name="productPrice" />
+            </div>
+            <div>
               <label>공급업체</label>
               <select name="supplierId" id="supplier">
                 <option value="">공급 업체 선택</option>
@@ -83,6 +87,8 @@
                 </c:forEach>
               </select>
             </div>
+            </div>
+            <div>
             <div>
               <label>상태</label>
               <select name="ordersStatus" id="ordersStatus">
@@ -96,6 +102,15 @@
         <!-- 페이지 번호와 페이지 크기를 히든 필드로 추가 -->
         <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
         <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
+        <!-- 기존 검색 폼의 검색 필드들을 히든 필드로 추가 -->
+		<input type="hidden" name="ordersId" value="${param.ordersId}"/>
+		<input type="hidden" name="ordersDate" value="${param.ordersDate}"/>
+		<input type="hidden" name="name" value="${param.name}"/>
+		<input type="hidden" name="productId" value="${param.productId}"/>
+		<input type="hidden" name="productName" value="${param.productName}"/>
+		<input type="hidden" name="brand" value="${param.brand}"/>
+		<input type="hidden" name="supplierId" value="${param.supplierId}"/>
+		<input type="hidden" name="ordersStatus" value="${param.ordersStatus}"/>
       </form>
 
       <!-- 발주 추가 정보 -->
@@ -103,12 +118,9 @@
         <div>
           <div>
             <label>발주수량</label>
-            <input type="number" id="ordersQuantity" name="ordersQuantity" style="background-color: #f0f0f0" readonly/>
+            <input type="number" id="ordersQuantity" name="ordersQuantity" style="background-color: #f0f0f0" readonly min="0"/>
           </div>
-          <div>
-            <label>단가</label>
-            <input type="number" id="productPrice" name="productPrice" style="background-color: #f0f0f0" readonly/>
-          </div>
+          
           <div>
             <label>납기일</label>
             <input type="date" id="deliveryDate" name="deliveryDate" style="text-align: left; background-color: #f0f0f0" readonly/>
@@ -192,37 +204,37 @@
         <div style="text-align: center;">
           <!-- 이전 페이지 링크 -->
           <c:choose>
-            <c:when test="${pager != null && pager.startPage > 1}">
-              <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}">[이전]</a>
-            </c:when>
-            <c:otherwise>
-              [이전]
-            </c:otherwise>
-          </c:choose>
-          
-          <!-- 페이지 번호 링크 -->
-          <c:if test="${pager != null}">
-            <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-              <c:choose>
-                <c:when test="${pager.pageNum != i}">
-                  <a href="<c:url value='/purchase/orders/list'/>?pageNum=${i}&pageSize=${pager.pageSize}">[${i}]</a>
-                </c:when>
-                <c:otherwise>
-                  [${i}]
-                </c:otherwise>
-              </c:choose>        
-            </c:forEach>
-          </c:if>
-          
-          <!-- 다음 페이지 링크 -->
-          <c:choose>
-            <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-              <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}">[다음]</a>
-            </c:when>
-            <c:otherwise>
-              [다음]
-            </c:otherwise>
-          </c:choose>
+		    <c:when test="${pager != null && pager.startPage > 1}">
+		        <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[이전]</a>
+		    </c:when>
+		    <c:otherwise>
+		        [이전]
+		    </c:otherwise>
+		</c:choose>
+		
+		<!-- 페이지 번호 링크 -->
+		<c:if test="${pager != null}">
+		    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+		        <c:choose>
+		            <c:when test="${pager.pageNum != i}">
+		                <a href="<c:url value='/purchase/orders/list'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[${i}]</a>
+		            </c:when>
+		            <c:otherwise>
+		                [${i}]
+		            </c:otherwise>
+		        </c:choose>
+		    </c:forEach>
+		</c:if>
+		
+		<!-- 다음 페이지 링크 -->
+		<c:choose>
+		    <c:when test="${pager != null && pager.endPage < pager.totalPage}">
+		        <a href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[다음]</a>
+		    </c:when>
+		    <c:otherwise>
+		        [다음]
+		    </c:otherwise>
+		</c:choose>
         </div>
       </div>
     </div>
@@ -247,9 +259,11 @@
       });
     });
 
-    // 발주 조회 폼 제출
+ 	// 발주 조회 폼 제출
     function searchOrders() {
-      $('#ordersForm').submit();
+        // 조회할 때 페이지 번호를 1로 설정
+        $('#pageNum').val(1);
+        $('#ordersForm').submit();
     }
 
     // 모든 필드를 읽기 전용으로 설정하는 함수
@@ -279,108 +293,128 @@
         }
       });
     }
-
-    // 발주 수정 버튼 클릭 시 실행되는 함수
+    
+	// 발주 수정 버튼 클릭 시 실행되는 함수
     function editOrders(button, ordersId) {
-      // 수정 버튼 비활성화 처리
-      $('.editButton').prop('disabled', true);
-      button.prop('disabled', false);
+        // 수정 버튼 비활성화 처리
+        $('.editButton').prop('disabled', true);
+        button.prop('disabled', false);
 
-      // 각 필드에 값을 채우기
-      const row = button.closest('tr');
+        // 각 필드에 값을 채우기
+        const row = button.closest('tr');
 
-      if (!row.length) {
-        alert('해당 행을 찾을 수 없습니다.');
-        return;
-      }
-
-      $('#ordersId').val($.trim(row.children().eq(0).text()));
-      $('#ordersDate').val($.trim(row.children().eq(1).text()));
-      $('#userid').val($.trim(row.children().eq(2).text()));
-      $('#productId').val($.trim(row.children().eq(3).text()));
-      $('#productName').val($.trim(row.children().eq(4).text()));
-      $('#brand').val($.trim(row.children().eq(5).text()));
-
-      // 공급업체와 발주 상태 설정
-      const supplierName = $.trim(row.children().eq(10).text());
-      $('#supplier option').each(function() {
-        if ($(this).text() === supplierName) {
-          $(this).prop('selected', true);
+        if (!row.length) {
+            alert('해당 행을 찾을 수 없습니다.');
+            return;
         }
-      });
 
-      const orderStatusText = $.trim(row.children().eq(15).text());
-      $('#ordersStatus option').each(function() {
-        if ($(this).text() === orderStatusText) {
-          $(this).prop('selected', true);
-        }
-      });
+        // 발주 정보를 해당 행에서 가져오기
+        $('#ordersId').val($.trim(row.children().eq(0).text()));
+        $('#ordersDate').val($.trim(row.children().eq(1).text()));
+        $('#userid').val($.trim(row.children().eq(2).text()));
+        $('#productId').val($.trim(row.children().eq(3).text()));
+        $('#productName').val($.trim(row.children().eq(4).text()));
+        $('#brand').val($.trim(row.children().eq(5).text()));
+        
+        // 단가는 읽기 전용으로 표시
+        const productPrice = $.trim(row.children().eq(12).text()); // 단가 열
+        $('#productPrice').val(productPrice).prop('readonly', true); // 단가를 읽기 전용으로 설정
 
-      // 수정 가능한 필드만 활성화
-      $('#ordersQuantity').val($.trim(row.children().eq(11).text()));
-      $('#productPrice').val($.trim(row.children().eq(12).text()));
-      $('#deliveryDate').val($.trim(row.children().eq(14).text()));
-      setAllFieldsReadOnly(true);
-      $('#ordersQuantity, #productPrice, #deliveryDate').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
+        // 공급업체와 발주 상태 설정
+        const supplierName = $.trim(row.children().eq(10).text());
+        $('#supplier option').each(function() {
+            if ($(this).text() === supplierName) {
+                $(this).prop('selected', true);
+            }
+        });
 
-      // 버튼을 완료 상태로 변경
-      button.text('완료');
-      button.off('click').on('click', function() {
-        saveOrderChanges(ordersId);
-      });
+        const orderStatusText = $.trim(row.children().eq(15).text());
+        $('#ordersStatus option').each(function() {
+            if ($(this).text() === orderStatusText) {
+                $(this).prop('selected', true);
+            }
+        });
+
+        // 수정 가능한 필드만 활성화
+        $('#ordersQuantity').val($.trim(row.children().eq(11).text()));
+        $('#deliveryDate').val($.trim(row.children().eq(14).text()));
+        setAllFieldsReadOnly(true);
+        $('#ordersQuantity, #deliveryDate').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
+
+        // 버튼을 완료 상태로 변경
+        button.text('완료');
+        button.off('click').on('click', function() {
+            saveOrderChanges(ordersId);
+        });
     }
 
-    // 발주 수정 내용을 서버에 저장
+	// 발주 수정 내용을 서버에 저장
     function saveOrderChanges(ordersId) {
-      const token = $("meta[name='_csrf']").attr("content");
-      const header = $("meta[name='_csrf_header']").attr("content");
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
 
-      // 수정된 값 가져오기
-      const data = {
-        ordersId: ordersId,
-        pageNum: $('#pageNum').val(),
-        pageSize: $('#pageSize').val()
-      };
+        // 수정된 값 가져오기
+        const data = {
+            ordersId: ordersId,
+            pageNum: $('#pageNum').val(),
+            pageSize: $('#pageSize').val(),
+            ordersQuantity: $('#ordersQuantity').val(),
+            deliveryDate: $('#deliveryDate').val()
+        };
 
-      const ordersQuantity = $('#ordersQuantity').val();
-      if (ordersQuantity) {
-        data.ordersQuantity = ordersQuantity;
-      }
-
-      const productPrice = $('#productPrice').val();
-      if (productPrice) {
-        data.productPrice = productPrice;
-      }
-
-      const deliveryDate = $('#deliveryDate').val();
-      if (deliveryDate) {
-        data.deliveryDate = deliveryDate;
-      }
-
-      // 서버에 수정 요청 보내기
-      $.ajax({
-        url: '<c:url value="/purchase/orders/modify"/>',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(data),
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(header, token); 
-        },
-        success: function(response) {
-          window.location.href = '<c:url value="/purchase/orders/list"/>' + '?pageNum=' + data.pageNum + '&pageSize=' + data.pageSize;
-        },
-        error: function(xhr, status, error) {
-          alert('수정 중 오류가 발생했습니다.');
-        }
-      });
+        // 서버에 수정 요청 보내기
+        $.ajax({
+            url: '<c:url value="/purchase/orders/modify"/>',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token); 
+            },
+            success: function(response) {
+                // 수정 후 현재 페이지 새로고침하여 변경 사항 반영
+                //alert('수정이 완료되었습니다.');
+                location.reload();  // 페이지 새로 고침
+            },
+            error: function(xhr, status, error) {
+                alert('수정 중 오류가 발생했습니다.');
+            }
+        });
     }
 
-    // 폼을 초기화하고 전체 목록 조회
     function resetForm() {
-      $('#ordersForm')[0].reset();
-      $('#ordersForm').attr('action', '<c:url value="/purchase/orders/list"/>').attr('method', 'get').submit();
-      $('.editButton').prop('disabled', false);
+        // 폼 필드 모두 초기화
+        $('#ordersForm')[0].reset(); // 모든 입력 필드 초기화
+        
+        // 페이지 번호를 1로 설정
+        $('#pageNum').val(1);
+        
+        // 첫 페이지로 리다이렉트
+        window.location.href = '<c:url value="/purchase/orders/list"/>'; // 처음 페이지로 이동
     }
+
+    
+    document.getElementById("ordersQuantity").addEventListener("input", function() {
+        const ordersQuantity = document.getElementById("ordersQuantity");
+
+        // 음수 입력 방지
+        if (ordersQuantity.value < 0) {
+            ordersQuantity.value = 0; // 음수 입력 시 값을 0으로 고정
+        }
+
+        // 숫자가 아닌 입력 방지
+        const sanitizedValue = ordersQuantity.value.replace(/[^0-9]/g, ''); // 숫자가 아닌 모든 것을 제거
+        ordersQuantity.value = sanitizedValue;
+
+        // 발주수량이 빈 값이거나 0 이하일 때 0으로 고정
+        if (ordersQuantity.value === '' || parseInt(ordersQuantity.value, 10) < 0) {
+            ordersQuantity.value = 0;
+        }
+
+        // 필드 검증
+        checkFields(); // 필드가 모두 입력되었는지 확인하는 기존 함수 호출
+    });
+
 
   </script>
 

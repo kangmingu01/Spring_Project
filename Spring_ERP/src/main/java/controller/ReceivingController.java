@@ -127,10 +127,14 @@ public class ReceivingController {
         return "purchase/receiving/receiving_register"; // 입고 등록 페이지로 다시 이동
     }
 
-    // 발주 리스트 조회 - 모달 창에서 페이징 및 검색 처리
+    // 발주 목록 조회 - 모달 창에서 페이징 및 검색 처리
+    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/ordersList", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Object> getOrdersList(@RequestParam Map<String, Object> map) {
+    public Map<String, Object> getOrdersList(@RequestParam Map<String, Object> map, Model model, Principal principal) {
+    	// 로그인한 사용자 아이디 추가
+        String userId = principal.getName(); 
+        model.addAttribute("userId", userId);
     	// 페이지 번호와 페이지 크기를 기본값으로 설정 (1페이지, 10개 항목)
         if (!map.containsKey("pageNum")) {
             map.put("pageNum", "1");
@@ -138,11 +142,21 @@ public class ReceivingController {
         if (!map.containsKey("pageSize")) {
             map.put("pageSize", "10");
         }
+        
+        map.putIfAbsent("productId", "");
+        map.putIfAbsent("productName", "");
+        map.putIfAbsent("supplierId", "");
+        map.putIfAbsent("supplierName", "");
 
         // 발주 목록과 페이징 정보를 조회
         Map<String, Object> resultMap = receivingService.getOrdersList(map);
         
-        return resultMap;  // JSON 형식으로 데이터 반환
+        // 조회된 입고 목록과 페이징 정보를 모델에 추가
+        model.addAttribute("pager", resultMap.get("pager"));
+        model.addAttribute("receivingList", resultMap.get("receivingList"));
+        model.addAttribute("searchMap", map);
+        
+        return resultMap;  
     }
     
     // 입고 목록 페이지 - 구매팀 ROLE만 접근 가능

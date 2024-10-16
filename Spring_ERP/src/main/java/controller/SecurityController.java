@@ -68,9 +68,7 @@ public class SecurityController {
     }
 
     @GetMapping("/access_denied")
-    public String accessDenied(Model model) {
-        model.addAttribute("info", "입사일 당일부터 로그인 가능합니다.");
-
+    public String accessDenied() {
         return "accessDenied";
     }
 }

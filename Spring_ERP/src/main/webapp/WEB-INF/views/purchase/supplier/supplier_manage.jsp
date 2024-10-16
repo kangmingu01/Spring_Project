@@ -116,7 +116,7 @@
       <!-- 테이블 부분 -->
       <div class="content_body_list">
         <table>
-          <thead>
+          <thead style="font-weight: bold;">
             <tr>
               <th>공급업체번호</th>
               <th>이름</th>

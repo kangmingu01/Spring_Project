@@ -161,7 +161,7 @@
       <!-- 테이블 부분 -->
       <div class="content_body_list">
         <table>
-          <thead>
+          <thead style="font-weight: bold;">
             <tr>
               <th>발주번호</th>
               <th>제품번호</th>

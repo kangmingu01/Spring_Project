@@ -133,7 +133,7 @@
 		<!-- 발주 목록 테이블 -->
 		<div class="content_body_list">
 		    <table>
-		        <thead>
+		        <thead style="font-weight: bold;">
 		        <tr>
 		            <th>제품번호</th>
 		            <th>제품명</th>
@@ -351,26 +351,32 @@ function productDisplay(pageNum=1) {
 			html+="<th>제품코드</th>";
 			html+="<th>제품명</th>";
 			html+="<th>브랜드</th>";
+			html+="<th>종류</th>";
 			html+="<th>색상</th>";
 			html+="<th>사이즈</th>";
-			html+="<th>종류</th>";
 			html+="<th>성별</th>";
 			html+="<th></th>"; 
 			html+="</tr>";
 			html+="</thead>";
 			html+="<tbody class='sty'>";
-			$(result.productList).each(function(index){
-				html+="<tr>";					
-				html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+		  $(result.productList).each(function(index){
+                var brand = this.productCategory.substring(0, 2);  
+                var type = this.productCategory.substring(2, 4);   
+                var color = this.productCategory.substring(4, 6);  
+                var size = this.productCategory.substring(6, 9);   
+                var gender = this.productCategory.substring(9, 10); 
+                
+                html+="<tr>";					
+				html+="<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분        
 				html+="<td>"+this.productCategory+"</td>";
 				html+="<td>"+this.productName+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
+				html+="<td>"+brand+"</td>";
+				html+="<td>"+type+"</td>";
+				html+="<td>"+color+"</td>";
+				html+="<td>"+size+"</td>";
+				html+="<td>"+gender+"</td>";
 				html+="<td>"; 
-				html+='<button type="button" class="btn btn-primary btn-sm" style="background-color: #6571FF" data-bs-dismiss="modal"  onclick="addProductTitle('+this.productId+');">선택</button>'; 
+				html+='<button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="addProductTitle('+this.productId+');">선택</button>';
 				html+="</td>"
 				html+="</tr>";
 			});
@@ -425,15 +431,25 @@ function addProductTitle(productId) {
         url:"<c:url value='/inventory/product_modify_view'/>/" + productId,
         dataType:"json",
         success:function(result) {
+        	//console.log(result);
+        	
+        	// productCategory에서 각 속성을 자름
+            var productCategory = result.productCategory;
+            var brand = productCategory.substring(0, 2);   
+            var type = productCategory.substring(2, 4);   
+            var color = productCategory.substring(4, 6);   
+            var size = productCategory.substring(6, 9);  
+            var gender = productCategory.substring(9, 10); 
+
             // 선택된 제품의 정보를 폼의 필드에 채움
             document.getElementById("productId").value = result.productId;
             document.getElementById("productName").value = result.productName;
-            document.getElementById("brand").value = result.productBrand;
-            document.getElementById("type").value = result.productType;
-            document.getElementById("color").value = result.productColor;
-            document.getElementById("size").value = result.productSize;
-            document.getElementById("gender").value = result.productGender;
-            document.getElementById("productPrice").value = result.productPrice; 
+            document.getElementById("brand").value = brand;
+            document.getElementById("type").value = type;
+            document.getElementById("color").value = color;
+            document.getElementById("size").value = size;
+            document.getElementById("gender").value = gender;
+            document.getElementById("productPrice").value = result.productPrice;
 			           
             // 모달 닫기
             var productModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('newModal'));

@@ -125,7 +125,7 @@
       <!-- 발주 목록 테이블 -->
       <div class="content_body_list">
         <table>
-          <thead>
+          <thead style="font-weight: bold;">
             <tr>
               <th>발주번호</th>
               <th>발주일자</th>
@@ -200,7 +200,7 @@
           <!-- 이전 페이지 링크 -->
           <c:choose>
 		    <c:when test="${pager != null && pager.startPage > 1}">
-		        <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">[이전]</a>
+		        <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/orders/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&ordersDate=${param.ordersDate}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&ordersStatus=${param.ordersStatus}">&laquo; 이전</a>
 		    </c:when>
 		    <c:otherwise>
 		        <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">&laquo; 이전</span>

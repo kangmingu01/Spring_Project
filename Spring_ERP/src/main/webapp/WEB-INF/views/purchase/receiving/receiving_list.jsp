@@ -140,7 +140,7 @@
       <!-- 테이블 부분 -->
       <div class="content_body_list">
         <table>
-          <thead>
+          <thead style="font-weight: bold;">
             <tr>
               <th>입고번호</th>
               <th>입고일자</th>
@@ -224,7 +224,7 @@
 		    <!-- 이전 페이지 링크 -->
 		    <c:choose>
 		        <c:when test="${pager != null && pager.startPage > 1}">
-		            <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">[이전]</a>
+		            <a class="btn btn-primary btn-sm" style="background-color: #6571FF" href="<c:url value='/purchase/receiving/list'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&receivingId=${param.receivingId}&receivingDate=${param.receivingDate}&ordersId=${param.ordersId}&name=${param.name}&productId=${param.productId}&productName=${param.productName}&brand=${param.brand}&supplierId=${param.supplierId}&deliveryDate=${param.deliveryDate}&warehouseId=${param.warehouseId}&receivingStatus=${param.receivingStatus}&warehouseName=${param.warehouseName}">&laquo; 이전</a>
 		        </c:when>
 		        <c:otherwise>
 		            <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">&laquo; 이전</span>

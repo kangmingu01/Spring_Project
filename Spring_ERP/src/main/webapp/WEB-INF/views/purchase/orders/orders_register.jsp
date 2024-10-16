@@ -342,6 +342,11 @@ $(".content_header_search_btn").click(function(){
 	productDisplay();
 });
 
+//모달창 제품 검색 이벤트
+$(".modalSearch_btn").click(function(){
+	productDisplay();
+});
+
 //제품조회 함수
 function productDisplay(pageNum=1) {
 	var pageSize=10;

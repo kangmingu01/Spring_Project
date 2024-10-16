@@ -4,7 +4,23 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="ko">
-
+<style>
+.sty tr:hover {
+    background-color: #6571ff;
+    color: white; 
+    cursor: pointer;
+}
+.sty tr:hover td {
+	background-color: #6571ff;
+    color: white; 
+}
+.sty button {
+    font-size: 12px;
+    width: 55px;
+    height: 30px;
+    margin-right: 5px;
+}
+</style>
 <head>
  <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -161,7 +177,7 @@
       <!-- 테이블 부분 -->
       <div class="content_body_list">
         <table>
-          <thead>
+          <thead style="font-weight: bold;">
             <tr>
               <th>발주번호</th>
               <th>제품번호</th>
@@ -210,9 +226,9 @@
 
   <!-- 발주 목록 모달 -->
   
-  <div class="modal fade" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 61%;">
-          <div class="modal-content">
+  <div class="modal fade sty" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" style="max-width: 61%;">
+        <div class="modal-content">
            <form id="ordersModalForm" method="get" action="<c:url value='/purchase/receiving/ordersList'/>">
             <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
             <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
@@ -222,16 +238,16 @@
 			<input type="hidden" id="supplierName" name="supplierName" value="${param.supplierName}">
             
         <div class="modal-header">
-          <h5 class="modal-title" id="ordersModalLabel">발주 목록</h5>
+          <h5 class="modal-title fs-5" id="ordersModalLabel">발주목록</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
                  <!-- 검색 필드 통합 -->
                  <div class="input-group mb-3">
                      <input type="text" class="form-control" id="ordersSearch" placeholder="제품명 또는 공급업체 검색" aria-label="검색">
-                     <button type="button" onclick="filterOrders()">검색</button>
+                     <button class="btn btn-outline-secondary" style="font-size: 16px; height: 38px; width: 58px " type="button" onclick="filterOrders()">검색</button>
                  </div>
-                 <table class="table" id="productTable">
+                 <table class="table sty" id="productTable">
                      <thead>
               <tr>
                 <th>발주번호</th>
@@ -247,10 +263,10 @@
                 <th>발주수량</th>
                 <th>단가</th>
                 <th>납기일</th>
-                <th>선택</th>
+                <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="sty">
 			   <c:forEach var="orders" items="${ordersResult}">
 			    <tr>
 			        <td>${orders.ordersId}</td>
@@ -284,7 +300,7 @@
 			        <td>${orders.productPrice}</td>
 			        <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
 			        <td>
-				    <button type="button"
+				    <button type="button" class="btn btn-success"
 				    onclick="selectOrders({
 				        ordersId: '${fn:escapeXml(orders.ordersId)}',
 				        productId: '${fn:escapeXml(orders.productId)}',

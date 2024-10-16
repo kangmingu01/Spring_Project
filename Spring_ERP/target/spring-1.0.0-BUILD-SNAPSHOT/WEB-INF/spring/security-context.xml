@@ -60,7 +60,8 @@
          -->
 
         <!-- 프로젝트 미리 설정해봄 -->
-        <!--<intercept-url pattern="/**" access="isAuthenticated()" />
+        <!--
+        <intercept-url pattern="/**" access="isAuthenticated()" />
         <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_SUPER_ADMINISTRATOR ')"/>
         ROLE_PURCHASING_TEAM
         ROLE_SALES_TEAM
@@ -116,6 +117,7 @@
         CSRF 토큰을 전달해 비교 처리하지 않도록 설정 가능 -->
         <!-- <csrf disabled="true"/> -->
 
+        <access-denied-handler error-page="/lnaccessible" />
         <!-- access-denied-handler : AccessDeniedException이 발생된 경우 403 에러코드 대신
         에러 페이지로 응답 처리하기 위한 기능을 제공하는 엘리먼트 -->
         <!-- error-page 속성 : 에러 메세지를 제공하기 위한 페이지의 경로를 속성값으로 설정 -->

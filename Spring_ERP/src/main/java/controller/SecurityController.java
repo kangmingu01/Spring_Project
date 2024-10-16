@@ -71,4 +71,9 @@ public class SecurityController {
     public String accessDenied() {
         return "accessDenied";
     }
+
+    @GetMapping("/lnaccessible")
+    public String lnaccessible() {
+        return "/security/lnaccessible_page";
+    }
 }

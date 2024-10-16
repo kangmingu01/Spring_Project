@@ -94,18 +94,19 @@
             </div>
             <div>
             	<label>창고</label>
-            	<input type="text" class="inventoryWarehouseId"/>
+            	<select class="inventoryWarehouseId">
+            		<c:forEach var="warehouseNum" items="${warehouseNum}">
+	            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
+            		</c:forEach>
+            	</select>
             </div>
             <div>
             	<label>입출고일자</label>
             	<input type="date" class="lastDate"/>
             </div>
-            
           </div>
         </div>
         <div class="content_search_two">
-
-
         </div>
       </div>
       <!-- 추가사항 태그 -->
@@ -223,26 +224,30 @@
 	</div>
 	
 	<div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h1 class="modal-title fs-5" id="newModalLabel">제품목록</h1>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body">
-	        <div class="input-group mb-3">
-			  <input type="text"  name="keyword" value="${ keyword}" class="form-control" placeholder="상품명 또는 브랜드를 입력해주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
-			  <button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
-			</div>
-			<div class="product_brand_search"></div>
-			<div class="modalpage"></div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-primary" id="newModal_btn">확인</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+		<div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+	        		<h1 class="modal-title fs-5" id="newModalLabel">제품목록</h1>
+	        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      		</div>
+	      		<div class="modal-body">
+			        <div class="input-group mb-3 selectSearch">
+			        	<select class="modalsearch" name="modalsearch">
+			      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
+			      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
+		      			</select>
+					  	<input type="text"  name="keyword" value="${ keyword}" class="form-control modalkeyword" placeholder="상품명 또는 제품코드를 입력해주세요" aria-label="Recipient's username" aria-describedby="button-addon2">
+					  	<button class="btn btn-outline-secondary modalSearch_btn" type="button" id="button-addon2">검색</button>
+					</div>
+					<div class="product_brand_search"></div>
+					<div class="modalpage"></div>
+			      	<div class="modal-footer">
+		        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		        		<button type="button" class="btn btn-primary" id="newModal_btn">확인</button>
+		      		</div>
+	    		</div>
+	  		</div>
+		</div>
 	</div>
 
   <script>
@@ -269,7 +274,11 @@
         $('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"]').val('');
     });
     
-
+    //모달창 제품 검색 이벤트
+    $(".modalSearch_btn").click(function(){
+    	productDisplay();
+    });
+    
     //제품조회 클릭이벤트
     $(".content_header_search_btn").click(function(){
     	productDisplay();
@@ -278,8 +287,8 @@
     //제품조회 함수
     function productDisplay(pageNum=1) {
     	var pageSize=10;
-    	var search = document.querySelector(".search").value;
-    	var keyword = document.querySelector(".form-control").value;
+    	var search = document.querySelector(".modalsearch").value;
+    	var keyword = document.querySelector(".modalkeyword").value;
     	$.ajax({
     		type:"get",
     		url: "<c:url value="/inventory/product_list"/>", 
@@ -315,9 +324,9 @@
 				$(result.productList).each(function(index){
 					html+="<tr>";					
 					html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-					html+="<td>"+this.productId+"</td>";
 					html+="<td>"+this.productCategory+"</td>";
 					html+="<td>"+this.productName+"</td>";
+					html+="<td>"+this.productCategory+"</td>";
 					html+="<td>"+this.productCategory+"</td>";
 					html+="<td>"+this.productCategory+"</td>";
 					html+="<td>"+this.productCategory+"</td>";
@@ -402,7 +411,6 @@
     	var inventoryDamagedQty=$(".inventoryDamagedQty").val();
     	console.log(inventoryDamagedQty);
     	var lastDate=$(".lastDate").val();
-    	console.log(lastDate);
     		
     	
     	if(confirm("재고를 등록 하시겠습니까?")){
@@ -531,8 +539,8 @@
 					var inventoryTime=this.lastDate.split(" ");
 					html+="<td>"+inventoryTime[0]+"</td>";
 					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
-					html+="<button type='button' onclick='remove("+this.inventoryId+","+pageNum+");'>삭제</button>"
+					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
+					html+="<button type='button' class='btn btn-danger' onclick='remove("+this.inventoryId+","+pageNum+");'>삭제</button>"
 					html+="</td>"
 					html+="</tr>";
 				});
@@ -611,8 +619,8 @@
 					var inventoryTime=this.lastDate.split(" ");
 					html+="<td>"+inventoryTime[0]+"</td>";
 					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
-					html+="<button type='button' onclick='removeDamage("+this.inventoryId+","+pageNum+");'>삭제</button>"
+					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
+					html+="<button type='button'  class='btn btn-danger' onclick='removeDamage("+this.inventoryId+","+pageNum+");'>삭제</button>"
 					html+="</td>"
 					html+="</tr>";
 				});
@@ -687,8 +695,8 @@
 					var inventoryTime=this.lastDate.split(" ");
 					html+="<td>"+inventoryTime[0]+"</td>";
 					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
-					html+="<button type='button' onclick='removeDamage("+this.inventoryId+","+pageNum+");'>삭제</button>"
+					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
+					html+="<button type='button' class='btn btn-danger' onclick='removeDamage("+this.inventoryId+","+pageNum+");'>삭제</button>"
 					html+="</td>"
 					html+="</tr>";
 				});

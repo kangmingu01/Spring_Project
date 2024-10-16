@@ -28,7 +28,7 @@ public class HistoryServiceImpl implements HistoryService{
 	}
 
 	@Override
-	public void removeProduct(int historyId) {
+	public void removeHistory(int historyId) {
 		historyDAO.deleteProduct(historyId);
 	}
 

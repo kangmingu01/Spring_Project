@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .content{
     margin: 0px auto;
     width: calc(100vw - 300px);
@@ -76,7 +77,7 @@
     background-color: #fff;
     overflow: hidden;
 }
-/* content_body_search 안에 div 태그 크기설정 */
+/* content_body_search �븞�뿉 div �깭洹� �겕湲곗꽕�젙 */
 .content_body_search > div{
     margin: 5px auto;
     display: flex;
@@ -118,7 +119,7 @@
     cursor: not-allowed;
 }
 
-/* content_body_search 안에 input 태그 크기설정 */
+/* content_body_search �븞�뿉 input �깭洹� �겕湲곗꽕�젙 */
 .content_body_search input{
     width: 165px;
     height: 25px;
@@ -136,7 +137,7 @@
 }
 
 
-/* 추가정보 시작 */
+/* 異붽��젙蹂� �떆�옉 */
 .content_body_search_plus{
     display: flex;
     align-items: center;
@@ -160,7 +161,7 @@
 .content_body_search_plus > div {
     margin-left: 20px;
 }
-/* 추가정보 부분 (창고등록) */
+/* 異붽��젙蹂� 遺�遺� (李쎄퀬�벑濡�) */
 .content_plus{
     display: none;
     /* height: 100px; */
@@ -206,7 +207,7 @@
 .content_plus.on label{
     width: 60px;
 }
-/* 추가정보 마지막 */
+/* 異붽��젙蹂� 留덉�留� */
 
 .file_btn{
     padding: 0px 10px;
@@ -253,7 +254,7 @@ table {
     width: 100%;
     border-collapse: collapse;
 }
-/* 테이블 헤더 스타일 */
+/* �뀒�씠釉� �뿤�뜑 �뒪���씪 */
 th {
     font-weight: 600;
     background-color: #f4f4f4;
@@ -261,13 +262,13 @@ th {
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
-/* 테이블 바디 스타일 */
+/* �뀒�씠釉� 諛붾뵒 �뒪���씪 */
 td {
     padding: 10px;
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
-/* 테이블의 홀수/짝수 행 색상 구분 */
+/* �뀒�씠釉붿쓽 ���닔/吏앹닔 �뻾 �깋�긽 援щ텇 */
 tr:nth-child(even) {
     background-color: #f9f9f9;
 }
@@ -292,11 +293,16 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     height: 30px;
 	margin-right: 5px;
 }
-.sty tr:hover{
+.sty tr:hover td{
     background-color: #6571ff;
+    color:white;
     cursor: pointer;
 }
 .pageNumDiv{
 	display: flex;
     justify-content: center;
+}
+.btn-danger {
+    background-color: #ff3366 !important; /* 원하는 색상 */
+    border-color: #ff3366 !important; 
 }

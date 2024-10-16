@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,11 +74,11 @@
         }
 
         .logo {
-            margin-bottom: 8px; /* 데스크톱일 때 하단 여백 */
+            margin-bottom: 8px;
         }
 
         .logo img {
-            width: 120px; /* 로고 사이즈 키움 */
+            width: 120px;
         }
 
         button {
@@ -116,38 +117,53 @@
 
             .right {
                 width: 100%;
-                align-items: center; /* 중앙 정렬 */
+                align-items: center;
             }
 
             .logo {
-                margin-bottom: 20px; /* 모바일일 때 하단 여백 */
+                margin-bottom: 20px;
             }
 
             .logo-mobile {
-                display: block; /* 모바일에서 로고 보이기 */
+                display: block;
             }
+        }
+
+        .fade-out {
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+        .fade-out {
+            opacity: 0;
+        }
+        .fade-in {
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+        .fade-in {
+            opacity: 1;
         }
     </style>
 </head>
-<body>
 
+<body>
 <!-- 데스크톱 로고 -->
 <div class="logo d-none d-md-block">
-    <img src="https://static.wanted.co.kr/community/2022/9/4cac9ce596e8f115290aa44f53f7264ad9a0060ca819fa0868add6bf64380789_resized" alt="logo">
+    <img src="https://static.wanted.co.kr/community/2022/9/4cac9ce596e8f115290aa44f53f7264ad9a0060ca819fa0868add6bf64380789_resized"
+         alt="logo">
 </div>
-
-
 
 <!-- 로그인 컨테이너 -->
 <div class="login-container">
     <div class="left">
-        <img src="<c:url value='/images/animation.gif'/>" alt="Animated Background">
+        <img id="animatedGif" src="<c:url value='/images/animation.gif'/>" alt="Animated Background">
     </div>
 
     <div class="right">
         <!-- 모바일 로고 -->
         <div class="logo logo-mobile d-block d-md-none">
-            <img src="https://static.wanted.co.kr/community/2022/9/4cac9ce596e8f115290aa44f53f7264ad9a0060ca819fa0868add6bf64380789_resized" alt="logo">
+            <img src="https://static.wanted.co.kr/community/2022/9/4cac9ce596e8f115290aa44f53f7264ad9a0060ca819fa0868add6bf64380789_resized"
+                 alt="logo">
         </div>
 
         <!-- 공통 부모 컨테이너 -->
@@ -159,7 +175,8 @@
 
             <form method="POST" action="<c:url value='/login'/>" id="loginform">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="userid" name="userid" placeholder="아이디" value="${userid}" autocomplete="off">
+                    <input type="text" class="form-control" id="userid" name="userid" placeholder="아이디"
+                           value="${userid}" autocomplete="off">
                     <label for="userid"><i class="fas fa-user"></i> 아이디</label>
                 </div>
 
@@ -169,7 +186,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">로그인</button>
-                <sec:csrfInput/>
+                <sec:csrfInput />
             </form>
         </div>
         <!-- 경고 메시지 섹션 -->
@@ -206,6 +223,27 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script>
+    // GIF가 끝나면 이미지로 대체하기 위한 스크립트
+    document.addEventListener('DOMContentLoaded', function () {
+        var gifElement = document.getElementById('animatedGif');
+        var gifDuration = 11000; // 애니메이션 GIF 지속 시간 (밀리초)
+
+        setTimeout(function () {
+            // 페이드 아웃을 위한 클래스 추가
+            gifElement.classList.add('fade-out');
+
+            // 페이드 아웃이 끝난 후 이미지로 교체
+            setTimeout(function () {
+                gifElement.src = '<c:url value="/images/animation_end.png"/>';
+                gifElement.classList.remove('fade-out');
+                gifElement.classList.add('fade-in');
+            }, 1000); // 페이드 아웃 시간 (1초) 후 이미지 교체
+        }, gifDuration);
+    });
+</script>
 </body>
+
 </html>

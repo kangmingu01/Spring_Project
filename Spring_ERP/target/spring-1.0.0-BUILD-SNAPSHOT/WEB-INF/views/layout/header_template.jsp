@@ -452,7 +452,7 @@
                         <ul class="list-unstyled p-1">
 
                             <a
-                                    href="pages/general/profile.html"
+                                    href="<c:url value="/mypage"/>"
                                     class="text-body ms-0"
                             >
                                 <li class="dropdown-item py-2">

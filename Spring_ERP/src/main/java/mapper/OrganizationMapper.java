@@ -16,4 +16,6 @@ public interface OrganizationMapper {
     List<Organization> selectOrganizationList(Map<String, Object> map);
     /* 최근에 생성된 조직 ID를 조회 Mapper */
     String selectLastOrgId(String orgPrefix);
+
+    String selectOrgName(String orgId);
 }

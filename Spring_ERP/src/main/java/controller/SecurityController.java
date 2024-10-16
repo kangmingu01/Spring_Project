@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import repository.ErpUserDAO;
+import repository.OrganizationDAO;
 
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 public class SecurityController {
     private final PasswordEncoder passwordEncoder;
     private final ErpUserDAO erpUserDAO;
+    private final OrganizationDAO organizationDAO;
 
     @GetMapping(value = "/change_password")
     public String changePassword(@RequestParam(value = "error", required = false) String error, Model model) {
@@ -75,5 +77,19 @@ public class SecurityController {
     @GetMapping("/lnaccessible")
     public String lnaccessible() {
         return "/security/lnaccessible_page";
+    }
+
+    /* 비상 */
+    @GetMapping("/mypage")
+    public String mypage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        ErpUser erpUser = erpUserDAO.selectErpUserByUserid(userDetails.getUsername());
+        String orgName = organizationDAO.selectOrgName(erpUser.getOrgId());
+        model.addAttribute("userDetails", userDetails);
+        model.addAttribute("erpUser", erpUser);
+        model.addAttribute("orgName", orgName);
+
+        return "/security/mypage_page";
     }
 }

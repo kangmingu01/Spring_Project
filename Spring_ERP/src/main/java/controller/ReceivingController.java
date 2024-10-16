@@ -58,9 +58,9 @@ public class ReceivingController {
         //ordersMap.put("pageNum", "1");
         //ordersMap.put("pageSize", "10");
         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
-        System.out.println(ordersResult);
+        //System.out.println(ordersResult);
         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
-        System.out.println(ordersResult.get("ordersList"));
+        //System.out.println(ordersResult.get("ordersList"));
 
         // 로그인한 사용자의 아이디 추가
         String userId = principal.getName();
@@ -123,15 +123,14 @@ public class ReceivingController {
         
         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
-
+        
         return "purchase/receiving/receiving_register"; // 입고 등록 페이지로 다시 이동
     }
 
     // 발주 목록 조회 - 모달 창에서 페이징 및 검색 처리
     @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
     @RequestMapping(value = "/ordersList", method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String, Object> getOrdersList(@RequestParam Map<String, Object> map, Model model, Principal principal) {
+    public String getOrdersList(@RequestParam Map<String, Object> map, Model model, Principal principal) {
     	// 로그인한 사용자 아이디 추가
         String userId = principal.getName(); 
         model.addAttribute("userId", userId);
@@ -142,7 +141,6 @@ public class ReceivingController {
         if (!map.containsKey("pageSize")) {
             map.put("pageSize", "10");
         }
-        map.put("userId", userId);
         
         map.putIfAbsent("productId", "");
         map.putIfAbsent("productName", "");
@@ -154,10 +152,12 @@ public class ReceivingController {
         
         // 조회된 발주 목록과 페이징 정보를 모델에 추가
         model.addAttribute("pager", resultMap.get("pager"));
-        model.addAttribute("ordersList", resultMap.get("ordersList"));
+        model.addAttribute("ordersResult", resultMap.get("ordersList"));
+      //System.out.println(ordersResult);
         model.addAttribute("searchMap", map);
-        
-        return resultMap;  
+        System.out.println("Pager: " + resultMap.get("pager"));
+
+        return "purchase/receiving/receiving_ordersList";  
     }
     
     // 입고 목록 페이지 - 구매팀 ROLE만 접근 가능

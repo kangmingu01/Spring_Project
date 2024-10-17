@@ -35,13 +35,13 @@ public class ReceivingServiceImpl implements ReceivingService {
         // 페이지 번호 설정 (기본값: 1)
         int pageNum = 1;
         if (map.get("pageNum") != null && !map.get("pageNum").equals("")) {
-            pageNum = Integer.parseInt((String) map.get("pageNum"));
+        	pageNum = Integer.parseInt(((String) map.get("pageNum")).trim());  // 공백 제거
         }
 
         // 페이지 크기 설정 (기본값: 10)
         int pageSize = 10;
         if (map.get("pageSize") != null && !map.get("pageSize").equals("")) {
-            pageSize = Integer.parseInt((String) map.get("pageSize"));
+        	pageSize = Integer.parseInt(((String) map.get("pageSize")).trim());  // 공백 제거
         }
 
         // 전체 발주 개수 조회

@@ -133,7 +133,7 @@
 		<!-- 발주 목록 테이블 -->
 		<div class="content_body_list">
 		    <table>
-		        <thead>
+		        <thead style="font-weight: bold;">
 		        <tr>
 		            <th>제품번호</th>
 		            <th>제품명</th>
@@ -190,11 +190,7 @@
 					  	<button class="btn btn-outline-secondary modalSearch_btn" type="button" id="button-addon2">검색</button>
 					</div>
 					<div class="product_brand_search"></div>
-					<div class="modalpage"></div>
-			      	<div class="modal-footer">
-		        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		        		<button type="button" class="btn btn-primary" id="newModal_btn">확인</button>
-		      		</div>
+					<div class="modalpage"></div>			      	
 	    		</div>
 	  		</div>
 		</div>
@@ -280,36 +276,17 @@ document.addEventListener("DOMContentLoaded", function () {
     checkFields();
 });
 
-// 제품 목록 모달 열기 함수
-function openProductModal() {
-    var productModal = new bootstrap.Modal(document.getElementById('productModal'));
-    productModal.show(); 
-}
+//모달이 닫힐 때 검색 필드 및 결과 초기화
+$('#newModal').on('hidden.bs.modal', function () {
+    // 검색 필드 초기화
+    document.querySelector(".modalsearch").value = "product_category";
+    document.querySelector(".modalkeyword").value = "";
 
-// 검색 버튼 클릭 시 제품 목록 모달 열기
-function searchOrder() {
-    openProductModal(); 
-}
+    // 검색 결과 테이블 초기화
+    document.querySelector(".product_brand_search").innerHTML = "";
+    document.querySelector(".modalpage").innerHTML = "";
+});
 
-// 제품 목록에서 검색 필터링 함수 (제품명이나 브랜드로 필터링)
-function filterProducts() {
-    const searchQuery = document.getElementById("productSearch").value.toLowerCase(); 
-    const productTable = document.getElementById("productTable");
-    const rows = productTable.getElementsByTagName("tr");
-
-    // 각 행을 검색어와 비교하여 필터링
-    for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 제외
-        const productName = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase(); 
-        const productBrand = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase();
-
-        // 제품명이나 브랜드가 검색어를 포함하면 표시, 그렇지 않으면 숨기기
-        if (productName.includes(searchQuery) || productBrand.includes(searchQuery) || searchQuery === "") {
-            rows[i].style.display = ""; // 조건에 맞으면 표시
-        } else {
-            rows[i].style.display = "none"; // 조건에 맞지 않으면 숨기기
-        }
-    }
-}
 
 // 폼 제출 함수
 function submitForm(formId) {
@@ -339,6 +316,9 @@ function resetForm() {
 
 //제품조회 클릭이벤트
 $(".content_header_search_btn").click(function(){
+	productDisplay();
+});
+$(".modalSearch_btn").click(function(){
 	productDisplay();
 });
 
@@ -376,26 +356,32 @@ function productDisplay(pageNum=1) {
 			html+="<th>제품코드</th>";
 			html+="<th>제품명</th>";
 			html+="<th>브랜드</th>";
+			html+="<th>종류</th>";
 			html+="<th>색상</th>";
 			html+="<th>사이즈</th>";
-			html+="<th>종류</th>";
 			html+="<th>성별</th>";
 			html+="<th></th>"; 
 			html+="</tr>";
 			html+="</thead>";
 			html+="<tbody class='sty'>";
-			$(result.productList).each(function(index){
-				html+="<tr>";					
-				html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+		  $(result.productList).each(function(index){
+                var brand = this.productCategory.substring(0, 2);  
+                var type = this.productCategory.substring(2, 4);   
+                var color = this.productCategory.substring(4, 6);  
+                var size = this.productCategory.substring(6, 9);   
+                var gender = this.productCategory.substring(9, 10); 
+                
+                html+="<tr>";					
+				html+="<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분        
 				html+="<td>"+this.productCategory+"</td>";
 				html+="<td>"+this.productName+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productCategory+"</td>";
+				html+="<td>"+brand+"</td>";
+				html+="<td>"+type+"</td>";
+				html+="<td>"+color+"</td>";
+				html+="<td>"+size+"</td>";
+				html+="<td>"+gender+"</td>";
 				html+="<td>"; 
-				html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+this.productId+');">선택</button>'; 
+				html+='<button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="addProductTitle('+this.productId+');">선택</button>';
 				html+="</td>"
 				html+="</tr>";
 			});
@@ -418,25 +404,25 @@ function modalpageNumberDisplay(pager) {
 
     // 이전 페이지 링크
     if (pager.startPage > pager.blockSize) {
-        html += "<a href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>[이전]</a>";
+        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:productDisplay(" + pager.prevPage + "," + pager.pageSize + ");'>&laquo; 이전</a>";
     } else {
-        html += "[이전]";
+        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-right: 5px;'>&laquo; 이전</span>";
     }
 
     // 페이지 번호 링크
     for (var i = pager.startPage; i <= pager.endPage; i++) {
         if (pager.pageNum != i) {
-            html += "<a href='javascript:productDisplay(" + i + ","+pager.pageSize+");'>[" + i + "]</a>";
+            html += "<a class='btn btn-outline-primary mx-1 btn-sm' href='javascript:productDisplay(" + i + "," + pager.pageSize + ");'>" + i + "</a>";
         } else {
-            html += "[" + i + "]";
+            html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
         }
     }
 
     // 다음 페이지 링크
     if (pager.endPage != pager.totalPage) {
-        html += "<a href='javascript:productDisplay(" + pager.nextPage + ","+pager.pageSize+");'>[다음]</a>";
+        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:productDisplay(" + pager.nextPage + "," + pager.pageSize + ");'>다음 &raquo;</a>";
     } else {
-        html += "[다음]";
+        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-left: 5px;'>다음 &raquo;</span>";
     }
 
     // 페이지 번호 HTML 업데이트
@@ -445,24 +431,43 @@ function modalpageNumberDisplay(pager) {
  
 //상품정보 삽입 이벤트
 function addProductTitle(productId) {
-	$.ajax({
-		type:"get",
-		url:"<c:url value="/inventory/product_modify_view"/>/"+productId,
-		dataType:"json",
-		success:function(result){    			
-			$(".productId").val(result.productId);
-			$(".updateId").val(result.productId);
-			$(".productCategory").val(result.productCategory);
-			$(".updateCode").val(result.productCategory);
-			$(".productName").val(result.productName);
-			$(".updateName").val(result.productName);
-		},
-		error:function(xhr){
-			alert("검색된 정보가 없습니다.")
-		}
-	});    	
-}
+    $.ajax({
+        type:"get",
+        url:"<c:url value='/inventory/product_modify_view'/>/" + productId,
+        dataType:"json",
+        success:function(result) {
+        	//console.log(result);
+        	
+        	// productCategory에서 각 속성을 자름
+            var productCategory = result.productCategory;
+            var brand = productCategory.substring(0, 2);   
+            var type = productCategory.substring(2, 4);   
+            var color = productCategory.substring(4, 6);   
+            var size = productCategory.substring(6, 9);  
+            var gender = productCategory.substring(9, 10); 
 
+            // 선택된 제품의 정보를 폼의 필드에 채움
+            document.getElementById("productId").value = result.productId;
+            document.getElementById("productName").value = result.productName;
+            document.getElementById("brand").value = brand;
+            document.getElementById("type").value = type;
+            document.getElementById("color").value = color;
+            document.getElementById("size").value = size;
+            document.getElementById("gender").value = gender;
+            document.getElementById("productPrice").value = result.productPrice;
+			           
+            // 모달 닫기
+            var productModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('newModal'));
+            productModal.hide();
+
+            // 필드가 채워진 후 등록 버튼 상태 확인
+            checkFields();
+        },
+        error: function (xhr) {
+            alert("검색된 정보가 없습니다.");
+        }
+    });
+}
 
 </script>
 

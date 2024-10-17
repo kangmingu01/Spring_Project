@@ -22,15 +22,16 @@
         <div class="content_header_title">상품등록</div>
         <div class="content_header_btn">
             <div>
-                <select class="search" name="search">
-                    <option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
-                    <option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
-                    <option value="warehouse_name" <c:if test="${search }=='warehouse_name' "> selected </c:if>>창고이름</option>
-                    <option value="warehouse_location" <c:if test="${search }=='warehouse_location' "> selected </c:if>>창고위치</option>
-                </select>
+            	<select class="form-select search" name="search"  aria-label="Default select example">
+				    <option value="product_category" <c:if test="${search }=='product_category' "> </c:if>>제품코드</option>
+	                <option value="product_name" <c:if test="${search }=='product_name' "> </c:if>selected>제품명</option>
+	                <option value="warehouse_name" <c:if test="${search }=='warehouse_name' "> </c:if>>창고이름</option>
+	                <option value="warehouse_location" <c:if test="${search }=='warehouse_location' "> </c:if>>창고위치</option>
+				</select>
             </div>
             <div>
-                <input type="text" name="keyword" class="keyword" value="${ keyword}">
+			  <input type="text" class="form-control keyword" name="keyword"  value="${ keyword}" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <%-- <input type="text" name="keyword" class="keyword" value="${ keyword}"> --%>
             </div>
             <div class="content_header_search_btn">
                 <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -140,9 +141,6 @@
                 </div>
                 <div></div>
                 <div></div>
-                <div class="item_code_create">
-                    <button class="product_register_btn">상품등록</button>
-                </div>
             </div>
         </div>
         <!-- 추가사항 태그 -->
@@ -220,23 +218,27 @@
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">상품수정</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"  id="productUpdateSty">
                 <input type="hidden" class="updateId">
                 <div>
                     <label>제품코드</label>
-                    <input type="text" class="updateCode" >
+                    <input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <!-- <input type="text" class="updateCode" > -->
                 </div>
                 <div>
                     <label>제품명</label>
-                    <input type="text"  class="updateName">
+                    <input type="text" class="form-control updateName"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <!-- <input type="text"  class="updateName"> -->
                 </div>
                 <div>
                     <label>입고가격</label>
-                    <input type="text"  class="updatePrice">
+                    <input type="text" class="form-control updatePrice"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <!-- <input type="text"  class="updatePrice"> -->
                 </div>
                 <div>
                     <label>출고가격</label>
-                    <input type="text"  class="updateDelivery">
+                    <input type="text" class="form-control updateDelivery"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <!-- <input type="text"  class="updateDelivery"> -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -257,19 +259,22 @@
                 <h1 class="modal-title fs-5" id="customModalLabel">창고수정</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body " id="warehouseUpdateSty">
                 <input type="hidden" class="warehouseUpdateId">
                 <div>
                     <label>창고이름</label>
-                    <input type="text" class="warehouseUpdateCode" >
+                    <input type="text" class="form-control warehouseUpdateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <!-- <input type="text" class="warehouseUpdateCode" > -->
                 </div>
                 <div>
                     <label>창고위치</label>
-                    <input type="text" class="warehouseUpdateLocation" >
+                    <input type="text" class="form-control warehouseUpdateLocation"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <!-- <input type="text" class="warehouseUpdateLocation" > -->
                 </div>
                 <div>
                     <label>창고용량</label>
-                    <input type="text" class="warehouseUpdateCapacity" >
+                    <input type="text" class="form-control warehouseUpdateCapacity"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <!-- <input type="text" class="warehouseUpdateCapacity" > -->
                 </div>
                 <div></div>
             </div>
@@ -323,7 +328,7 @@
         document.querySelector(".warehouseName").value="";
         document.querySelector(".warehouseVolume").value="";
         document.querySelector(".warehouseLocation").value="";
-
+		document.querySelector(".keyword").value="";
     }
     //초기화 클릭 이벤트
     document.querySelector(".content_header_reset_btn").addEventListener("click",function(){
@@ -348,7 +353,7 @@
     });
 
     //상품등록 이벤트
-    document.querySelector(".product_register_btn").addEventListener("click",function(){
+    document.querySelector(".content_header_plus_btn").addEventListener("click",function(){
         var productName=document.querySelector(".productName").value;
         var brand=document.querySelector(".productBrand").value;
         var productPrice=document.querySelector(".productPrice").value;
@@ -508,7 +513,7 @@
                     html+="<td>"+this.warehouseCapacity+"</td>";
                     html+="<td>";
                     html+='<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#customModal" onclick="modifyhouse('+this.warehouseId+');">수정</button>'
-                    html+="<button type='button' class='btn btn-danger' onclick='remove("+this.warehouseId+");'>삭제</button>"
+                    html+="<button type='button' class='btn btn-danger' onclick='warehouseremove("+this.warehouseId+");'>삭제</button>"
                     html+="</td>"
                     html+="</tr>";
                 });
@@ -593,7 +598,7 @@
     });
 
     //창고 리스트 삭제 함수
-    function remove(warehouseId){
+    function warehouseremove(warehouseId){
         if(confirm("삭제 하시겠습니까?")){
             $.ajax({
                 type:"delete",
@@ -620,10 +625,11 @@
     document.querySelector(".content_header_search_btn").addEventListener("click",function(){
         if(document.querySelector(".search").value=="product_category" || document.querySelector(".search").value=="product_name"){
             productDisplay();
+            init();
         }else{
             warehouseDisplay();
+            init();
         }
-
     });
 
 
@@ -682,8 +688,8 @@
                     html+="<td>"+this.deliveryPrice+"</td>";
                     html+="<td>";
                     html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.productId+');">수정</button>';
-                    html+="<button type='button' class='btn btn-danger' onclick='remove("+this.productId+","+pageNum+");'>삭제</button>"
-                    html+="</td>"
+                    html+="<button type='button' class='btn btn-danger' onclick='remove("+this.productId+","+pageNum+");'>삭제</button>";
+                    html+="</td>";
                     html+="</tr>";
                 });
                 html+="</tbody>";
@@ -826,7 +832,7 @@
                     }
                 },
                 error:function(xhr){
-                    alert("삭제하지 못하였습니다.");
+                    alert("이 제품은 재고창고에 존재하므로 삭제하지 못하였습니다.");
                 }
             });
         }

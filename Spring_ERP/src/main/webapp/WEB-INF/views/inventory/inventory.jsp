@@ -94,6 +94,7 @@
             <div>
             	<label>창고</label>
             	<select class="inventoryWarehouseId">
+            		<option disabled="disabled" selected="selected">선택해주세요.</option>
             		<c:forEach var="warehouseNum" items="${warehouseNum}">
 	            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
             		</c:forEach>
@@ -148,15 +149,15 @@
       <!-- 테이블 부분 -->
       <div class="content_body_search_sty">
       	<div>
-      		<select class="search" name="search">
-      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
-      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
-      			<option value="warehouse_name" <c:if test="${search }=='warehouse.warehouse_name' "> selected </c:if>>창고이름</option>
-      		</select>
+      		<select class="form-select search" name="search"  aria-label="Default select example">
+			    <option value="product_category" <c:if test="${search }=='product_category' "> </c:if>>제품코드</option>
+                <option value="product_name" <c:if test="${search }=='product_name' "> </c:if>selected>제품명</option>
+                <option value="warehouse_name" <c:if test="${search }=='warehouse_name' "> </c:if>>창고이름</option>
+			</select>
       	</div>
       	<div>
-      		<input type="text" name="keyword" class="keyword" value="${ keyword}">
-      	</div>
+			  <input type="text" class="form-control keyword" name="keyword"  value="${ keyword}" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
       	<div class="content_body_search_btn" >
           <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -171,48 +172,48 @@
 	
 	<!-- Modal -->
 	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+	  <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h1 class="modal-title fs-5" id="staticBackdropLabel">재고수정</h1>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
-	      <div class="modal-body" id="modal_update_body">
-	      	<div class="updateOne">
+	      <div class="modal-body" id="productUpdateSty">
 		      	<input type="hidden" class="updateinventoryId">
 		      	<input type="hidden" class="updateId">
 		        <div>
 		        	<label>제품코드</label>
-		        	<input type="text" class="updateCode"  readonly="readonly" />
+		        	<input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
+		        	<!-- <input type="text" class="updateCode"  readonly="readonly" /> -->
 		        </div>
 		        <div>
 		        	<label>상품명</label>
-		        	<input type="text"  class="updateName" readonly="readonly" />
+		        	<input type="text" class="form-control updateName"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
+		        	<!-- <input type="text"  class="updateName" readonly="readonly" /> -->
 		        </div>
-		        <div>
-		        	<label>현재수량</label>
-		        	<input type="text"  class="updateQty" />
-		        </div>
-		        <div>
-		        	<label>창고</label>
-		        	<input type="text"  class="updateWarehouse" />
-		        </div>
-		        <div>
-		        	<label>파손수량</label>
-		        	<input type="text"  class="updateDamageQty" disabled  />
-		        </div>
-		        <div>
-		        	<label>입출고일자</label>
-		        	<input type="date"  class="updateDate" />
-		        </div>	      	
-	      	</div>
-	      	<div class="updateTwo">
 		      	<div class="item_code_create">
 		            <button type="button" class="product_code_create" data-bs-toggle="modal" data-bs-target="#newModal">제품조회</button>
 	      		</div>
-	      		<div></div>
-	      	</div>
-	      	<div class="updateThree"></div>
+		        <div>
+		        	<label>현재수량</label>
+		        	<input type="text" class="form-control updateQty"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+		        	<!-- <input type="text"  class="updateQty" /> -->
+		        </div>
+		        <div>
+		        	<label>창고</label>
+		        	<input type="text" class="form-control updateWarehouse"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+		        	<!-- <input type="text"  class="updateWarehouse" /> -->
+		        </div>
+		        <div>
+		        	<label>파손수량</label>
+		        	<input type="text" class="form-control updateDamageQty"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+		        	<!-- <input type="text"  class="updateDamageQty" disabled  /> -->
+		        </div>
+		        <div>
+		        	<label>입출고일자</label>
+		        	<input type="date" class="form-control updateDate"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+		        	<!-- <input type="date"  class="updateDate" /> -->
+		        </div>	      	
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -231,7 +232,7 @@
 	      		</div>
 	      		<div class="modal-body">
 			        <div class="input-group mb-3 selectSearch">
-			        	<select class="modalsearch" name="modalsearch">
+			        	<select class="modalsearch" name="modalsearch" id="modalsearch">
 			      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
 			      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
 		      			</select>
@@ -268,6 +269,13 @@
     $(".content_header_reset_btn").click(function(){
     	// 모든 input 태그를 선택하고 값 초기화
         $('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"]').val('');
+    });
+    
+    $(".updateCode").click(function(){
+    	alert("제품명과 제품코드를 변경시 제품조회를 눌러주세요.");
+    });
+    $(".updateName").click(function(){
+    	alert("제품명과 제품코드를 변경시 제품조회를 눌러주세요.");
     });
     
     //모달창 제품 검색 이벤트
@@ -439,7 +447,8 @@
     //################################# 수정중 .. 다른 리스트 형식 함수 호출해야함
     // 조회 버튼 클릭시  
     document.querySelector(".content_body_search_btn").addEventListener("click",function(){
-	    inventoryDisplay();    		   	
+	    inventoryDisplay();
+	    $(".keyword").val("");
     });
 
   //페이징 처리 관련 Object 객체를 전달받아 HTML 태그로 변환해 페이지 번호를 출력하는 함수

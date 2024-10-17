@@ -234,7 +234,7 @@
 	
 	
 	function createChart(data) {
-	    // Prepare the data for the chart
+	   
 	    var productNames = data.map(item => item.productName);
 	    var totalCurrentQtys = data.map(item => item.totalCurrentQty);
 	    
@@ -259,17 +259,17 @@
 	        options: {
 	            plugins: {
 	                legend: {
-	                    display: true, // Set to false to hide the legend
-	                    position: 'right', // Position of the legend (top, left, bottom, right) 
+	                    display: true, 
+	                    position: 'right', 
 	                    labels: {
 	                        font: {
-	                            size: 16 // Change font size of legend labels
+	                            size: 16 
 	                        }
 	                    }
 	                },
 	                tooltip: {
 	                    bodyFont: {
-	                        size: 14 // Change font size of tooltip text
+	                        size: 14 
 	                    }
 	                }
 	            },

@@ -1,10 +1,10 @@
 @charset "UTF-8";
 .content{
     margin: 0px auto;
-    width: calc(100vw - 300px);
-    height: calc(100vh- 60px);
+   /* width: calc(100vw - 300px); */
+    /* height: calc(100vh- 60px); */
     /* width: 1400px; */
-    min-width: 1000px;
+    min-width: 1250px;
     overflow: hidden;
 }
 .content_header{
@@ -41,16 +41,7 @@
     align-items: center;
     justify-content: center;
 }
-/* .content_header_search_btn{
-    padding: 10px 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-weight: 500;
-    font-size: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-} */
+
 .content_header_search_btn:hover , .content_header_plus_btn:hover, .content_header_reset_btn:hover{
     background-color: #7782f8;
 }
@@ -69,7 +60,9 @@
     border-radius: 8px;
     background-color: #fff;
     font-size: 12px;
-    
+}
+.content_search_one select{
+	-webkit-appearance: auto;
 }
 .content_search_two{
     margin-left: 5px;
@@ -81,7 +74,6 @@
     
 }
 
-/* content_body_search �븞�뿉 div �깭洹� �겕湲곗꽕�젙 */
 .content_search_one > div{
     margin: 5px auto;
     display: flex;
@@ -100,7 +92,6 @@
     text-align: right;
     width: 60px;
 }
-
 .item_code_create > button:hover{
     background-color: #7782f8;
 }
@@ -111,7 +102,6 @@
     cursor: not-allowed;
 }
 
-/* content_body_search �븞�뿉 input �깭洹� �겕湲곗꽕�젙 */
 .content_body_search input{
     width: 165px;
     height: 25px;
@@ -134,8 +124,6 @@
     border: 1px solid #cbd6dd;
 }
 
-
-/* 異붽��젙蹂� �떆�옉 */
 .content_body_search_plus{
     display: flex;
     align-items: center;
@@ -279,6 +267,7 @@
     /* height: 500px; */
     border-radius: 10px;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -336,39 +325,27 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
 	margin:10px;
 	text-align: center;	
 }
-#modal_update_body{
-	display: flex;
+#productUpdateSty >div {
+	margin-top: 15px;
+}
+#productUpdateSty label {
+	margin-left: 5px;
+	font-weight: 500;
 }
 .product_code_create{
-	width: 120px;
+	width: 100%;
+	height:30px;
     border: none;
     border-radius: 3px;
     color: white;
     background-color: #6571ff;
 }
-.updateOne  label{
-	text-align:right;
-	width: 100px;
-}
+
 .updateName, .updateCode{
     background-color: #e9e9e9;
     cursor: not-allowed;
 }
-.updateOne > div, .updateTwo > div { 
-	margin-top: 5px;
-}
-.updateOne > div {
-	width: 290px;
-	height: 30px;
-}
-.updateOne input{
-	padding-left: 5px;
-	width: 183px;
-	border: 1px solid #cbd6dd;	
-}
-.updateThree{
-	width: 200px;
-}
+
 .modal-dialog.modal-lg {
     max-height: 600px; /* 최대 높이 */
     height: 600px; /* 고정 높이 */
@@ -377,6 +354,7 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     max-height: 500px; /* 본문의 최대 높이 (고정 높이보다 작아야 함) */
     overflow-y: auto; /* 내용이 넘칠 경우 스크롤 표시 */
 }
+
 .product_brand_search > tr > th:nth-last-child(1){
 	width: 80px;	
 }
@@ -389,12 +367,14 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
 	width: 100px;	
 }
 .selectSearch  select{
+	-webkit-appearance: auto;
 	border: var(--bs-border-width) solid var(--bs-border-color);
 	width: 100px;
 	text-align: center;
 	border-bottom-left-radius: 10px;
 	border-top-left-radius: 10px;
 }
+
 .btn-danger {
     background-color: #ff3366 !important; /* 원하는 색상 */
     border-color: #ff3366 !important; 

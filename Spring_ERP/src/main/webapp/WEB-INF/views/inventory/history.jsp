@@ -91,7 +91,6 @@
             <div>
             	<label>입출고</label>
             	<select name="historyType" class="historyType">
-            		
             		<option value="0" disabled selected>선택해주세요</option>
             		<option value="1">입고</option>
             		<option value="2">출고</option>
@@ -154,14 +153,15 @@
       <!-- 테이블 부분 -->
       <div class="content_body_search_sty">
       	<div>
-      		<select class="search" name="search">
-      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
-      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
-      			<option value="warehouse_name" <c:if test="${search }=='warehouse.warehouse_name' "> selected </c:if>>창고이름</option>
-      		</select>
+      		<select class="form-select search" name="search"  aria-label="Default select example">
+			    <option value="product_category" <c:if test="${search }=='product_category' "> </c:if>>제품코드</option>
+                <option value="product_name" <c:if test="${search }=='product_name' "> </c:if>selected>제품명</option>
+                <option value="warehouse_name" <c:if test="${search }=='warehouse_name' "> </c:if>>창고이름</option>
+                <option value="history_type" <c:if test="${search }=='history_type' "> </c:if>>입출고</option>
+			</select>
       	</div>
       	<div>
-      		<input type="text" name="keyword" class="keyword" value="${ keyword}">
+      		<input type="text" class="form-control keyword" name="keyword"  value="${ keyword}" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
       	</div>
       	<div class="content_body_search_btn" >
           <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -185,32 +185,43 @@
 	        <h1 class="modal-title fs-5" id="staticBackdropLabel">입출고수정</h1>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
-	      <div class="modal-body">
+	      <div class="modal-body" id="productUpdateSty">
 	      	<input type="hidden" class="updateId">
 	      	<input type="hidden" class="updateproductId">
 	        <div>
-	        	<label>제품명</label>
-	        	<input type="text" class="updateName" >
+	        	<label>제품코드</label>
+	        	<input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
 	        </div>
 	        <div>
-	        	<label>제품코드</label>
-	        	<input type="text"  class="updateCode">
+	        	<label>제품명</label>
+	        	<input type="text" class="form-control updateName"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
 	        </div>
 	        <div>
 	        	<label>수량</label>
-	        	<input type="text"  class="updateQty">
+	        	<input type="text" class="form-control updateQty"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
 	        </div>
 	        <div>
 	        	<label>입출고</label>
-	        	<input type="text"  class="updateType">
+	        	<select class="form-select updateType"  aria-label="Default select example">
+		        	<option value="0" disabled selected>선택해주세요</option>
+	            	<option value="1">입고</option>
+	            	<option value="2">출고</option>
+	            	<option value="3">반품</option>
+	        	</select>
+	        	<input type="text" class="form-control updateType"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
 	        </div>
 	        <div>
 	        	<label>창고</label>
-	        	<input type="text"  class="updateWarehouse">
+	        	<select class="form-select updateWarehouse"  aria-label="Default select example">	
+            		<option value="0" disabled selected>선택해주세요</option>
+            		<c:forEach var="warehouseNum" items="${warehouseNum}">
+	            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
+            		</c:forEach>
+            	</select>	        	
 	        </div>
 	        <div>
 	        	<label>입출고일자</label>
-	        	<input type="text"  class="updateDate">
+	        	<input type="date" class="form-control updateDate"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
 	        </div>
 	      </div>
 	      <div class="modal-footer">
@@ -556,7 +567,21 @@
     
    	//history 검색 창 조회
     document.querySelector(".content_body_search_btn").addEventListener("click",function(){
-	    historyDisplay();    		   	
+    	var keyword=$(".keyword").val();
+    	if(keyword=="입고" || keyword=="입" ){
+    		$(".keyword").val("1");
+    	}
+    	if(keyword=="출고" || keyword=="출" ){
+    		$(".keyword").val("2");
+    	}
+    	if(keyword=="반품"){
+    		$(".keyword").val("3");
+    	}
+    	if(keyword=="고"){
+		    $(".keyword").val("");
+    	}
+	    historyDisplay();
+
     });
     
     //history 정보 선택 함수 (update 전)
@@ -566,7 +591,6 @@
     		url:"<c:url value="/inventory/history_modify_view"/>/"+historyId,
     		dataType:"json",
     		success:function(result){    		
-    			console.log(result);
     			$(".updateId").val(result.historyId);    			
     			$(".updateproductId").val(result.product.productId);
     			$(".updateName").val(result.product.productName);
@@ -586,17 +610,11 @@
     //수정완료 버튼 클릭 이벤트
     $("#update_btn").click(function(){
     	var historyId=$(".updateId").val();
-    	console.log(historyId);
     	var historyProductId=$(".updateproductId").val();
-    	console.log(historyProductId);
     	var historyType=$(".updateType").val();
-    	console.log(historyType);
     	var historyWarehouseId=$(".updateWarehouse").val();
-    	console.log(historyWarehouseId);
     	var historyQty=$(".updateQty").val();
-    	console.log(historyQty);
     	var historyDate=$(".updateDate").val();
-    	console.log(historyDate);
     	
     	$.ajax({
 			type:"put",

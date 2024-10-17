@@ -12,9 +12,11 @@
 	
 	<!-- 발주 목록 개수 조회 (페이징 처리 시 필요) -->
 	<select id="selectOrdersCount" resultType="int">
-	    select count(*) from orders o
+	    select count(*) 
+	    from orders o
 	    join product p on o.product_id = p.product_id
 	    join supplier s on o.supplier_id = s.supplier_id
+	    join erp_user u on o.userid = u.userid
 	    left join receiving r on o.orders_id = r.orders_id  <!-- receiving 테이블과 조인 -->
 	    <where>
 	        o.orders_status = 2 <!-- 발주 상태가 2인 항목만 필터링 -->
@@ -33,25 +35,28 @@
 	<!-- 발주 목록 조회 (페이징 처리 및 검색 기능 포함) -->
 	<select id="selectOrdersList" resultType="Orders">
 	    select * from (
-	        select rownum rn, o.orders_id, o.orders_date, o.userid, s.supplier_name, s.supplier_id,
-	               p.product_name, p.product_id, o.orders_quantity, o.product_price, 
-	               o.delivery_date, o.orders_status, p.product_category, u.name 
-	        from orders o
-	        join product p on o.product_id = p.product_id
-	        join supplier s on o.supplier_id = s.supplier_id
-	        join erp_user u on o.userid = u.userid
-	        left join receiving r on o.orders_id = r.orders_id  <!-- receiving 테이블과 조인 -->
-	        <where>
-	            o.orders_status = 2
-	            and (r.receiving_status is null or r.receiving_status not in (4, 5))  <!-- 입고 완료 및 확정된 항목 제외 -->
-	            <if test="productName != null and productName != ''">
-	                and p.product_name like '%' || #{productName} || '%'
-	            </if>
-	            <if test="supplierName != null and supplierName != ''">
-	                and s.supplier_name like '%' || #{supplierName} || '%'
-	            </if>
-	        </where>
-	        order by o.orders_id desc
+	        select rownum rn, ordersData.*
+	        from (
+	        	select	o.orders_id, o.orders_date, o.userid, s.supplier_name, s.supplier_id,
+	               		p.product_name, p.product_id, o.orders_quantity, o.product_price, 
+	               		o.delivery_date, o.orders_status, p.product_category, u.name 
+		        from orders o
+		        join product p on o.product_id = p.product_id
+		        join supplier s on o.supplier_id = s.supplier_id
+		        join erp_user u on o.userid = u.userid
+		        left join receiving r on o.orders_id = r.orders_id  <!-- receiving 테이블과 조인 -->
+		        <where>
+		            o.orders_status = 2
+		            and (r.receiving_status is null or r.receiving_status not in (4, 5))  <!-- 입고 완료 및 확정된 항목 제외 -->
+		            <if test="productName != null and productName != ''">
+		                and p.product_name like '%' || #{productName} || '%'
+		            </if>
+		            <if test="supplierName != null and supplierName != ''">
+		                and s.supplier_name like '%' || #{supplierName} || '%'
+		            </if>
+		        </where>
+		        order by o.orders_id desc
+		    ) ordersData    
 	    )
 	    where rn between #{startRow} and #{endRow}
 	</select>

@@ -268,7 +268,17 @@ tr:nth-child(odd) {
 }
 .sty tr:hover {
     background-color: #6571ff;
+    color: white; 
     cursor: pointer;
+}
+.sty tr:hover td {
+    color: white; 
+}
+.sty button {
+    font-size: 12px;
+    width: 55px;
+    height: 30px;
+    margin-right: 5px;
 }
 .read-only-field {
     background-color: #e9e9e9; /* 회색 배경으로 비활성화된 느낌 */

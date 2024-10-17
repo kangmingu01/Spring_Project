@@ -4,7 +4,23 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="ko">
-
+<style>
+.sty tr:hover {
+    background-color: #6571ff;
+    color: white; 
+    cursor: pointer;
+}
+.sty tr:hover td {
+	background-color: #6571ff;
+    color: white; 
+}
+.sty button {
+    font-size: 12px;
+    width: 55px;
+    height: 30px;
+    margin-right: 5px;
+}
+</style>
 <head>
  <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -161,7 +177,7 @@
       <!-- 테이블 부분 -->
       <div class="content_body_list">
         <table>
-          <thead>
+          <thead style="font-weight: bold;">
             <tr>
               <th>발주번호</th>
               <th>제품번호</th>
@@ -209,10 +225,9 @@
   </div>
 
   <!-- 발주 목록 모달 -->
-  
-  <div class="modal fade" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 61%;">
-          <div class="modal-content">
+  <div class="modal fade sty" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" style="max-width: 50%;">
+        <div class="modal-content">
            <form id="ordersModalForm" method="get" action="<c:url value='/purchase/receiving/ordersList'/>">
             <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
             <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
@@ -222,35 +237,35 @@
 			<input type="hidden" id="supplierName" name="supplierName" value="${param.supplierName}">
             
         <div class="modal-header">
-          <h5 class="modal-title" id="ordersModalLabel">발주 목록</h5>
+          <h5 class="modal-title fs-5" id="ordersModalLabel">발주목록</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
                  <!-- 검색 필드 통합 -->
                  <div class="input-group mb-3">
-                     <input type="text" class="form-control" id="ordersSearch" placeholder="제품명 또는 공급업체 검색" aria-label="검색">
-                     <button type="button" onclick="filterOrders()">검색</button>
+                     <input type="text" class="form-control" id="ordersSearch" placeholder="상품명 또는 공급업체를 입력해주세요" aria-label="검색">
+                     <button class="btn btn-outline-secondary" style="font-size: 16px; height: 38px; width: 58px " type="button" onclick="filterOrders()">검색</button>
                  </div>
-                 <table class="table" id="productTable">
+                 <table class="table sty" id="productTable">
                      <thead>
               <tr>
-                <th>발주번호</th>
-                <th>제품번호</th>
-                <th>제품명</th>
-                <th>제품코드</th>
-                <th>브랜드</th>
-                <th>종류</th>
-                <th>색상</th>
-                <th>사이즈</th>
-                <th>성별</th>
-                <th>공급업체</th>
-                <th>발주수량</th>
-                <th>단가</th>
-                <th>납기일</th>
-                <th>선택</th>
+                <th style="background-color: #f4f4f4">발주번호</th>
+                <th style="background-color: #f4f4f4">제품번호</th>
+                <th style="background-color: #f4f4f4">제품명</th>
+                <th style="background-color: #f4f4f4">제품코드</th>
+                <th style="background-color: #f4f4f4">브랜드</th>
+                <th style="background-color: #f4f4f4">종류</th>
+                <th style="background-color: #f4f4f4">색상</th>
+                <th style="background-color: #f4f4f4">사이즈</th>
+                <th style="background-color: #f4f4f4">성별</th>
+                <th style="background-color: #f4f4f4">공급업체</th>
+                <th style="background-color: #f4f4f4">발주수량</th>
+                <th style="background-color: #f4f4f4">단가</th>
+                <th style="background-color: #f4f4f4">납기일</th>
+                <th style="background-color: #f4f4f4"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="sty">
 			   <c:forEach var="orders" items="${ordersResult}">
 			    <tr>
 			        <td>${orders.ordersId}</td>
@@ -284,7 +299,7 @@
 			        <td>${orders.productPrice}</td>
 			        <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
 			        <td>
-				    <button type="button"
+				    <button type="button" class="btn btn-success"
 				    onclick="selectOrders({
 				        ordersId: '${fn:escapeXml(orders.ordersId)}',
 				        productId: '${fn:escapeXml(orders.productId)}',
@@ -308,48 +323,66 @@
 					</c:forEach>
 					</tbody>
                  </table>
-			             <!-- 페이징 부분 -->
-		<div style="text-align: center;">
-		    <!-- 이전 페이지 링크 -->
-		    <c:choose>
-		        <c:when test="${pager != null && pager.startPage > 1}">
-		            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[이전]</a>
-		        </c:when>
-		        <c:otherwise>
-		            [이전]
-		        </c:otherwise>
-		    </c:choose>
-		    
-		    <!-- 페이지 번호 링크 -->
-		    <c:if test="${pager != null}">
-		        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-		            <c:choose>
-		                <c:when test="${pager.pageNum != i}">
-		                    <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[${i}]</a>
-		                </c:when>
-		                <c:otherwise>
-		                    [${i}]
-		                </c:otherwise>
-		            </c:choose>
-		        </c:forEach>
-		    </c:if>
-		    
-		    <!-- 다음 페이지 링크 -->
-		    <c:choose>
-		        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-		            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[다음]</a>
-		        </c:when>
-		        <c:otherwise>
-		            [다음]
-		        </c:otherwise>
-		    </c:choose>
-		</div>
-				             </div>
-				             </form>
-				           </div>
-				         </div>
-				     </div>
-
+			             <!-- 페이징 처리 -->
+                    <div class="d-flex justify-content-center modal-footer pagination-container text-center mt-4">
+					    <c:if test="${pager.totalPage > 1}">
+					        <nav>
+					            <ul class="pagination justify-content-center">
+					                <!-- 이전 페이지 링크 -->
+					                <c:choose>
+					                    <c:when test="${pager.pageNum > 1}">
+					                        <li class="page-item">
+					                            <a class="btn btn-primary btn-sm" style="background-color: #6571FF"
+					                               href="<c:url value='/purchase/receiving/ordersList?pageNum=${pager.pageNum - 1}&pageSize=${pager.pageSize}'/>">
+					                                &laquo; 이전
+					                            </a>
+					                        </li>
+					                    </c:when>
+					                    <c:otherwise>
+					                        <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">&laquo; 이전</span>
+					                    </c:otherwise>
+					                </c:choose>
+					
+					                <!-- 페이지 번호 링크 -->
+					                <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+					                    <c:choose>
+					                        <c:when test="${pager.pageNum != i}">
+					                            <li class="page-item">
+					                                <a class="btn btn-outline-primary mx-1 btn-sm"
+					                                   href="<c:url value='/purchase/receiving/ordersList?pageNum=${i}&pageSize=${pager.pageSize}'/>">${i}</a>
+					                            </li>
+					                        </c:when>
+					                        <c:otherwise>
+					                            <li class="page-item">
+					                                <span class="btn btn-primary mx-1 active btn-sm" style="background-color: #6571FF">${i}</span>
+					                            </li>
+					                        </c:otherwise>
+					                    </c:choose>
+					                </c:forEach>
+					
+					                <!-- 다음 페이지 링크 -->
+					                <c:choose>
+					                    <c:when test="${pager.pageNum < pager.totalPage}">
+					                        <li class="page-item">
+					                            <a class="btn btn-primary btn-sm" style="background-color: #6571FF"
+					                               href="<c:url value='/purchase/receiving/ordersList?pageNum=${pager.pageNum + 1}&pageSize=${pager.pageSize}'/>">
+					                                다음 &raquo;
+					                            </a>
+					                        </li>
+					                    </c:when>
+					                    <c:otherwise>
+					                        <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">다음 &raquo;</span>
+					                    </c:otherwise>
+					                </c:choose>
+					            </ul>
+					        </nav>
+					    </c:if>
+					</div>
+				</div>
+            </form>
+        </div>
+    </div>
+    </div>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
 	    // 입고일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
@@ -534,6 +567,13 @@
 	        document.querySelector(".content_header_registers_btn").onclick = null;
 	    }
 	}	
+	$(document).ready(function() {
+        // 서버에서 모달 열기 플래그가 true로 전달되면 모달을 자동으로 엽니다.
+        <c:if test="${openModal}">
+            var ordersModal = new bootstrap.Modal(document.getElementById('ordersModal'));
+            ordersModal.show();
+        </c:if>
+    });
 
 </script>
 

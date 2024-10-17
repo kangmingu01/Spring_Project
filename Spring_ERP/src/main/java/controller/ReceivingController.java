@@ -31,6 +31,7 @@ import service.CommonService;
 import service.ReceivingService;
 import util.ProductCategoryEditor;
 import util.ProductCategoryParser;
+import util.ProductCategoryReverse;
 
 @Controller
 @RequestMapping("/purchase/receiving")
@@ -199,7 +200,17 @@ public class ReceivingController {
         map.putIfAbsent("warehouseName", "");
         
         map.put("receivingStatus", receivingStatus != null ? receivingStatus : "");
- 
+        
+        // 역변환 로직 적용 (한글을 코드로 변환)
+        String brand = ProductCategoryReverse.reverseBrand(map.getOrDefault("brand", "").toString());
+        map.put("brand", brand);
+        
+        String type = ProductCategoryReverse.reverseType(map.getOrDefault("type", "").toString());
+        map.put("type", type);
+
+        String color = ProductCategoryReverse.reverseColor(map.getOrDefault("color", "").toString());
+        map.put("color", color);
+        
         // 입고 목록 조회 (페이징 처리 및 검색 포함)
         Map<String, Object> resultMap = receivingService.getReceivingList(map);
 

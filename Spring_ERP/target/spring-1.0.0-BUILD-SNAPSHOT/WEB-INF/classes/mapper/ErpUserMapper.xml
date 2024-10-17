@@ -3,7 +3,8 @@
 <mapper namespace="mapper.ErpUserMapper">
     <!-- 사용자 추가 -->
     <insert id="insertErpUser">
-        insert into erp_user values(
+        insert into erp_user(userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id)
+        values (
         #{userid}, #{passwd}, #{name}, #{phone}, #{address},
         #{email}, #{gender}, #{birthday}, #{joindate}, #{enabled}, #{orgId}
         )
@@ -30,7 +31,13 @@
                 enabled = #{enabled},
             </if>
             <if test="orgId != null and orgId != ''">
-                org_id = #{orgId}
+                org_id = #{orgId},
+            </if>
+            <if test="isInitialPassword != null">
+                isInitialPassword = #{isInitialPassword},
+            </if>
+            <if test="failedAttempts != null">
+                failedAttempts = #{failedAttempts}
             </if>
         </set>
         where userid = #{userid}
@@ -58,6 +65,9 @@
         <result column="joindate" property="joindate"/>
         <result column="enabled" property="enabled"/>
         <result column="org_id" property="orgId"/>
+        <result column="isInitialPassword" property="isInitialPassword"/>
+        <result column="failedAttempts" property="failedAttempts"/>
+
 
         <!-- 사용자 권한 목록을 가져오기 위한 컬렉션 -->
         <collection property="erpAuthList" select="selectErpAuthByUserid" column="userid"/>
@@ -70,7 +80,7 @@
 
     <!-- 사용자 정보를 가져오는 쿼리 -->
     <select id="selectErpUserByUserid" resultMap="erpUserResultMap">
-        SELECT userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id
+        SELECT userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id, isInitialPassword, failedAttempts
         FROM erp_user WHERE userid = #{userid}
     </select>
 
@@ -91,7 +101,7 @@
         select * from (
         select rownum rn, erp_user.*
         from (
-        select userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id
+        select userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id, isInitialPassword, failedAttempts
         from erp_user
         <if test="keyword != null and keyword != ''">
             <bind name="word" value="'%' + keyword + '%'"/>

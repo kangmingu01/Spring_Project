@@ -42,13 +42,6 @@ public class ErpUserServiceImpl implements ErpUserService {
         return erpUserDAO.selectErpUserByUserid(userid);
     }
 
-    /* 권한 정보 추가 */
-    /*@Override
-    public void addErpAuth(ErpAuth erpAuth) {
-        erpUserDAO.insertErpAuth(erpAuth);
-    }*/
-
-
     /* 리스트 페이징 */
     @Override
     public Map<String, Object> getErpUserList(Map<String, Object> map) {

@@ -12,4 +12,5 @@ public interface OrganizationService {
     Map<String, Object> getOrganizationList(Map<String, Object> map);
 
     String generateNextOrgId(String orgPrefix);
+
 }

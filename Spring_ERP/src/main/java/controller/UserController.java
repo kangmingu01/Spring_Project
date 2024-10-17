@@ -2,7 +2,6 @@ package controller;
 
 import dto.ErpUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import service.EmailService;
+import repository.EmailService;
 import service.ErpUserService;
 import service.OrganizationService;
 
@@ -89,8 +88,14 @@ public class UserController {
     /* 사용자 정보 수정 */
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
     public String updateUser(@ModelAttribute ErpUser erpUser) {
-        String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
-        erpUser.setPasswd(encodedPassword);
+        System.out.println(erpUser);
+        if (erpUser.getPasswd() != null && !erpUser.getPasswd().isEmpty()) {
+            String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
+            erpUser.setPasswd(encodedPassword);
+        } else {
+            erpUser.setPasswd(erpUserService.getErpUserByUserid(erpUser.getUserid()).getPasswd());
+        }
+
         erpUserService.updateErpUser(erpUser);
         return "redirect:/admin/user";
     }

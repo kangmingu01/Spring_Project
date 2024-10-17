@@ -41,6 +41,8 @@ public class ErpUser {
     private LocalDate birthday;      // 생년월일
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate joindate;      // 입사일
+    private int isInitialPassword;  // 초기 비밀번호 여부 (1: 초기 비밀번호 상태, 0: 변경됨)
+    private int failedAttempts;     // 로그인 실패 횟수 (0부터 시작)
     private int enabled;    // 계정 활성 상태 (1: 활성, 0: 비활성)
     private String orgId;      // 조직 ID (부서 또는 지점)
     private List<ErpAuth> erpAuthList;  // 동일 사용자가 여러 권한을 가질 수 있음

@@ -253,8 +253,8 @@
             <div class="row g-2 align-items-center">
                 <div class="col-4">
                     <select name="column" class="form-select">
-                        <option value="userid">유저 ID</option>
-                        <option value="name" selected>이름</option>
+                        <option value="userid" selected>유저 ID</option>
+                        <option value="name">이름</option>
                         <option value="org_Id">조직 ID</option>
                     </select>
                 </div>
@@ -349,7 +349,10 @@
                                         data-birthday="${erpUser.birthday}"
                                         data-joindate="${erpUser.joindate}"
                                         data-enabled="${erpUser.enabled}"
-                                        data-orgid="${erpUser.orgId}">
+                                        data-orgid="${erpUser.orgId}"
+                                        data-isInitialPassword="${erpUser.isInitialPassword}"
+                                        data-failedAttempts="${erpUser.failedAttempts}"
+                                >
                                     수정
                                 </button>
                             </td>
@@ -377,6 +380,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="editUserForm" action="<c:url value="/admin/updateUser"/>" method="post">
+                    <input type="hidden" name="isInitialPassword" id="isInitialPassword_modal">
+                    <input type="hidden" name="failedAttempts" id="failedAttempts_modal">
+
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="userid_modal" class="form-label">유저 ID</label>
@@ -392,7 +398,8 @@
                                 </div>
                             </div>
                             <div class="d-flex">
-                                <input type="text" class="form-control" id="passwd_modal" name="passwd" disabled>
+                                <%-- 나중에 이부분 비밀번호 재설정이면 --%>
+                                <input type="text" class="form-control" id="passwd_modal" name="passwd" >
                                 <button type="button" id="generate_passwd_btn"
                                         class="btn btn-secondary btn-sm text-nowrap disabled" disabled
                                         onclick="generateRandomPassword()">재생성
@@ -817,6 +824,8 @@
             var joindate = button.getAttribute('data-joindate');
             var enabled = button.getAttribute('data-enabled');
             var orgid = button.getAttribute('data-orgid');
+            var isInitialPassword = button.getAttribute('data-isInitialPassword');
+            var failedAttempts = button.getAttribute('data-failedAttempts');
 
             // 모달 내 입력 필드에 값을 설정
             document.getElementById('userid_modal').value = userid;
@@ -830,6 +839,8 @@
             document.getElementById('joindate_modal').value = joindate;
             document.getElementById('enabled_modal').value = enabled;
             document.getElementById('orgId_modal').value = orgid;
+            document.getElementById('isInitialPassword_modal').value = isInitialPassword;
+            document.getElementById('failedAttempts_modal').value = failedAttempts;
         });
     });
 

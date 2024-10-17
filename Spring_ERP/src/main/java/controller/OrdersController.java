@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import dto.Orders;
 import dto.ProductCategory;
 import dto.Supplier;
 import lombok.RequiredArgsConstructor;
+import service.CommonService;
 import service.OrdersService;
 import util.ProductCategoryEditor;
 
@@ -29,6 +31,9 @@ import util.ProductCategoryEditor;
 @RequiredArgsConstructor
 public class OrdersController {
     private final OrdersService ordersService;
+    
+    @Autowired
+    private CommonService commonService;
     
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -218,5 +223,14 @@ public class OrdersController {
         String pageSize = map.get("pageSize") != null ? (String) map.get("pageSize") : "10";
 
         return "redirect:/purchase/orders/list?pageNum=" + pageNum + "&pageSize=" + pageSize;
+    }
+    
+    // 발주에서 카테고리 코드 보기
+    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @RequestMapping("/viewCategory")
+    public String viewCategory(Model model, @RequestParam("categoryCode") String categoryCode) {
+        ProductCategory productCategory = commonService.getProductCategoryDetails(categoryCode);
+        model.addAttribute("productCategory", productCategory);
+        return "viewCategory";
     }
 }

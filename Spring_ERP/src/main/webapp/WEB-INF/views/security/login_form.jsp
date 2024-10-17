@@ -162,7 +162,7 @@
     <div class="right">
         <!-- 모바일 로고 -->
         <div class="logo logo-mobile d-block d-md-none">
-            <img src="<c:url value="/images/animation_end.png"/>"
+            <img src="<c:url value="/images/logo_icon.png"/>"
                  alt="logo">
         </div>
 

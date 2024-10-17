@@ -516,8 +516,7 @@
 
 	    checkFields(); // 필드 체크
 	}
-
-
+	
 	// 폼 제출 함수
 	function submitForm(formId) {
 	    const ordersQuantity = parseInt(document.getElementById("ordersQuantity").value);
@@ -537,15 +536,7 @@
 
 	// 폼 초기화 함수
 	function resetForm() {
-	    document.getElementById('registerForm').reset();
-
-	    const receivingDateInput = document.getElementById("receivingDate");
-	    const today = new Date().toISOString().split('T')[0];
-	    receivingDateInput.value = today;
-
-	    const ordersTable = document.getElementById("receivingTable");
-	    ordersTable.innerHTML = '';
-	    checkFields(); // 필드 초기화 후 다시 필드 체크
+	    location.reload(); // 페이지 완전 새로 고침
 	}
 
 	// 필수 입력 필드 확인 후 등록 버튼 활성화

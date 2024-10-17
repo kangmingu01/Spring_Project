@@ -151,45 +151,52 @@
 
             if (newPassword === "" || confirmPassword === "") {
                 $('#passwordMatchError').text('');
+                $('#updateButton').prop('disabled', true);
             } else if (newPassword !== confirmPassword) {
                 $('#passwordMatchError').text('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.').css('color', 'red');
+                $('#updateButton').prop('disabled', true);
             } else {
                 $('#passwordMatchError').text('새 비밀번호와 일치합니다.').css('color', 'green');
+                checkAllFieldsFilled();
             }
         }
 
-        $('#newPassword').on('keyup', function () {
+        function checkAllFieldsFilled() {
+            var currentPassword = $('#currentPassword').val();
+            var newPassword = $('#newPassword').val();
+            var confirmPassword = $('#confirmPassword').val();
+
+            // 모든 필드에 값이 있을 경우에만 버튼 활성화
+            if (currentPassword !== "" && newPassword !== "" && confirmPassword !== "") {
+                $('#updateButton').prop('disabled', false);
+            } else {
+                $('#updateButton').prop('disabled', true);
+            }
+        }
+
+        $('#newPassword, #confirmPassword, #currentPassword').on('keyup', function () {
             validatePasswordStrength();
             validatePasswordMatch();
+            checkAllFieldsFilled();
         });
 
-        $('#confirmPassword').on('keyup', function () {
-            validatePasswordMatch();
+        // 슬라이드 토글 효과를 사용하여 비밀번호 변경 섹션을 열고 닫기
+        $("#togglePasswordChange").on("click", function () {
+            $("#passwordChangeSection").slideToggle("slow", function() {
+                if ($("#passwordChangeSection").is(":visible")) {
+                    // 비밀번호 변경 섹션이 열리면 정보 수정 버튼 비활성화
+                    $('#updateButton').prop('disabled', true);
+                } else {
+                    // 비밀번호 변경 섹션이 닫히면 정보 수정 버튼 활성화
+                    $('#updateButton').prop('disabled', false);
+                }
+            });
         });
 
-        // 성공 메시지가 있는 경우, 3초 후 부드럽게 사라짐
-        if ($('#successMessage').length) {
-            setTimeout(function() {
-                $('#successMessage').fadeOut('slow');
-            }, 3000);
-        }
-
-        if ($('.alert-danger').length) {
-            $('#passwordChangeSection').show(); // 비밀번호 변경 섹션을 표시
-            $('html, body').animate({
-                scrollTop: $('#passwordChangeSection').offset().top
-            }, 'slow');
-        }
+        // 페이지가 로드될 때 기본적으로 버튼 비활성화
+        $('#updateButton').prop('disabled', true);
     });
 
-    // 슬라이드 토글 효과를 사용하여 비밀번호 변경 섹션을 열고 닫기
-    $("#togglePasswordChange").on("click", function () {
-        $("#passwordChangeSection").slideToggle("slow");
-    });
-
-    $(document).ready(function() {
-
-    });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

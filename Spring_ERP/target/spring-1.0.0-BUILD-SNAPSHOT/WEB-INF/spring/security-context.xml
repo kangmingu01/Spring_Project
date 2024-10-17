@@ -66,11 +66,12 @@
         <intercept-url pattern="/purchase/**" access="hasAnyRole('ROLE_SUPER_ADMINISTRATOR', 'ROLE_PURCHASING_TEAM')"/>
         <intercept-url pattern="/inventory/**" access="hasAnyRole('ROLE_SUPER_ADMINISTRATOR', 'ROLE_INVENTORY_TEAM', 'ROLE_PURCHASING_TEAM', 'ROLE_SALES_TEAM')"/>
 
+        ROLE_SUPER_ADMINISTRATOR
         ROLE_PURCHASING_TEAM
         ROLE_SALES_TEAM
         ROLE_INVENTORY_TEAM
         ROLE_STORE_OWNER
-        ROLE_PART_TIME_JOB
+
         <intercept-url pattern="/user/**" access="hasRole('ROLE_USER')"/>-->
 
 

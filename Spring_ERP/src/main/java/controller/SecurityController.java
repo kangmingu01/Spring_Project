@@ -86,7 +86,7 @@ public class SecurityController {
 
     /* 비상 */
     @GetMapping("/mypage")
-    public String mypage( Model model) {
+    public String mypage(Model model) {
         /*@AuthenticationPrincipal CustomUserDetails userDetails*/
         /*@RequestParam(value = "error",required = false) String error, @RequestParam(value = "success",required = false) String success,*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -106,24 +106,37 @@ public class SecurityController {
     }
 
     @PostMapping("/updateUserInfo")
-    public String updateUserInfo(@ModelAttribute ErpUser erpUser, @RequestParam Map<String, Object> map, Model model, RedirectAttributes redirectAttributes) {
-
+    public String updateUserInfo(@RequestParam Map<String, Object> map, Model model, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        ErpUser erp = erpUserDAO.selectErpUserByUserid(userDetails.getUsername());
+        ErpUser erpUser = erpUserDAO.selectErpUserByUserid(userDetails.getUsername());
 
         String currentPassword = (String) map.get("currentPassword");
         String newPassword = (String) map.get("newPassword");
         String confirmPassword = (String) map.get("confirmPassword");
 
-        if (currentPassword != null && passwordEncoder.matches(currentPassword, erp.getPasswd())) {
+        System.out.println(erpUser);
+        System.out.println(currentPassword);
+        System.out.println(newPassword);
+        System.out.println(confirmPassword);
+
+        /*// 입력값이 모두 있는지 확인
+        if (currentPassword == null || currentPassword.isEmpty() ||
+            newPassword == null || newPassword.isEmpty() ||
+            confirmPassword == null || confirmPassword.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "모든 비밀번호 입력란을 채워주세요.");
+            return "redirect:/mypage";
+        }
+*/
+        if (passwordEncoder.matches(currentPassword, erp.getPasswd())) {
             if (currentPassword.equals(newPassword)) {
-                redirectAttributes.addFlashAttribute("error", "현재 비밀번호와 입력한 새 비밀번호랑 같습니다. 다시 입력해주세요");
+                redirectAttributes.addFlashAttribute("error", "현재 비밀번호와 입력한 새 비밀번호가 같습니다. 다시 입력해주세요.");
                 return "redirect:/mypage";
             }
             if (newPassword.equals(confirmPassword)) {
-                erpUser.setPasswd(passwordEncoder.encode(newPassword));
-                erpUserDAO.updateErpUser(erpUser);
+                erp.setPasswd(passwordEncoder.encode(newPassword));
+                erp.setEnabled(1);
+                erpUserDAO.updateErpUser(erp);
 
                 redirectAttributes.addFlashAttribute("success", "성공적으로 변경되었습니다.");
                 return "redirect:/mypage";

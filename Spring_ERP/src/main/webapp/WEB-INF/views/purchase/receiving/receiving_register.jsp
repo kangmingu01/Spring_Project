@@ -324,30 +324,61 @@
 					</tbody>
                  </table>
 			             <!-- 페이징 처리 -->
-                    <div class="modal-footer pagination-container text-center mt-4">
-                        <c:if test="${pager.totalPage > 1}">
-                            <nav>
-                                <ul class="pagination">
-                                    <c:if test="${pager.pageNum > 1}">
-                                        <li class="page-item">
-                                            <a class="page-link" href="<c:url value='/purchase/receiving/ordersList?pageNum=${pager.pageNum - 1}&pageSize=${pager.pageSize}'/>">이전</a>
-                                        </li>
-                                    </c:if>
-                                    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-                                        <li class="page-item <c:if test='${pager.pageNum == i}'>active</c:if>">
-                                            <a class="page-link" href="<c:url value='/purchase/receiving/ordersList?pageNum=${i}&pageSize=${pager.pageSize}'/>">${i}</a>
-                                        </li>
-                                    </c:forEach>
-                                    <c:if test="${pager.pageNum < pager.totalPage}">
-                                        <li class="page-item">
-                                            <a class="page-link" href="<c:url value='/purchase/receiving/ordersList?pageNum=${pager.pageNum + 1}&pageSize=${pager.pageSize}'/>">다음</a>
-                                        </li>
-                                    </c:if>
-                                </ul>
-                            </nav>
-                        </c:if>
-                    </div>
-                </div>
+                    <div class="d-flex justify-content-center modal-footer pagination-container text-center mt-4">
+					    <c:if test="${pager.totalPage > 1}">
+					        <nav>
+					            <ul class="pagination justify-content-center">
+					                <!-- 이전 페이지 링크 -->
+					                <c:choose>
+					                    <c:when test="${pager.pageNum > 1}">
+					                        <li class="page-item">
+					                            <a class="btn btn-primary btn-sm" style="background-color: #6571FF"
+					                               href="<c:url value='/purchase/receiving/ordersList?pageNum=${pager.pageNum - 1}&pageSize=${pager.pageSize}'/>">
+					                                &laquo; 이전
+					                            </a>
+					                        </li>
+					                    </c:when>
+					                    <c:otherwise>
+					                        <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">&laquo; 이전</span>
+					                    </c:otherwise>
+					                </c:choose>
+					
+					                <!-- 페이지 번호 링크 -->
+					                <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+					                    <c:choose>
+					                        <c:when test="${pager.pageNum != i}">
+					                            <li class="page-item">
+					                                <a class="btn btn-outline-primary mx-1 btn-sm"
+					                                   href="<c:url value='/purchase/receiving/ordersList?pageNum=${i}&pageSize=${pager.pageSize}'/>">${i}</a>
+					                            </li>
+					                        </c:when>
+					                        <c:otherwise>
+					                            <li class="page-item">
+					                                <span class="btn btn-primary mx-1 active btn-sm" style="background-color: #6571FF">${i}</span>
+					                            </li>
+					                        </c:otherwise>
+					                    </c:choose>
+					                </c:forEach>
+					
+					                <!-- 다음 페이지 링크 -->
+					                <c:choose>
+					                    <c:when test="${pager.pageNum < pager.totalPage}">
+					                        <li class="page-item">
+					                            <a class="btn btn-primary btn-sm" style="background-color: #6571FF"
+					                               href="<c:url value='/purchase/receiving/ordersList?pageNum=${pager.pageNum + 1}&pageSize=${pager.pageSize}'/>">
+					                                다음 &raquo;
+					                            </a>
+					                        </li>
+					                    </c:when>
+					                    <c:otherwise>
+					                        <span class="btn btn-secondary disabled btn-sm" style="background-color: #6571FF">다음 &raquo;</span>
+					                    </c:otherwise>
+					                </c:choose>
+					            </ul>
+					        </nav>
+					    </c:if>
+					</div>
+				</div>
             </form>
         </div>
     </div>

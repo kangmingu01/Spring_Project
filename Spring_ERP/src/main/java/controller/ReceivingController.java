@@ -82,7 +82,7 @@ public class ReceivingController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@ModelAttribute ProductCategory productCategory, @ModelAttribute Receiving receiving, Principal principal, Model model) {
     	// 로그로 productCategoryDetails 확인
-        System.out.println("Received Product Category Details: " + receiving.getProductCategoryDetails());
+        //System.out.println("Received Product Category Details: " + receiving.getProductCategoryDetails());
         
     	// 로그인한 사용자의 아이디를 입고 정보에 추가
         String userId = principal.getName();
@@ -93,11 +93,11 @@ public class ReceivingController {
 
         // ProductCategory에서 색상 코드를 조회하고 색상 이름으로 변환하여 모델에 추가
         String colorCode = productCategory.getColor();
-        System.out.println("colorCode = "+colorCode);
+        //System.out.println("colorCode = "+colorCode);
         String propertyKey = "color." + productCategory.getColor();
-        System.out.println("propertyKey = "+propertyKey);
+        //System.out.println("propertyKey = "+propertyKey);
         String propertyValue = env.getProperty(propertyKey);
-        System.out.println("propertyValue = "+propertyValue);
+        //System.out.println("propertyValue = "+propertyValue);
         
         productCategory.setColor(propertyValue);
 
@@ -106,7 +106,7 @@ public class ReceivingController {
         model.addAttribute("newReceiving", newReceiving);
         model.addAttribute("productCategory", productCategory);
         String productCode = "" + productCategory.getBrand() + " " + colorCode + " " + productCategory.getColor() + " " + productCategory.getSize() + " " + productCategory.getGender();
-        System.out.println(productCode);
+        //System.out.println(productCode);
         model.addAttribute("productCode", productCode);
 
         // ProductCategory 코드를 파싱하여 상세 정보를 설정
@@ -167,7 +167,6 @@ public class ReceivingController {
     public String listReceiving( @RequestParam(required = false) String receivingStatus,@RequestParam Map<String, Object> map
     		, Model model, Principal principal) {
     	
-    	 // receivingStatus 값 확인 로그
         //System.out.println("receivingStatus: " + receivingStatus);
         
         // 로그인한 사용자 아이디 추가

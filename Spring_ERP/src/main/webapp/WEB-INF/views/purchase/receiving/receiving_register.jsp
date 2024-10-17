@@ -91,7 +91,6 @@
             <label>발주번호</label>
             <input type="text" name="ordersId" class="result" id="ordersId" readonly style="background-color: #e9e9e9;" />
           </div>
-
           <div>
             <label>제품번호</label>
             <input type="text" name="productId" class="result" id="productId" readonly style="background-color: #e9e9e9;" />
@@ -102,10 +101,10 @@
           </div>
          </div>
          <div>
-           <div>
+           <!-- <div>
             <label>제품코드</label>
             <input type="text" id="productCategoryDetails" name="productCategoryDetails" readonly class="read-only-field" />
-          </div>
+          </div>  -->
           <div>
             <label>브랜드</label>
             <input type="text" id="brand" name="brand" readonly class="read-only-field"/>
@@ -118,12 +117,12 @@
             <label>색상</label>
              <input type="text" id="color" name="color" readonly class="read-only-field"/>
           </div>
-          </div>
-          <div>
           <div>
             <label>사이즈</label>
              <input type="text" id="size" name="size" readonly class="read-only-field"/>
           </div>
+          </div>
+          <div>
           <div>
             <label>성별</label>
            <input type="text" id="gender" name="gender" readonly class="read-only-field"/>
@@ -136,17 +135,17 @@
               <label>공급업체</label>
               <input type="text" id="supplier" name="supplier" readonly class="read-only-field" />
             </div>
-            </div>
-            <div>
             <div>
               <label>발주수량</label>
               <input type="number" id="ordersQuantity" name="ordersQuantity" readonly class="read-only-field" min="0"/>
             </div>
+            </div>
+            <div>
             <div>
               <label>납기일</label>
                <input type="date" id="deliveryDate" name="deliveryDate" style="text-align: left;" readonly class="read-only-field" />
             </div>
-          </div>
+            </div>
       </div>
 
       <div class="content_body_search_price">
@@ -182,7 +181,7 @@
               <th>발주번호</th>
               <th>제품번호</th>
               <th>제품명</th>
-              <th>제품코드</th>
+              <!--  <th>제품코드</th> -->
               <th>브랜드</th>
               <th>종류</th>
               <th>색상</th>
@@ -203,7 +202,7 @@
                     <td>${newReceiving.ordersId}</td>
                     <td>${newReceiving.productId}</td>
                     <td>${newReceiving.productName}</td>
-                    <td>${productCode}</td>
+                    <!-- <td>${productCode}</td> -->
                     <td>${productCategory.brand}</td>                            
                           <td>${productCategory.type}</td>
                           <td>${productCategory.color}</td>
@@ -252,7 +251,7 @@
                 <th style="background-color: #f4f4f4">발주번호</th>
                 <th style="background-color: #f4f4f4">제품번호</th>
                 <th style="background-color: #f4f4f4">제품명</th>
-                <th style="background-color: #f4f4f4">제품코드</th>
+                <!-- <th style="background-color: #f4f4f4">제품코드</th>  -->
                 <th style="background-color: #f4f4f4">브랜드</th>
                 <th style="background-color: #f4f4f4">종류</th>
                 <th style="background-color: #f4f4f4">색상</th>
@@ -271,8 +270,7 @@
 			        <td>${orders.ordersId}</td>
 			        <td>${orders.productId}</td>
 			        <td>${orders.productName}</td>
-			        <td>
-					    <!-- 카테고리 출력 부분 -->
+			        <!-- <td>
 					    <c:if test="${not empty orders.productCategoryDetails.brand}">
 					        ${fn:substring(orders.productCategoryDetails.brand, 0, 2)}
 					    </c:if>
@@ -288,7 +286,7 @@
 					    <c:if test="${not empty orders.productCategoryDetails.gender}">
 					        ${fn:substring(orders.productCategoryDetails.gender, 0, 1)}
 					    </c:if>
-					</td>
+					</td>  -->
 			        <td>${orders.productCategoryDetails.brand}</td>
 			        <td>${orders.productCategoryDetails.type}</td>
 			        <td>${orders.productCategoryDetails.color}</td>
@@ -498,7 +496,7 @@
 	        shortCategory += order.productCategoryDetails.gender.substring(0, 1);
 	    }
 
-	    document.getElementById("productCategoryDetails").value = shortCategory;
+	    //document.getElementById("productCategoryDetails").value = shortCategory;
 	    document.getElementById("brand").value = order.productCategoryDetails.brand;
 	    document.getElementById("type").value = order.productCategoryDetails.type;
 	    document.getElementById("color").value = order.productCategoryDetails.color;

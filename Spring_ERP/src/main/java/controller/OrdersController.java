@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import service.CommonService;
 import service.OrdersService;
 import util.ProductCategoryEditor;
+import util.ProductCategoryReverse;
 
 @Controller
 @RequestMapping("/purchase/orders")
@@ -158,7 +159,18 @@ public class OrdersController {
         map.putIfAbsent("supplierId", "");
         map.putIfAbsent("ordersStatus", "");
         map.putIfAbsent("productPrice", "");
+        
+        // 역변환 로직 적용 (한글을 코드로 변환)
+        String brand = ProductCategoryReverse.reverseBrand(map.getOrDefault("brand", "").toString());
+        map.put("brand", brand);
+        
+        String type = ProductCategoryReverse.reverseType(map.getOrDefault("type", "").toString());
+        map.put("type", type);
 
+        String color = ProductCategoryReverse.reverseColor(map.getOrDefault("color", "").toString());
+        map.put("color", color);
+        
+        
         // 발주 목록 조회 (페이징 처리 및 검색 포함)
         Map<String, Object> resultMap = ordersService.getOrdersList(map);
 

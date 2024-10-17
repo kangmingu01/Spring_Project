@@ -225,7 +225,6 @@
   </div>
 
   <!-- 발주 목록 모달 -->
-  
   <div class="modal fade sty" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" style="max-width: 61%;">
         <div class="modal-content">
@@ -324,48 +323,35 @@
 					</c:forEach>
 					</tbody>
                  </table>
-			             <!-- 페이징 부분 -->
-		<div style="text-align: center;">
-		    <!-- 이전 페이지 링크 -->
-		    <c:choose>
-		        <c:when test="${pager != null && pager.startPage > 1}">
-		            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.prevPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[이전]</a>
-		        </c:when>
-		        <c:otherwise>
-		            [이전]
-		        </c:otherwise>
-		    </c:choose>
-		    
-		    <!-- 페이지 번호 링크 -->
-		    <c:if test="${pager != null}">
-		        <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
-		            <c:choose>
-		                <c:when test="${pager.pageNum != i}">
-		                    <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${i}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[${i}]</a>
-		                </c:when>
-		                <c:otherwise>
-		                    [${i}]
-		                </c:otherwise>
-		            </c:choose>
-		        </c:forEach>
-		    </c:if>
-		    
-		    <!-- 다음 페이지 링크 -->
-		    <c:choose>
-		        <c:when test="${pager != null && pager.endPage < pager.totalPage}">
-		            <a href="<c:url value='/purchase/receiving/ordersList'/>?pageNum=${pager.nextPage}&pageSize=${pager.pageSize}&ordersId=${param.ordersId}&productId=${param.productId}&productName=${param.productName}&supplierId=${param.supplierId}&supplierName=${param.supplierName}">[다음]</a>
-		        </c:when>
-		        <c:otherwise>
-		            [다음]
-		        </c:otherwise>
-		    </c:choose>
-		</div>
-				             </div>
-				             </form>
-				           </div>
-				         </div>
-				     </div>
-
+			             <!-- 페이징 처리 -->
+                    <div class="modal-footer pagination-container text-center mt-4">
+                        <c:if test="${pager.totalPage > 1}">
+                            <nav>
+                                <ul class="pagination">
+                                    <c:if test="${pager.pageNum > 1}">
+                                        <li class="page-item">
+                                            <a class="page-link" href="<c:url value='/purchase/receiving/ordersList?pageNum=${pager.pageNum - 1}&pageSize=${pager.pageSize}'/>">이전</a>
+                                        </li>
+                                    </c:if>
+                                    <c:forEach var="i" begin="${pager.startPage}" end="${pager.endPage}">
+                                        <li class="page-item <c:if test='${pager.pageNum == i}'>active</c:if>">
+                                            <a class="page-link" href="<c:url value='/purchase/receiving/ordersList?pageNum=${i}&pageSize=${pager.pageSize}'/>">${i}</a>
+                                        </li>
+                                    </c:forEach>
+                                    <c:if test="${pager.pageNum < pager.totalPage}">
+                                        <li class="page-item">
+                                            <a class="page-link" href="<c:url value='/purchase/receiving/ordersList?pageNum=${pager.pageNum + 1}&pageSize=${pager.pageSize}'/>">다음</a>
+                                        </li>
+                                    </c:if>
+                                </ul>
+                            </nav>
+                        </c:if>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
 	    // 입고일자 필드에 현재 날짜를 설정하고 수정 불가능하게 처리
@@ -550,6 +536,13 @@
 	        document.querySelector(".content_header_registers_btn").onclick = null;
 	    }
 	}	
+	$(document).ready(function() {
+        // 서버에서 모달 열기 플래그가 true로 전달되면 모달을 자동으로 엽니다.
+        <c:if test="${openModal}">
+            var ordersModal = new bootstrap.Modal(document.getElementById('ordersModal'));
+            ordersModal.show();
+        </c:if>
+    });
 
 </script>
 

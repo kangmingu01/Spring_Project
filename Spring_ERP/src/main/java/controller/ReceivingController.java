@@ -148,18 +148,17 @@ public class ReceivingController {
             map.put("pageSize", "10");
         }
         
-        map.putIfAbsent("productId", "");
-        map.putIfAbsent("productName", "");
-        map.putIfAbsent("supplierId", "");
-        map.putIfAbsent("supplierName", "");
-        
-        Map<String, Object> ordersMap = new HashMap<>();        
-        Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
+        // 발주 목록 조회
+        Map<String, Object> ordersResult = receivingService.getOrdersList(map);
         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
         model.addAttribute("pager", ordersResult.get("pager"));
-        model.addAttribute("searchMap", ordersMap); 
+        model.addAttribute("searchMap", map);
+
+        // 플래그를 설정하여 모달이 다시 열리도록 설정
+        model.addAttribute("openModal", true);
         
-        return "purchase/receiving/receiving_ordersList";  
+        // 입고 등록 페이지로 이동 (이 때 모달을 다시 열도록 처리)
+        return "purchase/receiving/receiving_register";  
     }
     
     // 입고 목록 페이지 - 구매팀 ROLE만 접근 가능

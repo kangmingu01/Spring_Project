@@ -54,14 +54,22 @@ public class ReceivingController {
     	model.addAttribute("warehouseList", warehouseList);
        
         // 발주 목록을 조회하여 모델에 추가
-        Map<String, Object> ordersMap = new HashMap<>();
+        //Map<String, Object> ordersMap = new HashMap<>();
         //ordersMap.put("pageNum", "1");
         //ordersMap.put("pageSize", "10");
-        Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
+        //Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
         //System.out.println(ordersResult);
-        model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+        //model.addAttribute("ordersResult", ordersResult.get("ordersList"));
         //System.out.println(ordersResult.get("ordersList"));
+        //model.addAttribute("pager", ordersResult.get("pager"));
 
+    	
+    	 Map<String, Object> ordersMap = new HashMap<>();        
+         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
+         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+         model.addAttribute("pager", ordersResult.get("pager"));
+         model.addAttribute("searchMap", ordersMap); 
+         
         // 로그인한 사용자의 아이디 추가
         String userId = principal.getName();
         model.addAttribute("userId", userId);
@@ -116,13 +124,11 @@ public class ReceivingController {
         List<Warehouse> warehouseList = receivingService.getWarehouseList();
         model.addAttribute("warehouseList", warehouseList);
 
-        // 발주 목록도 다시 조회하여 모델에 추가
-        Map<String, Object> ordersMap = new HashMap<>();
-        //ordersMap.put("pageNum", "1");
-        //ordersMap.put("pageSize", "10");
-        
+        Map<String, Object> ordersMap = new HashMap<>();        
         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+        model.addAttribute("pager", ordersResult.get("pager"));
+        model.addAttribute("searchMap", ordersMap); 
         
         return "purchase/receiving/receiving_register"; // 입고 등록 페이지로 다시 이동
     }
@@ -147,13 +153,11 @@ public class ReceivingController {
         map.putIfAbsent("supplierId", "");
         map.putIfAbsent("supplierName", "");
         
-        // 서비스로 검색 조건과 페이징 정보가 담긴 map 전달
-        Map<String, Object> ordersResult = receivingService.getOrdersList(map);
-
-        // 조회된 발주 목록과 페이징 정보를 모델에 추가
-        model.addAttribute("ordersResult", ordersResult.get("ordersList")); // 발주 목록
-        model.addAttribute("pager", ordersResult.get("pager")); // 페이징 정보
-        model.addAttribute("searchMap", map); // 검색 조건
+        Map<String, Object> ordersMap = new HashMap<>();        
+        Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
+        model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+        model.addAttribute("pager", ordersResult.get("pager"));
+        model.addAttribute("searchMap", ordersMap); 
         
         return "purchase/receiving/receiving_ordersList";  
     }

@@ -42,6 +42,7 @@
 	background-color: #6571FF;
 }
 .total_inventory{
+	position:relative;
 	padding: 40px;
 	display: flex;
 	align-items: center;
@@ -50,6 +51,17 @@
 	width: 500px;
 	border-radius: 10px;
     background-color: #fff;
+}
+.inventory_title{
+	position: absolute;
+	width:150px;
+	height:25px;
+	top:10px;
+	right: 20px;
+	text-align:center;
+	border-radius: 10px;
+	background-color: #6571FF;
+	color: #fff;
 }
 .total_inventory > canvas {
 /* 	width: 400px !important;

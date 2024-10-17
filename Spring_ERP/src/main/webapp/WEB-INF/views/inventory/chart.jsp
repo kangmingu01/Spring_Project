@@ -36,6 +36,7 @@
 	       	</div>
 	        <!-- 현재 재고 -->
         	<div class="total_inventory">
+        		<div class="inventory_title">총 재고 수량</div>
 	        	<canvas id="inventoryChart" ></canvas>
         	</div>
 	
@@ -272,7 +273,7 @@
 	                    }
 	                }
 	            },
-	            cutout: '70%', // 도넛 차트 가운데 구멍의 크기 (퍼센트로 설정)
+	            cutout: '0%', // 도넛 차트 가운데 구멍의 크기 (퍼센트로 설정)
 	            responsive: true,
 	        },
 	        plugins: [{
@@ -283,7 +284,7 @@
 
 	                ctx.restore(); // 복원
 
-	                // "총재고" 텍스트의 폰트 크기 설정
+	               /*  // "총재고" 텍스트의 폰트 크기 설정
 	                var titleFontSize = (height / 150).toFixed(2); 
 	                ctx.font = titleFontSize + "em sans-serif";
 	                ctx.textBaseline = "middle";
@@ -292,7 +293,7 @@
 	                var text = "총재고",
 	                    countText = totalInventory.toString(), // 총재고 수를 문자열로 변환
 	                   // textX = Math.round((width - ctx.measureText(text).width) / 2)-90, // 중앙 정렬
-	                    textX = 100, // 중앙 정렬
+	                    textX = 70, // 중앙 정렬
 	                    textY = height / 2 - 10; // 중앙에서 약간 위로 이동 (위치 조정)
 
 	                ctx.clearRect(0, 0, width, height); // 이전 그리기 지우기
@@ -307,7 +308,7 @@
 	                var countTextY = textY + 50; // "총재고" 텍스트 아래에 위치 (위치 조정)
 
 	                ctx.fillText(countText, countTextX, countTextY); // 총재고 수 텍스트 그리기
-	                ctx.save(); // 상태 저장
+	                ctx.save(); // 상태 저장 */
 	            }
 	        }]
 
@@ -407,19 +408,19 @@
 	}
 
 	function salesChart(data) {
-	    // Prepare the data for the chart
+
 	    var months = data.map(item => item.MONTH);
 	    var totalCosts = data.map(item => item.TOTAL_COST);
 	    var totalRevenues = data.map(item => item.TOTAL_REVENUE);
 
 	    var ctx = document.getElementById('salesChart').getContext('2d');
 	    
-	    // Create gradient for total costs
+	
 	    var gradientCost = ctx.createLinearGradient(0, 0, 0, 400);
 	    gradientCost.addColorStop(0, 'rgba(75, 192, 192, 0.6)');
 	    gradientCost.addColorStop(1, 'rgba(75, 192, 192, 0.1)');
 	    
-	    // Create gradient for total revenues
+	
 	    var gradientRevenue = ctx.createLinearGradient(0, 0, 0, 400);
 	    gradientRevenue.addColorStop(0, 'rgba(153, 102, 255, 0.6)');
 	    gradientRevenue.addColorStop(1, 'rgba(153, 102, 255, 0.1)');

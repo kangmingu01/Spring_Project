@@ -5,11 +5,11 @@
 		<selectKey resultType="int" keyProperty="historyId" order="BEFORE">
 			select history_seq.nextval from dual
 		</selectKey>
-		insert into history values(#{historyId},#{historyProductId},#{historyType},sysdate,#{historyWarehouseId},#{historyQty} )
+		insert into history values(#{historyId},#{historyProductId},#{historyType},#{historyDate},#{historyWarehouseId},#{historyQty} )
 	</insert>
 	
 	<update id="updateHistory">
-		update history set history_product_id=#{historyProductId},history_type=#{historyType},history_date=#{historyDate},history_warehouse_id=#{historyWarehouseId}
+		update history set history_product_id=#{historyProductId},history_type=#{historyType},history_date=#{historyDate},history_warehouse_id=#{historyWarehouseId},
 		history_quantity=#{historyQty} where history_id=#{historyId}
 	</update>
 	

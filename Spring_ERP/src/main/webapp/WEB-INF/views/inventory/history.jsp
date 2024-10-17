@@ -91,6 +91,8 @@
             <div>
             	<label>입출고</label>
             	<select name="historyType" class="historyType">
+            		
+            		<option value="0" disabled selected>선택해주세요</option>
             		<option value="1">입고</option>
             		<option value="2">출고</option>
             		<option value="3">반품</option>
@@ -99,6 +101,7 @@
             <div>
             	<label>창고</label>
             	<select class="inventoryWarehouseId">
+            		<option value="0" disabled selected>선택해주세요</option>
             		<c:forEach var="warehouseNum" items="${warehouseNum}">
 	            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
             		</c:forEach>
@@ -184,6 +187,7 @@
 	      </div>
 	      <div class="modal-body">
 	      	<input type="hidden" class="updateId">
+	      	<input type="hidden" class="updateproductId">
 	        <div>
 	        	<label>제품명</label>
 	        	<input type="text" class="updateName" >
@@ -236,8 +240,7 @@
 			<div class="product_brand_search"></div>
 			<div class="modalpage"></div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-primary" id="newModal_btn">확인</button>
+	    
 	      </div>
 	    </div>
 	  </div>
@@ -359,7 +362,7 @@
     	var historyProductId =$(".productId").val();
     	var historyQty =$(".historyQty").val();
     	var historyType =$(".historyType").val();
-    	var historyWarehouseId =$(".historyWarehouseId").val();
+    	var historyWarehouseId =$(".inventoryWarehouseId").val();
     	var historyDate =$(".historyDate").val();
     	
     	if(historyProductId==""){
@@ -378,6 +381,11 @@
     		alert("창고정보를 입력해주세요.");
     		return;
     	}
+    	if(historyDate==""){
+    		alert("날짜를 입력해주세요.");
+    		return;
+    	}
+    	
     	
     	if(confirm("입출고 등록을 하시겠습니까?")){
 	    	$.ajax({
@@ -410,25 +418,25 @@
 	
 	    // 이전 페이지 링크
 	    if (pager.startPage > pager.blockSize) {
-	        html += "<a href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>[이전]</a>";
+	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>&laquo; 이전</a>";
 	    } else {
-	        html += "[이전]";
+	        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-right: 5px;'>&laquo; 이전</span>";
 	    }
 	
 	    // 페이지 번호 링크
 	    for (var i = pager.startPage; i <= pager.endPage; i++) {
 	        if (pager.pageNum != i) {
-	            html += "<a href='javascript:productDisplay(" + i + ","+pager.pageSize+");'>[" + i + "]</a>";
+	            html += "<a class='btn btn-outline-primary mx-1 btn-sm' href='javascript:productDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
 	        } else {
-	            html += "[" + i + "]";
+	            html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
 	        }
 	    }
 	
 	    // 다음 페이지 링크
 	    if (pager.endPage != pager.totalPage) {
-	        html += "<a href='javascript:productDisplay(" + pager.nextPage + ","+pager.pageSize+");'>[다음]</a>";
+	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:productDisplay(" + pager.nextPage + ","+pager.pageSize+");'>다음 &raquo;</a>";
 	    } else {
-	        html += "[다음]";
+	        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-left: 5px;'>다음 &raquo;</span>";
 	    }
 	
 	    // 페이지 번호 HTML 업데이트
@@ -441,25 +449,25 @@
 	
 	    // 이전 페이지 링크
 	    if (pager.startPage > pager.blockSize) {
-	        html += "<a href='javascript:historyDisplay(" + pager.prevPage + ","+pager.pageSize+");'>[이전]</a>";
+	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:historyDisplay(" + pager.prevPage + ","+pager.pageSize+");'>&laquo; 이전</a>";
 	    } else {
-	        html += "[이전]";
+	        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-right: 5px;'>&laquo; 이전</span>";
 	    }
 	
 	    // 페이지 번호 링크
 	    for (var i = pager.startPage; i <= pager.endPage; i++) {
 	        if (pager.pageNum != i) {
-	            html += "<a href='javascript:historyDisplay(" + i + ","+pager.pageSize+");'>[" + i + "]</a>";
+	            html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:historyDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
 	        } else {
-	            html += "[" + i + "]";
+	            html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
 	        }
 	    }
 	
 	    // 다음 페이지 링크
 	    if (pager.endPage != pager.totalPage) {
-	        html += "<a href='javascript:historyDisplay(" + pager.nextPage + ","+pager.pageSize+");'>[다음]</a>";
+	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:historyDisplay(" + pager.nextPage + ","+pager.pageSize+");'>다음 &raquo;</a>";
 	    } else {
-	        html += "[다음]";
+	        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-left: 5px;'>다음 &raquo;</span>";
 	    }
 	
 	    // 페이지 번호 HTML 업데이트
@@ -557,8 +565,10 @@
     		type:"get",
     		url:"<c:url value="/inventory/history_modify_view"/>/"+historyId,
     		dataType:"json",
-    		success:function(result){    			
-    			$(".updateId").val(result.historyId);
+    		success:function(result){    		
+    			console.log(result);
+    			$(".updateId").val(result.historyId);    			
+    			$(".updateproductId").val(result.product.productId);
     			$(".updateName").val(result.product.productName);
     			$(".updateCode").val(result.product.productCategory);
     			$(".updateQty").val(result.historyQty);
@@ -573,6 +583,47 @@
     	});
     }
     
+    //수정완료 버튼 클릭 이벤트
+    $("#update_btn").click(function(){
+    	var historyId=$(".updateId").val();
+    	console.log(historyId);
+    	var historyProductId=$(".updateproductId").val();
+    	console.log(historyProductId);
+    	var historyType=$(".updateType").val();
+    	console.log(historyType);
+    	var historyWarehouseId=$(".updateWarehouse").val();
+    	console.log(historyWarehouseId);
+    	var historyQty=$(".updateQty").val();
+    	console.log(historyQty);
+    	var historyDate=$(".updateDate").val();
+    	console.log(historyDate);
+    	
+    	$.ajax({
+			type:"put",
+			url:"<c:url value="/inventory/history_modify"/>",
+			contentType: "application/json",
+			data: JSON.stringify({"historyId":historyId, "historyProductId":historyProductId, "historyType":historyType, "historyWarehouseId":historyWarehouseId, "historyQty":historyQty, "historyDate":historyDate }),
+			dataType: "text",
+			beforeSend: function(xhr) {
+                // CSRF 토큰을 HTTP 요청 헤더에 추가
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+			success:function(result){
+				if(result == "success") {
+					$('input[type="text"], input[type="hidden"], input[type="number"]').val('');
+					historyDisplay();
+				}
+				alert("수정완료");
+			},
+			error:function(xhr){
+				alert("상품정보가 수정되지 않았습니다.");
+			}
+		});
+    	
+    	
+    });
+    
+
     //history 삭제 함수
     function remove(historyId, pageNum) {
     	if(confirm("삭제 하시겠습니까?")){

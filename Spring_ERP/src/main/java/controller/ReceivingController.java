@@ -7,8 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ import dto.Receiving;
 import dto.Supplier;
 import dto.Warehouse;
 import lombok.RequiredArgsConstructor;
+import service.CommonService;
 import service.ReceivingService;
 import util.ProductCategoryEditor;
 import util.ProductCategoryParser;
@@ -37,6 +39,9 @@ import util.ProductCategoryParser;
 @PropertySource("classpath:colors.properties")
 public class ReceivingController {
     private final ReceivingService receivingService;
+    
+    @Autowired
+    private CommonService commonService;
     
     private final Environment env; // Environment 객체 주입
 
@@ -286,6 +291,15 @@ public class ReceivingController {
 
         // 상태 변경이 성공하면 OK 응답을 반환
         return ResponseEntity.ok("상태가 5로 변경되었습니다.");
+    }
+    
+    // 입고에서 카테고리 코드 보기
+    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @RequestMapping("/viewCategory")
+    public String viewCategory(Model model, @RequestParam("categoryCode") String categoryCode) {
+        ProductCategory productCategory = commonService.getProductCategoryDetails(categoryCode);
+        model.addAttribute("productCategory", productCategory);
+        return "viewCategory";
     }
 
 }

@@ -463,7 +463,7 @@
 
 	    for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 제외
 	        const productName = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase(); // 제품명
-	        const supplierName = rows[i].getElementsByTagName("td")[9].textContent.toLowerCase(); // 공급업체명
+	        const supplierName = rows[i].getElementsByTagName("td")[8].textContent.toLowerCase(); // 공급업체명
 
 	        if (productName.includes(searchQuery) || supplierName.includes(searchQuery) || searchQuery === "") {
 	            rows[i].style.display = ""; // 검색 조건에 맞으면 표시

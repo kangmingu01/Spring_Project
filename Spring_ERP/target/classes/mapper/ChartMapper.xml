@@ -92,22 +92,27 @@
 	</select>
 	
 	<!-- 최근 1년 최고 매출 상품 -->
+
 	<select id="selectSalesProduct" resultType="map">
-		SELECT 
-		    p.product_name, 
-		    SUM(h.history_quantity) AS total_out_quantity
-		FROM 
-		    product p
-		JOIN 
-		    history h ON p.product_id = h.history_product_id
-		WHERE 
-		    h.history_type = 2
-		    AND h.history_date BETWEEN ADD_MONTHS(SYSDATE, -12) AND SYSDATE
-		GROUP BY 
-		    p.product_name
-		ORDER BY 
-		    total_out_quantity DESC
-		FETCH FIRST 5 ROWS ONLY
+		SELECT *
+		FROM (
+		    SELECT 
+		        p.product_name, 
+		        SUM(h.history_quantity) AS total_out_quantity
+		    FROM 
+		        product p
+		    JOIN 
+		        history h ON p.product_id = h.history_product_id
+		    WHERE 
+		        h.history_type = 2
+		        AND h.history_date BETWEEN ADD_MONTHS(SYSDATE, -12) AND SYSDATE
+		    GROUP BY 
+		        p.product_name
+		    ORDER BY 
+		        total_out_quantity DESC
+		) 
+		WHERE ROWNUM &lt;= 5
+		
 	</select>
 	
 	<!-- 현재 창고 여유 공간 -->

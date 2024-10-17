@@ -5,7 +5,7 @@
 <!-- partial:partials/_sidebar.html -->
 <nav class="sidebar">
     <div class="sidebar-header">
-        <a href="<c:url value="/"/>" class="sidebar-brand"> Noble<span>UI</span> </a>
+        <a href="<c:url value="/"/>" class="text-decoration-none sidebar-brand">KREAM</a>
         <div class="sidebar-toggler">
             <span></span>
             <span></span>

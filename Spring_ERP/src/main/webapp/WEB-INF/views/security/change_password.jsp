@@ -39,7 +39,7 @@
     <div class="ms-md-4 me-md-4 ms-3 me-3 mt-3 mb-3 d-flex align-items-center justify-content-between text-center">
         <div>
             <img
-                    src="<c:url value='/images/logo-mini-light.png'/>"
+                    src="<c:url value='/images/logo_icon.png'/>"
                     class="logo me-2"
                     alt="logo"
             />

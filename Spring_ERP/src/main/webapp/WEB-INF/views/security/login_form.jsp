@@ -148,8 +148,8 @@
 
 <body>
 <!-- 데스크톱 로고 -->
-<div class="logo d-none d-md-block">
-    <img src="https://static.wanted.co.kr/community/2022/9/4cac9ce596e8f115290aa44f53f7264ad9a0060ca819fa0868add6bf64380789_resized"
+<div class="logo d-none d-md-block mt-5">
+    <img src="<c:url value="/images/logo_icon.png"/>"
          alt="logo">
 </div>
 
@@ -162,7 +162,7 @@
     <div class="right">
         <!-- 모바일 로고 -->
         <div class="logo logo-mobile d-block d-md-none">
-            <img src="https://static.wanted.co.kr/community/2022/9/4cac9ce596e8f115290aa44f53f7264ad9a0060ca819fa0868add6bf64380789_resized"
+            <img src="<c:url value="/images/logo_icon.png"/>"
                  alt="logo">
         </div>
 
@@ -240,7 +240,7 @@
                 gifElement.src = '<c:url value="/images/animation_end.png"/>';
                 gifElement.classList.remove('fade-out');
                 gifElement.classList.add('fade-in');
-            }, 1000); // 페이드 아웃 시간 (1초) 후 이미지 교체
+            }, 500); // 페이드 아웃 시간 (1초) 후 이미지 교체
         }, gifDuration);
     });
 </script>

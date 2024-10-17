@@ -319,6 +319,8 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     cursor: pointer;
 }
 .pageNumDiv{
+	margin-top: 5px;
+    align-items: center;
 	display: flex;
     justify-content: center;
 }

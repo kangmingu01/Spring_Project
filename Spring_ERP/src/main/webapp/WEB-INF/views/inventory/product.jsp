@@ -537,7 +537,6 @@
             url:"<c:url value="/inventory/warehouse_modify_view"/>/"+warehouseId,
             dataType:"json",
             success:function(result){
-                console.log(result);
                 $(".warehouseUpdateId").val(result.warehouseId);
                 $(".warehouseUpdateCode").val(result.warehouseName);
                 $(".warehouseUpdateLocation").val(result.warehouseLocation);
@@ -706,25 +705,25 @@
 
         // 이전 페이지 링크
         if (pager.startPage > pager.blockSize) {
-            html += "<a  href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>[이전]</a>";
+            html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>&laquo; 이전</a>";
         } else {
-            html += "[이전]";
+            html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-right: 5px;'>&laquo; 이전</span>";
         }
 
         // 페이지 번호 링크
         for (var i = pager.startPage; i <= pager.endPage; i++) {
             if (pager.pageNum != i) {
-                html += "<a href='javascript:productDisplay(" + i + ","+pager.pageSize+");'>[" + i + "]</a>";
+                html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:productDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
             } else {
-                html += "[" + i + "]";
+                html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
             }
         }
 
         // 다음 페이지 링크
         if (pager.endPage != pager.totalPage) {
-            html += "<a href='javascript:productDisplay(" + pager.nextPage + ","+pager.pageSize+");'>[다음]</a>";
+            html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:productDisplay(" + pager.nextPage + ","+pager.pageSize+");'>다음 &raquo;</a>";
         } else {
-            html += "[다음]";
+            html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-left: 5px;'>다음 &raquo;</span>";
         }
 
         // 페이지 번호 HTML 업데이트

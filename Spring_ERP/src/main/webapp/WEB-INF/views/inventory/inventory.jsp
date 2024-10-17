@@ -10,7 +10,7 @@
   <meta name="_csrf_header" content="${_csrf.headerName}" />
   <link href="<c:url value="/css/reset.css"/>" type="text/css" rel="stylesheet">
   <link href="<c:url value="/css/inventory.css"/>" type="text/css" rel="stylesheet">
-  <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>--%>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <title>Document</title>
 </head>
 <body>
@@ -345,7 +345,7 @@
     	});
     }
     
-  //모달 페이징 처리
+  	//모달 페이징 처리
     function modalpageNumberDisplay(pager) {
 	    var html = "";
 	

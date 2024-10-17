@@ -41,30 +41,15 @@
     align-items: center;
     justify-content: center;
 }
-/* .content_header_search_btn{
-    padding: 10px 10px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-weight: 500;
-    font-size: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-} */
+
 .content_header_search_btn:hover{
     background-color: #7782f8;
 }
-/* .content_header_search_btn >div{
-    width: 30px;
-    height: 30px;
-} */
+
 .content_header_reset_btn:hover{
     background-color: #7782f8;
 }
-/* .content_header_excel_btn >div{
-    width: 30px;
-    height: 30px;
-} */
+
 .content_body{
     padding: 5px;
     background-color: #e2e2e2;
@@ -299,6 +284,8 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     cursor: pointer;
 }
 .pageNumDiv{
+	margin-top: 5px;
+    align-items: center;
 	display: flex;
     justify-content: center;
 }

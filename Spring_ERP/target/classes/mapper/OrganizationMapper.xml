@@ -81,9 +81,9 @@
 
     <!-- 부서 코드로 부서 이름 찾기 -->
     <select id="selectOrgName" parameterType="string" resultType="string">
-        select ORG_ID, ORG_NAME, ORG_TYPE, ADDRESS, PHONE_NUMBER, CREATED from ORGANIZATION
+        select ORG_NAME from ORGANIZATION
         <where>
-            <if test="orgId != null and orgId = ''">
+            <if test="orgId != null and orgId != ''">
                 ORG_ID = #{orgId}
             </if>
         </where>

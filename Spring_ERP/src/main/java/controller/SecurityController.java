@@ -9,8 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import repository.ErpUserDAO;
 import repository.OrganizationDAO;
 
@@ -37,8 +39,11 @@ public class SecurityController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         ErpUser erpUser = erpUserDAO.selectErpUserByUserid(userDetails.getUsername());
 
+        /* 현재 비밀번호 검증 */
         String currentPassword = (String) map.get("currentPassword");
+        /* 새 비밀번호 */
         String newPassword = (String) map.get("newPassword");
+        /* 새 비밀번호랑 같은지 확인하는 거 */
         String confirmPassword = (String) map.get("confirmPassword");
 
         if (currentPassword != null && passwordEncoder.matches(currentPassword, erpUser.getPasswd())) {
@@ -81,15 +86,54 @@ public class SecurityController {
 
     /* 비상 */
     @GetMapping("/mypage")
-    public String mypage(Model model) {
+    public String mypage( Model model) {
+        /*@AuthenticationPrincipal CustomUserDetails userDetails*/
+        /*@RequestParam(value = "error",required = false) String error, @RequestParam(value = "success",required = false) String success,*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        ErpUser erpUser = erpUserDAO.selectErpUserByUserid(userDetails.getUsername());
-        String orgName = organizationDAO.selectOrgName(erpUser.getOrgId());
-        model.addAttribute("userDetails", userDetails);
-        model.addAttribute("erpUser", erpUser);
-        model.addAttribute("orgName", orgName);
+        String orgName = organizationDAO.selectOrgName(userDetails.getOrgId());
 
+        model.addAttribute("orgName", orgName);
+        /*
+        if(error != null) {
+            model.addAttribute("error", error);
+        }
+        if(success != null) {
+            model.addAttribute("success", success);
+        }
+*/
         return "/security/mypage_page";
+    }
+
+    @PostMapping("/updateUserInfo")
+    public String updateUserInfo(@ModelAttribute ErpUser erpUser, @RequestParam Map<String, Object> map, Model model, RedirectAttributes redirectAttributes) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        ErpUser erp = erpUserDAO.selectErpUserByUserid(userDetails.getUsername());
+
+        String currentPassword = (String) map.get("currentPassword");
+        String newPassword = (String) map.get("newPassword");
+        String confirmPassword = (String) map.get("confirmPassword");
+
+        if (currentPassword != null && passwordEncoder.matches(currentPassword, erp.getPasswd())) {
+            if (currentPassword.equals(newPassword)) {
+                redirectAttributes.addFlashAttribute("error", "현재 비밀번호와 입력한 새 비밀번호랑 같습니다. 다시 입력해주세요");
+                return "redirect:/mypage";
+            }
+            if (newPassword.equals(confirmPassword)) {
+                erpUser.setPasswd(passwordEncoder.encode(newPassword));
+                erpUserDAO.updateErpUser(erpUser);
+
+                redirectAttributes.addFlashAttribute("success", "성공적으로 변경되었습니다.");
+                return "redirect:/mypage";
+            } else {
+                redirectAttributes.addFlashAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                return "redirect:/mypage";
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("error", "현재 비밀번호가 올바르지 않습니다.");
+            return "redirect:/mypage";
+        }
     }
 }

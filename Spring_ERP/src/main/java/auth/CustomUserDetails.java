@@ -55,16 +55,23 @@ public class CustomUserDetails implements UserDetails {
 
         this.erpAuthList = new HashSet<>();
 
-        for (ErpAuth auth : user.getErpAuthList()) {
-            this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
-        }
-
-        if (departmentAuthList != null) {
-            for (ErpAuth auth : departmentAuthList) {
-                this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
+        // 유저의 권한 리스트가 null이 아닌지 확인 후 추가
+        if (user.getErpAuthList() != null) {
+            for (ErpAuth auth : user.getErpAuthList()) {
+                if (auth != null && auth.getAuth() != null) {
+                    this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
+                }
             }
         }
 
+        // 부서 권한 리스트가 null이 아닌지 확인 후 추가
+        if (departmentAuthList != null) {
+            for (ErpAuth auth : departmentAuthList) {
+                if (auth != null && auth.getAuth() != null) {
+                    this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
+                }
+            }
+        }
     }
 
     // 인증된 사용자의 권한정보를 반환하는 메소드

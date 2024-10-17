@@ -17,16 +17,18 @@
 <nav class="navbar">
     <div class="navbar-content">
         <div class="logo-mini-wrapper">
-            <img
-                    src="<c:url value="/images/logo-mini-light.png"/>"
-                    class="logo-mini logo-mini-light"
-                    alt="logo"
-            />
-            <img
-                    src="<c:url value="/images/logo-mini-dark.png"/>"
-                    class="logo-mini logo-mini-dark"
-                    alt="logo"
-            />
+            <a href="<c:url value="/main"/>" class="nav-link">
+                <img
+                        src="<c:url value="/images/logo-mini-light.png"/>"
+                        class="logo-mini logo-mini-light"
+                        alt="logo"
+                />
+                <img
+                        src="<c:url value="/images/logo-mini-dark.png"/>"
+                        class="logo-mini logo-mini-dark"
+                        alt="logo"
+                />
+            </a>
         </div>
 
 

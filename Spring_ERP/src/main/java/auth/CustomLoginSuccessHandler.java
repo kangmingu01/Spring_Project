@@ -7,6 +7,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import repository.ErpUserDAO;
 import service.ErpUserService;
 
 import javax.servlet.ServletException;
@@ -18,10 +19,16 @@ import java.time.LocalDate;
 @Component
 @RequiredArgsConstructor
 public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private final ErpUserDAO erpUserDAO;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        ErpUser erpUser = erpUserDAO.selectErpUserByUserid(userDetails.getUserid());
+        erpUser.setFailedAttempts(0);
+        userDetails.setFailedAttempts(0);
+        erpUserDAO.updateErpUser(erpUser);
 
         if (userDetails.getIsInitialPassword() == 1) {
             getRedirectStrategy().sendRedirect(request, response, "/change_password");

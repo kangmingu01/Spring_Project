@@ -115,38 +115,40 @@ public class SecurityController {
         String newPassword = (String) map.get("newPassword");
         String confirmPassword = (String) map.get("confirmPassword");
 
-        System.out.println(erpUser);
-        System.out.println(currentPassword);
-        System.out.println(newPassword);
-        System.out.println(confirmPassword);
-
-        /*// 입력값이 모두 있는지 확인
-        if (currentPassword == null || currentPassword.isEmpty() ||
-            newPassword == null || newPassword.isEmpty() ||
-            confirmPassword == null || confirmPassword.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "모든 비밀번호 입력란을 채워주세요.");
-            return "redirect:/mypage";
+        if (!erpUser.getEmail().equals(map.get("email"))) {
+            erpUser.setEmail((String) map.get("email"));
         }
-*/
-        if (passwordEncoder.matches(currentPassword, erp.getPasswd())) {
-            if (currentPassword.equals(newPassword)) {
-                redirectAttributes.addFlashAttribute("error", "현재 비밀번호와 입력한 새 비밀번호가 같습니다. 다시 입력해주세요.");
-                return "redirect:/mypage";
-            }
-            if (newPassword.equals(confirmPassword)) {
-                erp.setPasswd(passwordEncoder.encode(newPassword));
-                erp.setEnabled(1);
-                erpUserDAO.updateErpUser(erp);
+        if (!erpUser.getPhone().equals(map.get("phone"))) {
+            erpUser.setPhone((String) map.get("phone"));
+        }
+        if (!erpUser.getAddress().equals(map.get("address"))) {
+            erpUser.setAddress((String) map.get("address"));
+        }
 
-                redirectAttributes.addFlashAttribute("success", "성공적으로 변경되었습니다.");
-                return "redirect:/mypage";
+        if (currentPassword != null && !currentPassword.isEmpty() &&
+            newPassword != null && !newPassword.isEmpty() &&
+            confirmPassword != null && !confirmPassword.isEmpty()) {
+
+            if (passwordEncoder.matches(currentPassword, erpUser.getPasswd())) {
+                if (currentPassword.equals(newPassword)) {
+                    redirectAttributes.addFlashAttribute("error", "현재 비밀번호와 입력한 새 비밀번호가 같습니다. 다시 입력해주세요.");
+                    return "redirect:/mypage";
+                }
+                if (newPassword.equals(confirmPassword)) {
+                    erpUser.setPasswd(passwordEncoder.encode(newPassword));
+                    erpUser.setEnabled(1);
+                } else {
+                    redirectAttributes.addFlashAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                    return "redirect:/mypage";
+                }
             } else {
-                redirectAttributes.addFlashAttribute("error", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                redirectAttributes.addFlashAttribute("error", "현재 비밀번호가 올바르지 않습니다.");
                 return "redirect:/mypage";
             }
-        } else {
-            redirectAttributes.addFlashAttribute("error", "현재 비밀번호가 올바르지 않습니다.");
-            return "redirect:/mypage";
         }
+
+        erpUserDAO.updateErpUser(erpUser);
+        redirectAttributes.addFlashAttribute("success", "정보가 성공적으로 수정되었습니다.");
+        return "redirect:/mypage";
     }
 }

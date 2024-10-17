@@ -58,10 +58,12 @@
                 <div class="mb-3">
                     <label for="email" class="form-label">이메일 <span class="badge bg-info">수정 가능</span></label>
                     <input type="email" class="form-control" id="email" name="email" value="${loginUser.email}">
+                    <div id="emailError" class="error-message"></div>
                 </div>
                 <div class="mb-3">
                     <label for="phone" class="form-label">전화번호 <span class="badge bg-info">수정 가능</span></label>
                     <input type="text" class="form-control" id="phone" name="phone" value="${loginUser.phone}">
+                    <div id="phoneError" class="error-message"></div>
                 </div>
                 <div class="mb-3">
                     <label for="address" class="form-label">주소 <span class="badge bg-info">수정 가능</span></label>
@@ -120,11 +122,10 @@
             </div>
         </div>
 
-
         <!-- 제출 버튼 -->
         <div class="text-center mb-3">
             <button type="button" class="btn btn-outline-secondary" id="togglePasswordChange">비밀번호 변경</button>
-            <button type="submit" class="btn btn-primary">정보 수정</button>
+            <button type="submit" class="btn btn-primary" id="updateButton">정보 수정</button>
         </div>
         <sec:csrfInput/>
     </form>
@@ -133,6 +134,8 @@
 <script>
     $(document).ready(function () {
         var passwdReg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&*_-]).{6,20}$/;
+        var emailReg = /^([a-zA-Z0-9._]+@[a-zA-Z0-9.-]+(\.[-a-zA-Z0-9]+)+)*$/;
+        var phoneReg = /^010\d{8}$/;
 
         function validatePasswordStrength() {
             var newPassword = $('#newPassword').val();
@@ -161,13 +164,37 @@
             }
         }
 
+        function validateEmail() {
+            var email = $('#email').val();
+            if (email !== "${loginUser.email}" && !emailReg.test(email)) {
+                $('#emailError').text('유효한 이메일 주소를 입력해주세요.').css('color', 'red');
+                $('#updateButton').prop('disabled', true);
+            } else {
+                $('#emailError').text('');
+                checkAllFieldsFilled();
+            }
+        }
+
+        function validatePhone() {
+            var phone = $('#phone').val();
+            if (phone !== "${loginUser.phone}" && !phoneReg.test(phone)) {
+                $('#phoneError').text('유효한 전화번호를 입력해주세요. 형식: 010XXXXXXXX').css('color', 'red');
+                $('#updateButton').prop('disabled', true);
+            } else {
+                $('#phoneError').text('');
+                checkAllFieldsFilled();
+            }
+        }
+
         function checkAllFieldsFilled() {
             var currentPassword = $('#currentPassword').val();
             var newPassword = $('#newPassword').val();
             var confirmPassword = $('#confirmPassword').val();
+            var emailError = $('#emailError').text();
+            var phoneError = $('#phoneError').text();
 
-            // 모든 필드에 값이 있을 경우에만 버튼 활성화
-            if (currentPassword !== "" && newPassword !== "" && confirmPassword !== "") {
+            // 모든 필드에 값이 올바르게 입력되었을 경우에만 버튼 활성화
+            if ((newPassword !== "" && confirmPassword !== "" && newPassword === confirmPassword && emailError === "" && phoneError === "") || (currentPassword === "" && newPassword === "" && confirmPassword === "" && emailError === "" && phoneError === "")) {
                 $('#updateButton').prop('disabled', false);
             } else {
                 $('#updateButton').prop('disabled', true);
@@ -178,6 +205,14 @@
             validatePasswordStrength();
             validatePasswordMatch();
             checkAllFieldsFilled();
+        });
+
+        $('#email').on('keyup', function () {
+            validateEmail();
+        });
+
+        $('#phone').on('keyup', function () {
+            validatePhone();
         });
 
         // 슬라이드 토글 효과를 사용하여 비밀번호 변경 섹션을 열고 닫기

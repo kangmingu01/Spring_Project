@@ -110,7 +110,7 @@
 		        p.product_name
 		    ORDER BY 
 		        total_out_quantity DESC
-		)
+		)  
 		WHERE ROWNUM &lt;= 5
 		
 	</select>

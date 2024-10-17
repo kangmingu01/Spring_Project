@@ -226,7 +226,7 @@
 
   <!-- 발주 목록 모달 -->
   <div class="modal fade sty" id="ordersModal" tabindex="-1" aria-labelledby="ordersModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" style="max-width: 61%;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg" style="max-width: 50%;">
         <div class="modal-content">
            <form id="ordersModalForm" method="get" action="<c:url value='/purchase/receiving/ordersList'/>">
             <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">

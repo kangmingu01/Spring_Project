@@ -36,7 +36,7 @@ public class OrdersController {
     }
 
     // 발주 등록 페이지 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register(Model model, Principal principal) {
         // 공급 업체 목록 조회 후 드롭다운에 사용
@@ -59,7 +59,7 @@ public class OrdersController {
     }
 
     // 발주 등록 처리 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@ModelAttribute Orders orders, Principal principal, Model model) {
         // 로그인한 사용자의 아이디를 발주 정보에 추가
@@ -128,7 +128,7 @@ public class OrdersController {
     */
     
     // 발주 목록 페이지 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listOrders(@RequestParam Map<String, Object> map, Model model, Principal principal) {
         // 로그인한 사용자 아이디 추가
@@ -170,7 +170,7 @@ public class OrdersController {
     }
 
     // 발주 수정 후 목록으로 이동 - 페이징 및 검색 조건 유지
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public String modifyOrder(@RequestBody Map<String, Object> map, Principal principal, Model model)
             throws UnsupportedEncodingException {
@@ -202,7 +202,7 @@ public class OrdersController {
     }
 
     // 발주 확정 - 발주 대기 상태에서 발주 완료 상태로 변경
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     public String confirmOrders(@RequestParam("ordersId") int ordersId, @RequestParam Map<String, Object> map, Model model, Principal principal) 
             throws UnsupportedEncodingException {

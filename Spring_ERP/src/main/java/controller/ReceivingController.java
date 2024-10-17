@@ -46,7 +46,7 @@ public class ReceivingController {
     }
 
     // 입고 등록 페이지 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register(Model model, Principal principal) {
     	// 창고 목록 조회
@@ -78,7 +78,7 @@ public class ReceivingController {
     }
 
     // 입고 등록 처리 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@ModelAttribute ProductCategory productCategory, @ModelAttribute Receiving receiving, Principal principal, Model model) {
     	// 로그로 productCategoryDetails 확인
@@ -134,7 +134,7 @@ public class ReceivingController {
     }
 
     // 발주 목록 조회 - 모달 창에서 페이징 및 검색 처리
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/ordersList", method = RequestMethod.GET)
     public String getOrdersList(@RequestParam Map<String, Object> map, Model model, Principal principal) {
     	// 로그인한 사용자 아이디 추가
@@ -162,7 +162,7 @@ public class ReceivingController {
     }
     
     // 입고 목록 페이지 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listReceiving( @RequestParam(required = false) String receivingStatus,@RequestParam Map<String, Object> map
     		, Model model, Principal principal) {
@@ -216,7 +216,7 @@ public class ReceivingController {
         return "purchase/receiving/receiving_list"; // 입고 목록 페이지 뷰로 이동
     }
     
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public String modifyReceiving(@RequestBody Map<String, Object> params, Principal principal, Model model) 
             throws UnsupportedEncodingException {
@@ -277,7 +277,7 @@ public class ReceivingController {
         return "redirect:" + redirectUrl;
     }
    
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> confirmReceiving(@RequestParam("receivingId") int receivingId) {

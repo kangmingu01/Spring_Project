@@ -244,26 +244,26 @@
         <div class="modal-body">
                  <!-- 검색 필드 통합 -->
                  <div class="input-group mb-3">
-                     <input type="text" class="form-control" id="ordersSearch" placeholder="제품명 또는 공급업체 검색" aria-label="검색">
+                     <input type="text" class="form-control" id="ordersSearch" placeholder="상품명 또는 공급업체를 입력해주세요" aria-label="검색">
                      <button class="btn btn-outline-secondary" style="font-size: 16px; height: 38px; width: 58px " type="button" onclick="filterOrders()">검색</button>
                  </div>
                  <table class="table sty" id="productTable">
                      <thead>
               <tr>
-                <th>발주번호</th>
-                <th>제품번호</th>
-                <th>제품명</th>
-                <th>제품코드</th>
-                <th>브랜드</th>
-                <th>종류</th>
-                <th>색상</th>
-                <th>사이즈</th>
-                <th>성별</th>
-                <th>공급업체</th>
-                <th>발주수량</th>
-                <th>단가</th>
-                <th>납기일</th>
-                <th></th>
+                <th style="background-color: #f4f4f4">발주번호</th>
+                <th style="background-color: #f4f4f4">제품번호</th>
+                <th style="background-color: #f4f4f4">제품명</th>
+                <th style="background-color: #f4f4f4">제품코드</th>
+                <th style="background-color: #f4f4f4">브랜드</th>
+                <th style="background-color: #f4f4f4">종류</th>
+                <th style="background-color: #f4f4f4">색상</th>
+                <th style="background-color: #f4f4f4">사이즈</th>
+                <th style="background-color: #f4f4f4">성별</th>
+                <th style="background-color: #f4f4f4">공급업체</th>
+                <th style="background-color: #f4f4f4">발주수량</th>
+                <th style="background-color: #f4f4f4">단가</th>
+                <th style="background-color: #f4f4f4">납기일</th>
+                <th style="background-color: #f4f4f4"></th>
               </tr>
             </thead>
             <tbody class="sty">

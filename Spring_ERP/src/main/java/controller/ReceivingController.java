@@ -46,7 +46,7 @@ public class ReceivingController {
     }
 
     // 입고 등록 페이지 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register(Model model, Principal principal) {
     	// 창고 목록 조회
@@ -54,14 +54,22 @@ public class ReceivingController {
     	model.addAttribute("warehouseList", warehouseList);
        
         // 발주 목록을 조회하여 모델에 추가
-        Map<String, Object> ordersMap = new HashMap<>();
+        //Map<String, Object> ordersMap = new HashMap<>();
         //ordersMap.put("pageNum", "1");
         //ordersMap.put("pageSize", "10");
-        Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
+        //Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
         //System.out.println(ordersResult);
-        model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+        //model.addAttribute("ordersResult", ordersResult.get("ordersList"));
         //System.out.println(ordersResult.get("ordersList"));
+        //model.addAttribute("pager", ordersResult.get("pager"));
 
+    	
+    	 Map<String, Object> ordersMap = new HashMap<>();        
+         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
+         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+         model.addAttribute("pager", ordersResult.get("pager"));
+         model.addAttribute("searchMap", ordersMap); 
+         
         // 로그인한 사용자의 아이디 추가
         String userId = principal.getName();
         model.addAttribute("userId", userId);
@@ -70,11 +78,11 @@ public class ReceivingController {
     }
 
     // 입고 등록 처리 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String register(@ModelAttribute ProductCategory productCategory, @ModelAttribute Receiving receiving, Principal principal, Model model) {
     	// 로그로 productCategoryDetails 확인
-        System.out.println("Received Product Category Details: " + receiving.getProductCategoryDetails());
+        //System.out.println("Received Product Category Details: " + receiving.getProductCategoryDetails());
         
     	// 로그인한 사용자의 아이디를 입고 정보에 추가
         String userId = principal.getName();
@@ -85,11 +93,11 @@ public class ReceivingController {
 
         // ProductCategory에서 색상 코드를 조회하고 색상 이름으로 변환하여 모델에 추가
         String colorCode = productCategory.getColor();
-        System.out.println("colorCode = "+colorCode);
+        //System.out.println("colorCode = "+colorCode);
         String propertyKey = "color." + productCategory.getColor();
-        System.out.println("propertyKey = "+propertyKey);
+        //System.out.println("propertyKey = "+propertyKey);
         String propertyValue = env.getProperty(propertyKey);
-        System.out.println("propertyValue = "+propertyValue);
+        //System.out.println("propertyValue = "+propertyValue);
         
         productCategory.setColor(propertyValue);
 
@@ -98,7 +106,7 @@ public class ReceivingController {
         model.addAttribute("newReceiving", newReceiving);
         model.addAttribute("productCategory", productCategory);
         String productCode = "" + productCategory.getBrand() + " " + colorCode + " " + productCategory.getColor() + " " + productCategory.getSize() + " " + productCategory.getGender();
-        System.out.println(productCode);
+        //System.out.println(productCode);
         model.addAttribute("productCode", productCode);
 
         // ProductCategory 코드를 파싱하여 상세 정보를 설정
@@ -116,19 +124,17 @@ public class ReceivingController {
         List<Warehouse> warehouseList = receivingService.getWarehouseList();
         model.addAttribute("warehouseList", warehouseList);
 
-        // 발주 목록도 다시 조회하여 모델에 추가
-        Map<String, Object> ordersMap = new HashMap<>();
-        //ordersMap.put("pageNum", "1");
-        //ordersMap.put("pageSize", "10");
-        
+        Map<String, Object> ordersMap = new HashMap<>();        
         Map<String, Object> ordersResult = receivingService.getOrdersList(ordersMap);
         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+        model.addAttribute("pager", ordersResult.get("pager"));
+        model.addAttribute("searchMap", ordersMap); 
         
         return "purchase/receiving/receiving_register"; // 입고 등록 페이지로 다시 이동
     }
 
     // 발주 목록 조회 - 모달 창에서 페이징 및 검색 처리
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/ordersList", method = RequestMethod.GET)
     public String getOrdersList(@RequestParam Map<String, Object> map, Model model, Principal principal) {
     	// 로그인한 사용자 아이디 추가
@@ -142,29 +148,25 @@ public class ReceivingController {
             map.put("pageSize", "10");
         }
         
-        map.putIfAbsent("productId", "");
-        map.putIfAbsent("productName", "");
-        map.putIfAbsent("supplierId", "");
-        map.putIfAbsent("supplierName", "");
-        
-        // 서비스로 검색 조건과 페이징 정보가 담긴 map 전달
+        // 발주 목록 조회
         Map<String, Object> ordersResult = receivingService.getOrdersList(map);
+        model.addAttribute("ordersResult", ordersResult.get("ordersList"));
+        model.addAttribute("pager", ordersResult.get("pager"));
+        model.addAttribute("searchMap", map);
 
-        // 조회된 발주 목록과 페이징 정보를 모델에 추가
-        model.addAttribute("ordersResult", ordersResult.get("ordersList")); // 발주 목록
-        model.addAttribute("pager", ordersResult.get("pager")); // 페이징 정보
-        model.addAttribute("searchMap", map); // 검색 조건
+        // 플래그를 설정하여 모달이 다시 열리도록 설정
+        model.addAttribute("openModal", true);
         
-        return "purchase/receiving/receiving_ordersList";  
+        // 입고 등록 페이지로 이동 (이 때 모달을 다시 열도록 처리)
+        return "purchase/receiving/receiving_register";  
     }
     
     // 입고 목록 페이지 - 구매팀 ROLE만 접근 가능
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listReceiving( @RequestParam(required = false) String receivingStatus,@RequestParam Map<String, Object> map
     		, Model model, Principal principal) {
     	
-    	 // receivingStatus 값 확인 로그
         //System.out.println("receivingStatus: " + receivingStatus);
         
         // 로그인한 사용자 아이디 추가
@@ -213,7 +215,7 @@ public class ReceivingController {
         return "purchase/receiving/receiving_list"; // 입고 목록 페이지 뷰로 이동
     }
     
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     public String modifyReceiving(@RequestBody Map<String, Object> params, Principal principal, Model model) 
             throws UnsupportedEncodingException {
@@ -274,7 +276,7 @@ public class ReceivingController {
         return "redirect:" + redirectUrl;
     }
    
-    @PreAuthorize("hasRole('ROLE_PURCHASING_TEAM')")
+    @PreAuthorize("hasAnyRole('ROLE_PURCHASING_TEAM', 'ROLE_SUPER_ADMINISTRATOR')")
     @RequestMapping(value = "/confirm", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> confirmReceiving(@RequestParam("receivingId") int receivingId) {

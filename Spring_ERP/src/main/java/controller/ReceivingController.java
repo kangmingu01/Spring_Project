@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +42,7 @@ public class ReceivingController {
     @Autowired
     private CommonService commonService;
     
-    private final Environment env; // Environment 객체 주입
+    //private final Environment env; // Environment 객체 주입
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -97,22 +96,22 @@ public class ReceivingController {
         receivingService.addReceiving(receiving);
 
         // ProductCategory에서 색상 코드를 조회하고 색상 이름으로 변환하여 모델에 추가
-        String colorCode = productCategory.getColor();
+        //String colorCode = productCategory.getColor();
         //System.out.println("colorCode = "+colorCode);
-        String propertyKey = "color." + productCategory.getColor();
+        //String propertyKey = "color." + productCategory.getColor();
         //System.out.println("propertyKey = "+propertyKey);
-        String propertyValue = env.getProperty(propertyKey);
+        //String propertyValue = env.getProperty(propertyKey);
         //System.out.println("propertyValue = "+propertyValue);
         
-        productCategory.setColor(propertyValue);
+        //productCategory.setColor(propertyValue);
 
         // 등록된 입고 정보 다시 조회하여 모델에 추가
         Receiving newReceiving = receivingService.getReceivingById(receiving.getReceivingId());
         model.addAttribute("newReceiving", newReceiving);
         model.addAttribute("productCategory", productCategory);
-        String productCode = "" + productCategory.getBrand() + " " + colorCode + " " + productCategory.getColor() + " " + productCategory.getSize() + " " + productCategory.getGender();
+        //String productCode = "" + productCategory.getBrand() + " " + colorCode + " " + productCategory.getColor() + " " + productCategory.getSize() + " " + productCategory.getGender();
         //System.out.println(productCode);
-        model.addAttribute("productCode", productCode);
+        //model.addAttribute("productCode", productCode);
 
         // ProductCategory 코드를 파싱하여 상세 정보를 설정
         if (newReceiving != null) {

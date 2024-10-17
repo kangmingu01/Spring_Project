@@ -182,7 +182,7 @@
               <th>발주번호</th>
               <th>제품번호</th>
               <th>제품명</th>
-              <th>제품코드</th>
+              <!--  <th>제품코드</th> -->
               <th>브랜드</th>
               <th>종류</th>
               <th>색상</th>
@@ -203,7 +203,7 @@
                     <td>${newReceiving.ordersId}</td>
                     <td>${newReceiving.productId}</td>
                     <td>${newReceiving.productName}</td>
-                    <td>${productCode}</td>
+                    <!-- <td>${productCode}</td> -->
                     <td>${productCategory.brand}</td>                            
                           <td>${productCategory.type}</td>
                           <td>${productCategory.color}</td>

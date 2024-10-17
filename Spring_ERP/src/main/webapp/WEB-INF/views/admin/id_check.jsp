@@ -75,18 +75,28 @@
 <section class="container mt-3">
     <c:choose>
         <c:when test="${check == 0}">
-            <p>입력된 [${userid}]는 사용 가능한 아이디입니다.</p>
-            <button type="button" onclick="selectId()">아이디 사용</button>
+            <!-- 아이디 사용 가능 메시지 -->
+            <div class="p-3 mb-3 rounded shadow-sm bg-light border" style="border-left: 4px solid #28a745;">
+                <p class="m-0">입력된 <strong>[${userid}]</strong>는 사용 가능한 아이디입니다.</p>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-success" onclick="selectId()">아이디 사용</button>
+            </div>
         </c:when>
-        <c:otherwise>
-            <p>입력하신 아이디 <strong>[${userid}]</strong> 는 이미 사용 중입니다.</p>
-            <p>새로운 아이디를 입력한 후 <strong>[확인]</strong> 버튼을 눌러 주세요.</p>
 
+        <c:otherwise>
+            <!-- 아이디 사용 불가 메시지 -->
+            <div class="p-3 mb-3 rounded shadow-sm bg-light border" style="border-left: 4px solid #dc3545;">
+                <p class="m-0">입력하신 아이디 <strong>[${userid}]</strong> 는 이미 사용 중입니다.</p>
+            </div>
+            <p class="text-muted mb-3">새로운 아이디를 입력한 후 <strong>[확인]</strong> 버튼을 눌러 주세요.</p>
+
+            <!-- 아이디 확인 폼 -->
             <form action="<c:url value='/admin/idCheck'/>" method="post" id="id_check_form">
                 <div class="input-group mb-3">
                     <!-- 아이디 입력 필드 -->
                     <div class="form-floating flex-grow-1">
-                        <input type="text" class="form-control" name="userid" id="userid" placeholder="아이디를 입력하세요"autocomplete="off">
+                        <input type="text" class="form-control" name="userid" id="userid" placeholder="아이디를 입력하세요" autocomplete="off">
                         <label for="userid">아이디 입력</label>
                     </div>
                     <!-- 확인 버튼 -->
@@ -97,7 +107,7 @@
                 <div class="mt-2">
                     <div id="idMsg" class="text-danger" style="display: none;">아이디를 입력해주세요</div>
                     <div id="idRegMsg" class="text-danger" style="display: none;">
-                        아이디는 영문자로 시작되는 영문자, 숫자의 범위 6~15 범위의 문자로만 작성 가능합니다
+                        아이디는 영문자로 시작되는 영문자, 숫자의 범위 6~15 범위의 문자로만 작성 가능합니다.
                     </div>
                 </div>
 
@@ -105,6 +115,9 @@
             </form>
         </c:otherwise>
     </c:choose>
+
+
+
 </section>
 <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
 <script>

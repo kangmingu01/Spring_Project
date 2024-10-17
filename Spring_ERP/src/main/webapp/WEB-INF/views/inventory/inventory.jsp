@@ -10,8 +10,7 @@
   <meta name="_csrf_header" content="${_csrf.headerName}" />
   <link href="<c:url value="/css/reset.css"/>" type="text/css" rel="stylesheet">
   <link href="<c:url value="/css/inventory.css"/>" type="text/css" rel="stylesheet">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>--%>
   <title>Document</title>
 </head>
 <body>
@@ -246,7 +245,7 @@
 	  		</div>
 		</div>
 	</div>
-
+  <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
   <script>
  	var csrfToken = $('meta[name="_csrf"]').attr('content');
   	var csrfHeader = $('meta[name="_csrf_header"]').attr('content');

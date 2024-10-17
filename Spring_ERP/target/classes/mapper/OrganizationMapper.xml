@@ -78,4 +78,14 @@
             ORDER BY org_id DESC
         ) WHERE ROWNUM = 1
     </select>
+
+    <!-- 부서 코드로 부서 이름 찾기 -->
+    <select id="selectOrgName" parameterType="string" resultType="string">
+        select ORG_NAME from ORGANIZATION
+        <where>
+            <if test="orgId != null and orgId != ''">
+                ORG_ID = #{orgId}
+            </if>
+        </where>
+    </select>
 </mapper>

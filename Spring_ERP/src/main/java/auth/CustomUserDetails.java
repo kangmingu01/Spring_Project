@@ -28,8 +28,11 @@ public class CustomUserDetails implements UserDetails {
     private int gender;     // 성별 (1: 남성, 2: 여성 등)
     private LocalDate birthday;      // 생년월일
     private LocalDate joindate;      // 입사일
+    private int isInitialPassword;  // 초기 비밀번호 여부 (1: 초기 비밀번호 상태, 0: 변경됨)
+    private int failedAttempts;     // 로그인 실패 횟수 (0부터 시작)
     private int enabled;    // 계정 활성 상태 (1: 활성, 0: 비활성)
     private String orgId;      // 조직 ID (부서 또는 지점)
+
 
     // 인증된 사용자의 모든 권한 정보가 저장될 필드 작성
     /* 혹시 모를 중복 권한 방지 => Set */
@@ -45,21 +48,30 @@ public class CustomUserDetails implements UserDetails {
         this.gender = user.getGender();
         this.birthday = user.getBirthday();
         this.joindate = user.getJoindate();
+        this.isInitialPassword = user.getIsInitialPassword();
+        this.failedAttempts = user.getFailedAttempts();
         this.enabled = user.getEnabled();
         this.orgId = user.getOrgId();
 
         this.erpAuthList = new HashSet<>();
 
-        for (ErpAuth auth : user.getErpAuthList()) {
-            this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
-        }
-
-        if (departmentAuthList != null) {
-            for (ErpAuth auth : departmentAuthList) {
-                this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
+        // 유저의 권한 리스트가 null이 아닌지 확인 후 추가
+        if (user.getErpAuthList() != null) {
+            for (ErpAuth auth : user.getErpAuthList()) {
+                if (auth != null && auth.getAuth() != null) {
+                    this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
+                }
             }
         }
 
+        // 부서 권한 리스트가 null이 아닌지 확인 후 추가
+        if (departmentAuthList != null) {
+            for (ErpAuth auth : departmentAuthList) {
+                if (auth != null && auth.getAuth() != null) {
+                    this.erpAuthList.add(new SimpleGrantedAuthority(auth.getAuth()));
+                }
+            }
+        }
     }
 
     // 인증된 사용자의 권한정보를 반환하는 메소드

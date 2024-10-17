@@ -19,14 +19,13 @@ CREATE SEQUENCE inventory_seq;
 */
 @Data
 public class Inventory {
-	private int inventoryId;	// ��� �ĺ���
+	private int inventoryId;
 	private int inventoryProductId;	
-	private int inventoryQty;	// ���� ����
-	private int inventoryWarehouseId;	// â����̵�
-	private int inventoryDamagedQty;	// �ļյ� ����
+	private int inventoryQty;
+	private int inventoryWarehouseId;
+	private int inventoryDamagedQty;
 	private String lastDate;
-	
+
 	private Product product;
 	private Warehouse warehouse;
-	
 }

@@ -10,7 +10,7 @@
 
     <!-- 로그인 페이지 첫 템플릿 -->
     <definition name="login" template="/WEB-INF/views/layout/template1.jsp">
-        <put-attribute name="content" value="/WEB-INF/views/login_form.jsp"/>
+        <put-attribute name="content" value="/WEB-INF/views/security/login_form.jsp"/>
     </definition>
 
     <definition name="idCheck" template="/WEB-INF/views/layout/template1.jsp">
@@ -21,8 +21,6 @@
     <definition name="main" template="/WEB-INF/views/layout/template.jsp">
         <put-attribute name="sidebar" value="/WEB-INF/views/layout/sidebar.jsp"/>
         <put-attribute name="header" value="/WEB-INF/views/layout/header_template.jsp"/>
-        <!-- 경로 수정 -->
-        <!--<put-attribute name="content" value="/WEB-INF/views/layout/main.jsp"/>-->
         <put-attribute name="content" value="/WEB-INF/views/inventory/chart.jsp"/>
         <put-attribute name="footer" value="/WEB-INF/views/layout/footer_template.jsp"/>
     </definition>
@@ -33,6 +31,18 @@
 
     <definition name="searchOrgId" extends="idCheck">
         <put-attribute name="content" value="/WEB-INF/views/admin/search_org_id.jsp"/>
+    </definition>
+
+    <definition name="changePassword" extends="idCheck">
+        <put-attribute name="content" value="/WEB-INF/views/security/change_password.jsp"/>
+    </definition>
+
+    <definition name="accessDenied" extends="idCheck">
+        <put-attribute name="content" value="/WEB-INF/views/security/access_denied.jsp"/>
+    </definition>
+
+    <definition name="passwordChanged" extends="idCheck">
+        <put-attribute name="content" value="/WEB-INF/views/security/password_changed.jsp"/>
     </definition>
 
     <!--

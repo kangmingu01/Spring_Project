@@ -44,4 +44,9 @@ public class OrganizationDAOImpl implements OrganizationDAO {
     public String selectLastOrgId(String orgPrefix) {
         return sqlSession.getMapper(OrganizationMapper.class).selectLastOrgId(orgPrefix);
     }
+
+    @Override
+    public String selectOrgName(String orgId) {
+        return sqlSession.getMapper(OrganizationMapper.class).selectOrgName(orgId);
+    }
 }

@@ -361,6 +361,10 @@
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
 
+        // 쉼표 제거 후 숫자 값을 저장
+        const ordersQuantity = $('#ordersQuantity').val().replace(/,/g, '');  // 쉼표 제거
+        const deliveryDate = $('#deliveryDate').val();
+        
         // 수정된 값 가져오기
         const data = {
             ordersId: ordersId,
@@ -380,7 +384,6 @@
                 xhr.setRequestHeader(header, token); 
             },
             success: function(response) {
-                // 수정 후 현재 페이지 새로고침하여 변경 사항 반영
                 //alert('수정이 완료되었습니다.');
                 location.reload();  // 페이지 새로 고침
             },

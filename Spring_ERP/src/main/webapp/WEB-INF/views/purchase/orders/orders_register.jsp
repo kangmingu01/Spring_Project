@@ -300,9 +300,18 @@ $('#newModal').on('hidden.bs.modal', function () {
 });
 
 
-// 폼 제출 함수
+//폼 제출 함수
 function submitForm(formId) {
-    document.getElementById(formId).submit(); // 해당 폼 제출
+    // 쉼표 제거 후 숫자로 변환
+    const ordersQuantity = document.getElementById("ordersQuantity");
+    const productPrice = document.getElementById("productPrice");
+
+    // 쉼표 제거
+    ordersQuantity.value = ordersQuantity.value.replace(/,/g, '');
+    productPrice.value = productPrice.value.replace(/,/g, '');
+
+    // 폼 제출
+    document.getElementById(formId).submit();
 }
 
 // 폼 초기화 함수

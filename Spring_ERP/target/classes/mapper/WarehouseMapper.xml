@@ -17,6 +17,11 @@
 		delete from warehouse where warehouse_Id=#{warehouseId}
 	</delete>
 	
+	<select id="selectWarehouseUpdate">
+		select warehouse_id, warehouse_name,warehouse_location,warehouse_capacity from warehouse where warehouse_id=#{warehouseId}
+	</select>
+	
+	
 	<select id="selectWarehouseAll">
 		select * from warehouse
 	</select>

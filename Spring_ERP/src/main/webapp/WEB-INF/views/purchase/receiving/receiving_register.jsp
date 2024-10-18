@@ -309,8 +309,16 @@
 			        <td>${orders.productCategoryDetails.size}</td>
 			        <td>${orders.productCategoryDetails.gender}</td>
 			        <td>${orders.supplierName}</td>
-			        <td>${orders.ordersQuantity}</td>
-			        <td>${orders.productPrice}</td>
+			        <td>
+					    <span class="quantity-amount" data-quantity="${orders.ordersQuantity}">
+					        ${orders.ordersQuantity}
+					    </span>
+					</td>
+					<td>
+					    <span class="price-amount" data-price="${orders.productPrice}">
+					        ${orders.productPrice}
+					    </span>
+					</td>
 			        <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
 			        <td>
 				    <button type="button" class="btn btn-success"

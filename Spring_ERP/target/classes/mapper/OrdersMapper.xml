@@ -8,7 +8,7 @@
             select orders_seq.nextval from dual
         </selectKey>
         insert into orders values (#{ordersId}, sysdate, #{userid}, #{supplierId}, #{productId},
-        	 #{ordersQuantity}, #{productPrice}, #{deliveryDate}, 1)
+        	 #{ordersQuantity}, #{productPrice}, to_date(#{deliveryDate}, 'YYYY-MM-DD'), 1)
     </insert>
    
     <!-- 제품 정보 개수 조회 (페이징 처리를 위한 전체 개수) -->
@@ -158,13 +158,13 @@
 	    <set>
 	        <if test="ordersQuantity != null">
 	            orders_quantity = #{ordersQuantity},
-	        </if>	        
+	        </if>
 	        <if test="deliveryDate != null">
-	            delivery_date = #{deliveryDate}
+	            delivery_date = to_date(#{deliveryDate}, 'YYYY-MM-DD')
 	        </if>
 	    </set>
 	    where orders_id = #{ordersId}
-	</update>  
+	</update>
 	
 	<!-- 발주 상태 업데이트 (확정 버튼 눌렀을 때) -->
 	<update id="updateOrdersStatus" parameterType="int">

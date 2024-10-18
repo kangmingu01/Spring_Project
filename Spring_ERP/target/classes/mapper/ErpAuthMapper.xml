@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ErpAuthMapper">
+
+    <select id="checkAuthExists" resultType="int">
+        SELECT COUNT(*)
+        FROM erp_auth
+        WHERE (userid = #{userid} AND auth = #{auth})
+        OR
+        (
+        orgId = #{orgId} AND auth = #{auth}
+        )
+    </select>
+
+    <!-- 조건 권한 추가 -->
+    <insert id="insertErpAuth">
+        INSERT INTO erp_auth (userid, orgId, auth)
+        SELECT #{userid}, #{orgId}, #{auth}
+        FROM DUAL
+        WHERE NOT EXISTS (
+        SELECT 1
+        FROM erp_auth
+        WHERE (userid = #{userid} AND auth = #{auth} AND #{userid} IS NOT NULL)
+        OR (orgId = #{orgId} AND auth = #{auth} AND #{orgId} IS NOT NULL)
+        )
+    </insert>
+
+    <!-- 조건에 맞는 권한 삭제 -->
+    <delete id="deleteAuth">
+        DELETE FROM erp_auth
+        <where>
+            <if test="userid != null">
+                userid = #{userid} AND auth = #{auth}
+            </if>
+            <if test="orgId != null">
+                orgId = #{orgId} AND auth = #{auth}
+            </if>
+        </where>
+    </delete>
+
+    <select id="selectAuthCount" resultType="int">
+        select count(*) from erp_auth
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%'+keyword+'%'"/>
+            where ${column} like #{word}
+        </if>
+    </select>
+
+    <select id="selectAuthList" resultType="ErpAuth">
+        select * from (
+        select rownum rn, inner_query.* from (
+        select userid, auth, orgId, created,
+        row_number() over (
+        partition by nvl(userid, orgId)
+        order by created desc
+        ) as rownum_in_group
+        from erp_auth
+        <if test="keyword != null and keyword != ''">
+            <bind name="word" value="'%' + keyword + '%'"/>
+            <where> ${column} like #{word} </where>
+        </if>
+        order by
+        case
+        when userid is not null then 1
+        when orgId like 'DEP%' then 2
+        else 3
+        end,
+        created desc
+        ) inner_query
+        order by rn
+        )
+        where rn between #{startRow} and #{endRow}
+    </select>
+
+    <!-- 대상의 아이디값을 가져오는 쿼리 -->
+    <select id="selectErpAuthById" resultType="ErpUser">
+        SELECT userid, passwd, name, phone, address, email, gender, birthday, joindate, enabled, org_id
+        FROM erp_user
+        WHERE 1=1
+        <choose>
+            <when test="selectAuth == 'userid'">
+                AND userid = #{value}
+            </when>
+            <when test="selectAuth == 'orgId'">
+                AND org_id = #{value}
+            </when>
+        </choose>
+    </select>
+    
+    <!-- 해당 부서 권한 가져오는 쿼리 -->
+    <select id="findAuthByOrgId" resultType="ErpAuth">
+        SELECT auth
+        FROM erp_auth
+        WHERE orgId = #{orgId}
+    </select>
+    
+</mapper>

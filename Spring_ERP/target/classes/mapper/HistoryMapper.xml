@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.HistoryMapper">
+	<insert id="insertHistory">
+		<selectKey resultType="int" keyProperty="historyId" order="BEFORE">
+			select history_seq.nextval from dual
+		</selectKey>
+		insert into history values(#{historyId},#{historyProductId},#{historyType},#{historyDate},#{historyWarehouseId},#{historyQty} )
+	</insert>
+	
+	<update id="updateHistory">
+		update history set history_product_id=#{historyProductId},history_type=#{historyType},history_date=#{historyDate},history_warehouse_id=#{historyWarehouseId},
+		history_quantity=#{historyQty} where history_id=#{historyId}
+	</update>
+	
+	<delete id="deleteProduct">
+		delete from history where history_id=#{historyId}
+	</delete>
+
+	
+	<resultMap id="historyResultMap" type="History">
+		<id property="historyId" column="history_id"/>
+		<result property="historyProductId" column="history_product_id"/>
+		<result property="historyType" column="history_type"/>
+		<result property="historyDate" column="history_date"/>
+		<result property="historyWarehouseId" column="history_warehouse_id"/>
+		<result property="historyQty" column="history_quantity"/>
+		
+		<association property="warehouse" javaType="Warehouse">
+		    <id property="warehouseId" column="warehouse_id"/>
+		    <result property="warehouseName" column="warehouse_name"/>
+		    <result property="warehouseLocation" column="warehouse_location"/>
+		    <result property="warehouseCapacity" column="warehouse_capacity"/>
+		</association>
+	    <!-- Product 객체와의 매핑 -->
+	    <association property="product" javaType="Product">
+	        <id property="productId" column="product_id"/>
+	        <result property="productCategory" column="product_category"/>
+	        <result property="productName" column="product_name"/>
+	        <result property="productPrice" column="product_price"/>
+	        <result property="deliveryPrice" column="delivery_price"/>
+	        <result property="productImg" column="product_img"/>
+	    </association>
+	</resultMap>
+
+	<!-- update 하기위한 select -->
+	<select id="selectHistoryUpdate" resultMap="historyResultMap">
+		SELECT 
+		    h.history_id,
+		    h.history_product_id,
+		    h.history_type,
+		    h.history_date,
+		    h.history_warehouse_id,
+		    h.history_quantity,
+		    w.warehouse_id,
+		    w.warehouse_name,
+		    w.warehouse_location,
+		    w.warehouse_capacity,
+		    p.product_id,
+		    p.product_category,
+		    p.product_name,
+		    p.product_price,
+		    p.delivery_price,
+		    p.product_img
+		FROM 
+		    history h
+		JOIN 
+		    warehouse w 
+		ON 
+		    h.history_warehouse_id = w.warehouse_id
+		JOIN 
+		    product p 
+		ON 
+		    h.history_product_id = p.product_id
+		WHERE 
+		    h.history_id = #{historyId}
+	</select>
+
+
+	<!-- 전체 리스트 카운트 -->
+	<select id="selectHistoryProductWarehouseCount" resultType="int">
+	    SELECT count(*)
+	    FROM history h
+	    JOIN warehouse w ON w.warehouse_id = h.history_warehouse_id
+	    JOIN product p ON p.product_id = h.history_product_id
+	    <if test="keyword != null and keyword != ''">
+	        <bind name="word" value="'%' + keyword + '%'"/>
+	        WHERE ${search} LIKE #{word}
+	    </if>
+	</select>
+	
+	<!-- 전체 리스트 select -->
+	<select id="selectHistoryProductWarehouseList" resultMap="historyResultMap">
+	    SELECT * FROM (
+	        SELECT rownum rn, history.* FROM (
+	            SELECT 
+	                h.history_id, 
+	                h.history_product_id, 
+	                h.history_type, 
+	                h.history_date, 
+	                h.history_warehouse_id, 
+	                h.history_quantity,
+	                w.warehouse_name, 
+	                w.warehouse_location, 
+	                p.product_name, 
+	                p.product_category 
+	            FROM history h 
+	            JOIN warehouse w ON w.warehouse_id = h.history_warehouse_id 
+	            JOIN product p ON p.product_id = h.history_product_id 
+	            <if test="keyword != null and keyword != ''">
+	                <bind name="word" value="'%' + keyword + '%'"/>
+	                WHERE ${search} LIKE #{word}
+	            </if>
+	            ORDER BY h.history_date DESC
+	        ) history
+	    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+
+	
+
+</mapper>

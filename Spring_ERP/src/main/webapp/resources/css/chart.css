@@ -1,0 +1,163 @@
+@charset "UTF-8";
+.content{
+    margin: 0px auto;
+    width: calc(100vw - 300px);
+    height: calc(100vh- 60px);
+    /* width: 1400px; */
+    min-width: 1000px;
+    overflow: hidden;
+}
+.content_body{
+	width:1620px;
+    padding: 10px;
+    background-color: #e2e2e2;
+}
+.content_body_search{
+	height: 400px;
+    display: flex;
+    justify-content: space-between;
+}
+.content_search_one{
+	position: relative;
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: end;
+    width: 800px;
+    padding: 30px;
+    border-radius: 10px;;
+    background-color: #fff;
+    font-size: 12px;
+}
+.month_inout_title{
+	position: absolute;
+	font-size:14px;
+    top: 10px;
+    height: 24px;
+    width: 150px;
+    color: #fff;
+    line-height: 23px;
+    text-align: center;
+    border-radius: 10px;
+	background-color: #6571FF;
+}
+.total_inventory{
+	position:relative;
+	padding: 40px;
+	display: flex;
+	align-items: center;
+	overflow:hidden;
+    justify-content: center;
+	width: 500px;
+	border-radius: 10px;
+    background-color: #fff;
+}
+.inventory_title{
+	position: absolute;
+	width:150px;
+	height:25px;
+	top:10px;
+	right: 20px;
+	text-align:center;
+	border-radius: 10px;
+	background-color: #6571FF;
+	color: #fff;
+}
+.total_inventory > canvas {
+/* 	width: 400px !important;
+	height: 400px !important ; */
+}	
+.item_sales_good{
+	padding: 5px 10px;
+	display:flex;
+	flex-direction:column;
+	text-align: center;
+	align-items: center;
+	width:280px;
+	border-radius: 10px;
+    background-color: #fff;
+}
+.item_sales_good > div{
+	border-radius:10px;
+/* 	border: 1px solid; */
+	color:#fff;
+    margin: 5px auto;
+    width: 100%;
+    background-color: rgba(153, 102, 255, 0.6);
+}
+.item_sales_good > div:nth-child(1){
+	background-color: #6571FF;
+	height:35px;
+	line-height:33px;
+	color: #fff;
+}
+
+.warehouse_inventory{
+	border-radius: 10px;
+    background-color: #fff;
+}
+
+.content_body_list{
+	display: flex;
+	margin-top: 10px;;
+}
+.salesChart{
+	padding: 20px;
+    width: 950px;
+    /* height: 450px; */
+    margin-right:10px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+.warehouse_capacity{
+	position:relative;
+	display: flex;
+	flex-direction: column;
+	justify-content:center;
+    align-items: center;
+	width:640px;
+	border-radius: 10px;
+    background-color: #fff;
+}
+.warehouse_header{
+	display: flex;
+}
+.warehouse_header div{
+	margin: 0px 10px;
+}
+#warehouseSelect{
+	position: absolute;
+	top:10px;
+	left: 10px;
+	width: 200px;
+}
+#chartContainer{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: end;
+    padding: 10px 10px;
+}
+#chartContainer canvas{
+	margin-right: 30px;
+}
+.styOne{
+	position: absolute;
+    top: 10px;
+    right: 180px;
+	width: 150px;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+	background-color: #6571FF;
+}
+.styTwo{
+	position: absolute;
+    top: 10px;
+    right: 20px;
+	width: 150px;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+	background-color: #6571FF;
+	background-color: #c0c0c0;
+}

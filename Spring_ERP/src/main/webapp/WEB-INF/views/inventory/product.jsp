@@ -632,7 +632,7 @@
     });
 
 
-    // 상품리스트 함수 ajax
+/*     // 상품리스트 함수 ajax
     function productDisplay(pageNum=1) {
         var pageSize=10;
         var search = document.querySelector(".search").value;
@@ -702,8 +702,106 @@
                 alert("상품 리스트를 불러오지 못했습니다.");
             }
         });
-    }
+    } */
 
+    
+ 	// 상품리스트 함수 ajax
+	function productDisplay(pageNum = 1) {
+	    var pageSize = 10;
+	    var search = document.querySelector(".search").value;
+	    var keyword = document.querySelector(".keyword").value;
+	
+	    $.ajax({
+	        type: "get",
+	        url: "<c:url value='/inventory/product_list'/>",
+	        data: { "pageNum": pageNum, "pageSize": pageSize, "search": search, "keyword": keyword },
+	        dataType: "json",
+	        success: function(result) {
+	            if (result.productList.length == 0) {
+	                var html = "<table>";
+	                html += "<tr>";
+	                html += "<th>검색된 상품이 없습니다.</th>";
+	                html += "</tr>";
+	                html += "</table>";
+	                $(".content_body_list").html(html);
+	                return;
+	            }
+	            var html = "<table>";
+	            html += "<thead>";
+	            html += "<tr>";
+	            html += "<th>No</th>";			
+	            html += "<th>제품코드</th>";
+	            html += "<th>제품명</th>";
+	            html += "<th>브랜드</th>";
+	            html += "<th>종류</th>";
+	            html += "<th>색상</th>";
+	            html += "<th>사이즈</th>";
+	            html += "<th>성별</th>";
+	            html += "<th>입고가격</th>";
+	            html += "<th>출고가격</th>";
+	            html += "<th></th>"; 
+	            html += "</tr>";
+	            html += "</thead>";
+	            html += "<tbody class='sty'>";
+	
+	            var remainingRequests = result.productList.length; // 남은 요청 수
+	
+	            $(result.productList).each(function(index) {
+	                var Category = this.productCategory; // productCategory 값을 저장
+	                var ProductItem = this; // ProductItem을 참조
+	
+	                // 변환된 productCategory를 요청하는 AJAX 호출
+	                $.ajax({
+	                    type: "get",
+	                    url: "<c:url value='/inventory/ProductconvertCategory'/>",
+	                    data: { "categoryCode": Category },
+	                    dataType: "json",
+	                    success: function(convertedCategory) {
+	                    	
+	                        html += "<tr>";					
+	                        html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+	                        html += "<td>" + ProductItem.productCategory + "</td>";
+	                        html += "<td>" + ProductItem.productName + "</td>";
+	                        html += "<td>" + convertedCategory.brand + "</td>";
+	                        html += "<td>" + convertedCategory.item + "</td>";
+	                        html += "<td>" + convertedCategory.color + "</td>";
+	                        html += "<td>" + convertedCategory.size + "</td>";
+	                        html += "<td>" + convertedCategory.gender + "</td>";
+	                        html += "<td>" + ProductItem.productPrice + "</td>";
+	                        html += "<td>" + ProductItem.deliveryPrice + "</td>";
+	                        html += "<td>"; 
+	                        html += '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modify(' + ProductItem.productId + ');">수정</button>'; 
+	                        html += "<button type='button' onclick='remove(" + ProductItem.productId + "," + pageNum + ");'>삭제</button>";
+	                        html += "</td>";
+	                        html += "</tr>";
+	
+	                        remainingRequests--; // 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    },
+	                    error: function(xhr) {
+	                        alert("카테고리 적용 실패");
+	                        remainingRequests--; // 실패한 경우에도 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    }
+	                });
+	            });
+	
+	            // 페이지 번호를 출력하는 함수 호출
+	            pageNumberDisplay(result.pager);
+	        },
+	        error: function(xhr) {
+	            alert("상품 리스트를 불러오지 못했습니다.");
+	        }
+	    });
+	}
+    
+    
     //페이징 처리 관련 Object 객체를 전달받아 HTML 태그로 변환해 페이지 번호를 출력하는 함수
     function pageNumberDisplay(pager) {
         var html = "";

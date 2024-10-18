@@ -180,10 +180,26 @@
 		            <td>${receiving.productCategoryDetails.size}</td>
 		            <td>${receiving.productCategoryDetails.gender}</td>
 		            <td>${receiving.supplierName}</td>
-		            <td>${receiving.ordersQuantity}</td>
-		            <td>${receiving.quantity}</td>
-		            <td>${receiving.productPrice}</td>
-		            <td>${receiving.quantity * receiving.productPrice}</td>
+		            <td>
+					    <span class="quantity-amount" data-quantity="${receiving.ordersQuantity}">
+					        ${receiving.ordersQuantity}
+					    </span>
+					</td>
+					<td>
+					    <span class="pass-quantity-amount" data-pass-quantity="${receiving.quantity}">
+					        ${receiving.quantity}
+					    </span>
+					</td>
+					<td>
+					    <span class="price-amount" data-price="${receiving.productPrice}">
+					        ${receiving.productPrice}
+					    </span>
+					</td>
+					<td>
+					    <span class="total-amount" data-total="${receiving.quantity * receiving.productPrice}">
+					        ${receiving.quantity * receiving.productPrice}
+					    </span>
+					</td>
 		            <td>${fn:substring(receiving.deliveryDate, 0, 10)}</td>
 		            <td>${receiving.warehouseName}</td>
 		             <td>
@@ -328,8 +344,11 @@ function loadReceivingDetails(receivingId) {
     $('#productId').val($.trim(row.children().eq(4).text()));
     $('#productName').val($.trim(row.children().eq(5).text()));
     $('#brand').val($.trim(row.children().eq(6).text()));
-    $('#ordersQuantity').val($.trim(row.children().eq(12).text())); 
-    $('#quantity').val($.trim(row.children().eq(13).text()));
+    const ordersQuantity = $.trim(row.children().eq(12).text()).replace(/,/g, '');
+    const quantity = $.trim(row.children().eq(13).text()).replace(/,/g, '');
+    $('#ordersQuantity').val(parseInt(ordersQuantity));
+    $('#quantity').val(parseInt(quantity));
+
     $('#deliveryDate').val($.trim(row.children().eq(16).text()));
 	
 	 // 상태 설정
@@ -516,7 +535,28 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+    // 발주수량, 통과수량, 단가, 총액에 쉼표 넣기
+    $('.quantity-amount').each(function() {
+        const quantity = $(this).data('quantity');
+        $(this).text(Number(quantity).toLocaleString());
+    });
 
+    $('.pass-quantity-amount').each(function() {
+        const passQuantity = $(this).data('pass-quantity');
+        $(this).text(Number(passQuantity).toLocaleString());
+    });
+
+    $('.price-amount').each(function() {
+        const price = $(this).data('price');
+        $(this).text(Number(price).toLocaleString());
+    });
+
+    $('.total-amount').each(function() {
+        const total = $(this).data('total');
+        $(this).text(Number(total).toLocaleString());
+    });
+});
 
 </script>
 

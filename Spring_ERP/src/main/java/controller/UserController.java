@@ -88,14 +88,13 @@ public class UserController {
     /* 사용자 정보 수정 */
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
     public String updateUser(@ModelAttribute ErpUser erpUser) {
-        System.out.println(erpUser);
         if (erpUser.getPasswd() != null && !erpUser.getPasswd().isEmpty()) {
             String encodedPassword = bCryptPasswordEncoder.encode(erpUser.getPasswd());
             erpUser.setPasswd(encodedPassword);
         } else {
             erpUser.setPasswd(erpUserService.getErpUserByUserid(erpUser.getUserid()).getPasswd());
         }
-
+        erpUser.setFailedAttempts(0);
         erpUserService.updateErpUser(erpUser);
         return "redirect:/admin/user";
     }

@@ -60,6 +60,7 @@
             color: white;
         }
     </style>
+    <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
 </head>
 <body>
 <main class="bg-light pb-1px">
@@ -308,7 +309,7 @@
         </c:choose>
     </div>
 </section>
-<script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
+
 <script>
     window.onload = function () {
         const errorAlert = document.getElementById('errorAlert');

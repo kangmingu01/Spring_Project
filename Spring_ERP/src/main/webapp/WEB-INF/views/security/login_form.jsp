@@ -221,10 +221,6 @@
     솔루션 문의는 전문가 컨설턴트가 도와드립니다.<br>
     jkang4531@korea.kr / Tel: 02-501-5858
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
 <script>
     // GIF가 끝나면 이미지로 대체하기 위한 스크립트
     document.addEventListener('DOMContentLoaded', function () {

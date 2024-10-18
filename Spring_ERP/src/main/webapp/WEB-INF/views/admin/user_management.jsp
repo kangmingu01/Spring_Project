@@ -80,6 +80,7 @@
         }
 
     </style>
+    <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
 </head>
 <body>
 <main class="bg-light pb-1px">
@@ -212,14 +213,6 @@
                             <option value="0">비활성화</option>
                         </select>
                     </div>
-                    <!-- 조직 ID -->
-                    <%--<div class="col-md-4">
-                        <label for="orgId" class="form-label">조직 ID</label>
-                        <input type="text" class="form-control" id="orgId" name="orgId">
-                        &lt;%&ndash; 여기가 문제임 조직명을 검색해서 나오면 그 값으로 사용할 수 있게 하기 &ndash;%&gt;
-                        <div id="orgIdMsg" class="error">조직 ID를 입력해주세요. 입력값이 없다면 null로 입력해주세요</div>
-                    </div>--%>
-                    <%-- 대상 ID --%>
                     <div class="col-md-4">
                         <label for="searchOrgId" class="form-label">조직 ID</label>
                         <div class="d-flex">
@@ -306,35 +299,30 @@
                 <c:otherwise>
                     <c:forEach var="erpUser" items="${resultMap.erpUserList}">
                         <tr>
-                            <td class="align-middle text-center">${erpUser.userid}</td>
-                                <%--<td>${erpUser.passwd}</td>--%>
-                            <td class="align-middle text-center">${erpUser.name}</td>
-                            <td class="align-middle text-center">${erpUser.phone}</td>
-                            <td class="align-middle text-center">${erpUser.address}</td>
-                            <td class="align-middle text-center">${erpUser.email}</td>
-                            <td class="align-middle text-center">
-                                <c:choose>
-                                    <c:when test="${erpUser.gender == 1}">
-                                        남자
-                                    </c:when>
-                                    <c:otherwise>
-                                        여자
-                                    </c:otherwise>
-                                </c:choose>
-
-                            </td>
-                            <td class="align-middle text-center">${erpUser.birthday}</td>
-                            <td class="align-middle text-center">${erpUser.joindate}</td>
+                            <td class="text-center align-middle">${erpUser.userid}</td>
+                            <td class="text-center align-middle">${erpUser.name}</td>
+                            <td class="text-center align-middle">${erpUser.phone}</td>
+                            <td class="text-center align-middle">${erpUser.address}</td>
+                            <td class="text-center align-middle">${erpUser.email}</td>
                             <td class="text-center align-middle">
                                 <c:choose>
-                                    <c:when test="${erpUser.enabled == 0}">
-                                        <p class="text-danger">비활성화</p>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <p class="text-primary">활성화</p>
-                                    </c:otherwise>
+                                    <c:when test="${erpUser.gender == 1}">남자</c:when>
+                                    <c:otherwise>여자</c:otherwise>
                                 </c:choose>
-
+                            </td>
+                            <td class="text-center align-middle">${erpUser.birthday}</td>
+                            <td class="text-center align-middle">${erpUser.joindate}</td>
+                            <td class="text-center align-middle">
+                                <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <c:choose>
+                                        <c:when test="${erpUser.enabled == 0}">
+                                            <p class="text-danger mb-0">비활성화</p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p class="text-primary mb-0">활성화</p>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
                             </td>
                             <td class="text-center align-middle">${erpUser.orgId}</td>
                             <td>
@@ -399,7 +387,7 @@
                             </div>
                             <div class="d-flex">
                                 <%-- 나중에 이부분 비밀번호 재설정이면 --%>
-                                <input type="text" class="form-control" id="passwd_modal" name="passwd" >
+                                <input type="text" class="form-control" id="passwd_modal" name="passwd">
                                 <button type="button" id="generate_passwd_btn"
                                         class="btn btn-secondary btn-sm text-nowrap disabled" disabled
                                         onclick="generateRandomPassword()">재생성
@@ -508,7 +496,7 @@
     </div>
 </section>
 
-<script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
+
 
 <script>
     function togglePassword() {

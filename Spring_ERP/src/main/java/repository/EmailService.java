@@ -39,7 +39,7 @@ public class EmailService {
                 + "</table>"
                 + "<p>아래 링크를 통해 로그인 후 반드시 비밀번호를 변경해 주세요.</p>"
                 /* 임시 나중에 EmailService 로그인 바꿔야됨 */
-                + "<p><a href='www.itwill.xyz/Spring_ERP/login' style='color: #007bff;'>비밀번호 변경 링크</a></p>"
+                + "<p><a href='https://www.itwill.xyz/Spring_ERP/login' style='color: #007bff;'>비밀번호 변경 링크</a></p>"
                 + "<br>"
                 + "<p>감사합니다.</p>"
                 + "</body></html>";

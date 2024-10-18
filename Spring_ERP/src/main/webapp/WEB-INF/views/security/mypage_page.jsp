@@ -5,9 +5,6 @@
 <html>
 <head>
     <title>마이페이지</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         /* 읽기 전용 필드 스타일 설정 */
         .readonly-field {
@@ -28,6 +25,7 @@
             min-height: 20px;  /* 고정된 높이 설정 */
         }
     </style>
+
 </head>
 <body>
 <sec:authentication property="principal" var="loginUser"/>
@@ -130,7 +128,7 @@
         <sec:csrfInput/>
     </form>
 </div>
-<script src="<c:url value='/js/jquery-3.7.1.min.js'/>"></script>
+
 <script>
     $(document).ready(function () {
         var passwdReg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[~!@#$%^&*_-]).{6,20}$/;
@@ -233,9 +231,5 @@
     });
 
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
 </body>
 </html>

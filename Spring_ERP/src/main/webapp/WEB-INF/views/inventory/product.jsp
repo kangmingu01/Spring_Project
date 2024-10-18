@@ -31,7 +31,6 @@
             </div>
             <div>
 			  <input type="text" class="form-control keyword" name="keyword"  value="${ keyword}" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                <%-- <input type="text" name="keyword" class="keyword" value="${ keyword}"> --%>
             </div>
             <div class="content_header_search_btn">
                 <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -420,7 +419,7 @@
                     alert("상품이 성공적으로 등록되었습니다.");
                 },
                 error: function(xhr){
-                    alert("상품등록이 실패 하였습니다.");
+                    alert("현재 상품은 등록 되어있습니다.");
                 }
             });
         }
@@ -465,7 +464,7 @@
                     alert("창고가 성공적으로 등록되었습니다.");
                 },
                 error: function(xhr){
-                    alert("창고 삽입이 실패 하였습니다.");
+                    alert("창고 등록이 실패 하였습니다.");
                 }
             });
         }
@@ -616,7 +615,7 @@
                     }
                 },
                 error:function(xhr){
-                    alert("삭제하지 못하였습니다.");
+                    alert("현재 창고는 사용중이기 때문에 삭제 할 수 없습니다.");
                 }
             });
         }
@@ -659,7 +658,7 @@
                 html+="<thead>";
                 html+="<tr>";
                 html+="<th>No</th>";
-                html+="<th>상품번호</th>";
+                //html+="<th>상품번호</th>";
                 html+="<th>제품코드</th>";
                 html+="<th>제품명</th>";
                 html+="<th>브랜드</th>";
@@ -676,7 +675,7 @@
                 $(result.productList).each(function(index){
                     html+="<tr>";
                     html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-                    html+="<td>"+this.productId+"</td>";
+                    //html+="<td>"+this.productId+"</td>";
                     html+="<td>"+this.productCategory+"</td>";
                     html+="<td>"+this.productName+"</td>";
                     html+="<td>"+this.warehouseName+"</td>";

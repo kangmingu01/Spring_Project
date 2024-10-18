@@ -208,7 +208,6 @@
 	            	<option value="2">출고</option>
 	            	<option value="3">반품</option>
 	        	</select>
-	        	<input type="text" class="form-control updateType"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
 	        </div>
 	        <div>
 	        	<label>창고</label>
@@ -226,7 +225,7 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-primary"  id="update_btn">수정완료</button>
+	        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  id="update_btn">수정완료</button>
 	      </div>
 	    </div>
 	  </div>
@@ -375,7 +374,7 @@
     	var historyType =$(".historyType").val();
     	var historyWarehouseId =$(".inventoryWarehouseId").val();
     	var historyDate =$(".historyDate").val();
-    	
+
     	if(historyProductId==""){
     		alert("제품정보가 없습니다.");
     		return;
@@ -384,11 +383,11 @@
     		alert("수량정보를 입력해주세요.");
     		return;
     	}
-    	if(historyType==""){
+    	if(historyType=="" || historyType== null ){
     		alert("입출고 정보를 입력해주세요.");
     		return;
     	}
-    	if(historyWarehouseId==""){
+    	if(historyWarehouseId=="" || historyWarehouseId==null){
     		alert("창고정보를 입력해주세요.");
     		return;
     	}

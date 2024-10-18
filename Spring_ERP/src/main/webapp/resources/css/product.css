@@ -42,6 +42,10 @@
     justify-content: center;
 }
 
+.content_body_search select{
+	-webkit-appearance: auto;
+}
+
 .content_header_search_btn:hover{
     background-color: #7782f8;
 }

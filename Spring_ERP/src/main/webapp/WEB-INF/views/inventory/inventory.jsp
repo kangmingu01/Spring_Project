@@ -10,6 +10,7 @@
   <meta name="_csrf_header" content="${_csrf.headerName}" />
   <link href="<c:url value="/css/reset.css"/>" type="text/css" rel="stylesheet">
   <link href="<c:url value="/css/inventory.css"/>" type="text/css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <title>Document</title>
 </head>
@@ -201,8 +202,12 @@
 		        </div>
 		        <div>
 		        	<label>창고</label>
-		        	<input type="text" class="form-control updateWarehouse"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
-		        	<!-- <input type="text"  class="updateWarehouse" /> -->
+		        	<select class="form-select updateWarehouse"  aria-label="Default select example">	
+	            		<option value="0" disabled selected>선택해주세요</option>
+	            		<c:forEach var="warehouseNum" items="${warehouseNum}">
+		            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
+	            		</c:forEach>
+	            	</select>
 		        </div>
 		        <div>
 		        	<label>파손수량</label>
@@ -246,12 +251,15 @@
 	  		</div>
 		</div>
 	</div>
-  <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
+	<script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
   <script>
  	var csrfToken = $('meta[name="_csrf"]').attr('content');
   	var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-  	inventoryDisplay(pageNum=1)
- 
+  	inventoryDisplay(pageNum=1);
+  	
+  	
     // 추가 정보 클릭 이벤트
     var plusBtn=document.querySelector(".content_body_search_plus");
     var plusContent=document.querySelector(".content_plus");
@@ -265,10 +273,15 @@
       }
     });
 
+    function inputinit(){
+    	$('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"],select').val('');
+        $('select').prop('selectedIndex', 0);	
+    }
+    
     //reset
     $(".content_header_reset_btn").click(function(){
     	// 모든 input 태그를 선택하고 값 초기화
-        $('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"]').val('');
+        inputinit();
     });
     
     $(".updateCode").click(function(){
@@ -287,6 +300,7 @@
     $(".content_header_search_btn").click(function(){
     	productDisplay();
     });
+    
     
     //제품조회 함수
     function productDisplay(pageNum=1) {
@@ -416,6 +430,23 @@
     	console.log(inventoryDamagedQty);
     	var lastDate=$(".lastDate").val();
     		
+    	if(inventoryProductId==""){
+    		alert("제품조회를 사용하여 제품정보를 등록해주세요.");
+    		return;
+    	}
+    	if(inventoryQty==""){
+    		alert("수량 정보를 등록해주세요.");
+    		return;
+    	}
+    	if(inventoryWarehouseId==""|| inventoryWarehouseId==null){
+    		alert("창고정보를 등록해주세요.");
+    		return;
+    	}
+    	if(lastDate==""){
+    		alert("날짜정보를 등록해주세요.");
+    		return;
+    	}
+    	
     	
     	if(confirm("재고를 등록 하시겠습니까?")){
 	        $.ajax({
@@ -431,17 +462,16 @@
 	    		success: function(){
 	    			$(".content_body_list").empty();
 	    			$(".pageNumDiv").empty();
-	    			productDisplay();
+	    			inventoryDisplay();
+	    			inputinit();
 	    			alert("성공적으로 등록되었습니다.");
 	    		},
 	    		error: function(xhr){
-	    			alert("등록이 실패 하였습니다.");
+	    			alert("현재 상품이 선택하신 창고에 등록되어있습니다.");
 	    		}
 	    	});
         }
     });
-    
-    
     
     
     //################################# 수정중 .. 다른 리스트 형식 함수 호출해야함

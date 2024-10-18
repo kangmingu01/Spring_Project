@@ -158,6 +158,10 @@ public class ReceivingController {
         model.addAttribute("ordersResult", ordersResult.get("ordersList"));
         model.addAttribute("pager", ordersResult.get("pager"));
         model.addAttribute("searchMap", map);
+        
+        // 창고 목록 조회하여 모델에 추가
+        List<Warehouse> warehouseList = receivingService.getWarehouseList();
+        model.addAttribute("warehouseList", warehouseList);
 
         // 플래그를 설정하여 모달이 다시 열리도록 설정
         model.addAttribute("openModal", true);

@@ -122,7 +122,7 @@
               <th>이름</th>
               <th>연락처</th>
               <th>이메일</th>
-              <th style="width: 100px;"></th>
+              <th style="width: 100px;">수정</th>
             </tr>
           </thead>
           <tbody id="supplierTable" class="sty">

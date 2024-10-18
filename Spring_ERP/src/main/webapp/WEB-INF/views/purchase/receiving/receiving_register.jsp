@@ -463,7 +463,7 @@
 
 	    for (let i = 1; i < rows.length; i++) { // 첫 번째 행은 헤더이므로 제외
 	        const productName = rows[i].getElementsByTagName("td")[2].textContent.toLowerCase(); // 제품명
-	        const supplierName = rows[i].getElementsByTagName("td")[9].textContent.toLowerCase(); // 공급업체명
+	        const supplierName = rows[i].getElementsByTagName("td")[8].textContent.toLowerCase(); // 공급업체명
 
 	        if (productName.includes(searchQuery) || supplierName.includes(searchQuery) || searchQuery === "") {
 	            rows[i].style.display = ""; // 검색 조건에 맞으면 표시
@@ -516,8 +516,7 @@
 
 	    checkFields(); // 필드 체크
 	}
-
-
+	
 	// 폼 제출 함수
 	function submitForm(formId) {
 	    const ordersQuantity = parseInt(document.getElementById("ordersQuantity").value);
@@ -537,15 +536,7 @@
 
 	// 폼 초기화 함수
 	function resetForm() {
-	    document.getElementById('registerForm').reset();
-
-	    const receivingDateInput = document.getElementById("receivingDate");
-	    const today = new Date().toISOString().split('T')[0];
-	    receivingDateInput.value = today;
-
-	    const ordersTable = document.getElementById("receivingTable");
-	    ordersTable.innerHTML = '';
-	    checkFields(); // 필드 초기화 후 다시 필드 체크
+	    location.reload(); // 페이지 완전 새로 고침
 	}
 
 	// 필수 입력 필드 확인 후 등록 버튼 활성화

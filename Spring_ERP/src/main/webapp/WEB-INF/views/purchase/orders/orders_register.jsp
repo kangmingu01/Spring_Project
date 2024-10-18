@@ -160,9 +160,21 @@
 		                    <td>${newOrder.productCategoryDetails.size}</td>
 		                    <td>${newOrder.productCategoryDetails.gender}</td>
 		                    <td>${newOrder.supplierName}</td>
-		                    <td>${newOrder.ordersQuantity}</td>
-		                    <td>${newOrder.productPrice}</td>
-		                    <td>${newOrder.ordersQuantity * newOrder.productPrice}</td>
+		                    <td>
+							    <span class="quantity-amount" data-quantity="${newOrder.ordersQuantity}">
+							        ${newOrder.ordersQuantity}
+							    </span>
+							</td>
+							<td>
+							    <span class="price-amount" data-price="${newOrder.productPrice}">
+							        ${newOrder.productPrice}
+							    </span>
+							</td>
+							<td>
+							    <span class="total-amount" data-total="${newOrder.ordersQuantity * newOrder.productPrice}">
+							        ${newOrder.ordersQuantity * newOrder.productPrice}
+							    </span>
+							</td>
 		                    <td>${fn:substring(newOrder.deliveryDate, 0, 10)}</td>
 		                </tr>
 		            </c:if>
@@ -468,6 +480,24 @@ function addProductTitle(productId) {
         }
     });
 }
+
+$(document).ready(function() {
+    // 발주수량, 단가, 총액에 쉼표 넣기
+    $('.quantity-amount').each(function() {
+        const quantity = $(this).data('quantity');
+        $(this).text(Number(quantity).toLocaleString());
+    });
+
+    $('.price-amount').each(function() {
+        const price = $(this).data('price');
+        $(this).text(Number(price).toLocaleString());
+    });
+
+    $('.total-amount').each(function() {
+        const total = $(this).data('total');
+        $(this).text(Number(total).toLocaleString());
+    });
+});
 
 </script>
 

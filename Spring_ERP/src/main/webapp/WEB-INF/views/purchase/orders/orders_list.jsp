@@ -161,9 +161,21 @@
                 <td>${orders.productCategoryDetails.size}</td>
                 <td>${orders.productCategoryDetails.gender}</td>
                 <td>${orders.supplierName}</td>
-                <td>${orders.ordersQuantity}</td>
-                <td>${orders.productPrice}</td>
-                <td>${orders.ordersQuantity * orders.productPrice}</td>
+                <td>
+				    <span class="quantity-amount" data-quantity="${orders.ordersQuantity}">
+				        ${orders.ordersQuantity}
+				    </span>
+				</td>
+				<td>
+				    <span class="price-amount" data-price="${orders.productPrice}">
+				        ${orders.productPrice}
+				    </span>
+				</td>
+				<td>
+				    <span class="total-amount" data-total="${orders.ordersQuantity * orders.productPrice}">
+				        ${orders.ordersQuantity * orders.productPrice}
+				    </span>
+				</td>
                 <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
                 <td>
                   <c:choose>
@@ -310,11 +322,10 @@
         $('#productId').val($.trim(row.children().eq(3).text()));
         $('#productName').val($.trim(row.children().eq(4).text()));
         $('#brand').val($.trim(row.children().eq(5).text()));
-        
-        // 단가는 읽기 전용으로 표시
-        const productPrice = $.trim(row.children().eq(12).text()); // 단가 열
-        $('#productPrice').val(productPrice).prop('readonly', true); // 단가를 읽기 전용으로 설정
-
+               
+        const productPrice = row.find('.price-amount').data('price');
+        $('#productPrice').val(productPrice).prop('readonly', true);
+                
         // 공급업체와 발주 상태 설정
         const supplierName = $.trim(row.children().eq(10).text());
         $('#supplier option').each(function() {
@@ -331,7 +342,8 @@
         });
 
         // 수정 가능한 필드만 활성화
-        $('#ordersQuantity').val($.trim(row.children().eq(11).text()));
+         const ordersQuantity = row.find('.quantity-amount').data('quantity');
+        $('#ordersQuantity').val(ordersQuantity);        
         $('#deliveryDate').val($.trim(row.children().eq(14).text()));
         setAllFieldsReadOnly(true);
         $('#ordersQuantity, #deliveryDate').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
@@ -410,7 +422,24 @@
         // 필드 검증
         checkFields(); // 필드가 모두 입력되었는지 확인하는 기존 함수 호출
     });
+    
+    $(document).ready(function() {
+        // 발주수량, 단가, 총액에 쉼표 넣기
+        $('.quantity-amount').each(function() {
+            const quantity = $(this).data('quantity');
+            $(this).text(Number(quantity).toLocaleString());
+        });
 
+        $('.price-amount').each(function() {
+            const price = $(this).data('price');
+            $(this).text(Number(price).toLocaleString());
+        });
+
+        $('.total-amount').each(function() {
+            const total = $(this).data('total');
+            $(this).text(Number(total).toLocaleString());
+        });
+    });
 
   </script>
 

@@ -209,10 +209,26 @@
                           <td>${productCategory.size}</td>
                           <td>${productCategory.gender}</td>
                     <td>${newReceiving.supplierName}</td>
-                    <td>${newReceiving.ordersQuantity}</td>
-                    <td>${newReceiving.quantity}</td>
-                    <td>${newReceiving.productPrice}</td>
-                    <td>${newReceiving.quantity * newReceiving.productPrice}</td>
+                    <td>
+					    <span class="quantity-amount" data-quantity="${newReceiving.ordersQuantity}">
+					        ${newReceiving.ordersQuantity}
+					    </span>
+					</td>
+					<td>
+					    <span class="pass-quantity-amount" data-pass-quantity="${newReceiving.quantity}">
+					        ${newReceiving.quantity}
+					    </span>
+					</td>
+					<td>
+					    <span class="price-amount" data-price="${newReceiving.productPrice}">
+					        ${newReceiving.productPrice}
+					    </span>
+					</td>
+					<td>
+					    <span class="total-amount" data-total="${newReceiving.quantity * newReceiving.productPrice}">
+					        ${newReceiving.quantity * newReceiving.productPrice}
+					    </span>
+					</td>
                     <td>${fn:substring(newReceiving.deliveryDate, 0, 10)}</td>
                     <td>${newReceiving.warehouseName}</td>
                 </tr>
@@ -293,8 +309,16 @@
 			        <td>${orders.productCategoryDetails.size}</td>
 			        <td>${orders.productCategoryDetails.gender}</td>
 			        <td>${orders.supplierName}</td>
-			        <td>${orders.ordersQuantity}</td>
-			        <td>${orders.productPrice}</td>
+			        <td>
+					    <span class="quantity-amount" data-quantity="${orders.ordersQuantity}">
+					        ${orders.ordersQuantity}
+					    </span>
+					</td>
+					<td>
+					    <span class="price-amount" data-price="${orders.productPrice}">
+					        ${orders.productPrice}
+					    </span>
+					</td>
 			        <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
 			        <td>
 				    <button type="button" class="btn btn-success"
@@ -536,7 +560,41 @@
 
 	// 폼 초기화 함수
 	function resetForm() {
-	    location.reload(); // 페이지 완전 새로 고침
+	    // 입력 필드와 선택 필드를 모두 초기화
+	    $('#registerForm')[0].reset();
+
+	    // 입고일자를 현재 날짜로 다시 설정
+	    const receivingDateInput = document.getElementById("receivingDate");
+	    const today = new Date().toISOString().split('T')[0];
+	    receivingDateInput.value = today;
+
+	    // 필드들 초기화
+	    document.getElementById('ordersId').value = '';
+	    document.getElementById('productId').value = '';
+	    document.getElementById('productName').value = '';
+	    document.getElementById('brand').value = '';
+	    document.getElementById('type').value = '';
+	    document.getElementById('color').value = '';
+	    document.getElementById('size').value = '';
+	    document.getElementById('gender').value = '';
+	    document.getElementById('supplier').value = '';
+	    document.getElementById('ordersQuantity').value = '';
+	    document.getElementById('productPrice').value = '';
+	    document.getElementById('deliveryDate').value = '';
+	    document.getElementById('quantity').value = '';
+
+	    // 창고 선택 필드 초기화
+	    $('#warehouse').val('');
+
+	    // 통과수량 에러 메시지 숨기기
+	    $('#quantity-error').hide();
+
+	    // 등록된 리스트 삭제 (화면에서 사라지게 처리)
+	    $('#receivingTable').empty();
+
+	    // 등록 버튼 비활성화
+	    document.querySelector(".content_header_registers_btn").classList.add("disabled");
+	    document.querySelector(".content_header_registers_btn").onclick = null;
 	}
 
 	// 필수 입력 필드 확인 후 등록 버튼 활성화
@@ -563,6 +621,29 @@
             ordersModal.show();
         </c:if>
     });
+	
+	$(document).ready(function() {
+	    // 발주수량, 통과수량, 단가, 총액에 쉼표 넣기
+	    $('.quantity-amount').each(function() {
+	        const quantity = $(this).data('quantity');
+	        $(this).text(Number(quantity).toLocaleString());
+	    });
+
+	    $('.pass-quantity-amount').each(function() {
+	        const passQuantity = $(this).data('pass-quantity');
+	        $(this).text(Number(passQuantity).toLocaleString());
+	    });
+
+	    $('.price-amount').each(function() {
+	        const price = $(this).data('price');
+	        $(this).text(Number(price).toLocaleString());
+	    });
+
+	    $('.total-amount').each(function() {
+	        const total = $(this).data('total');
+	        $(this).text(Number(total).toLocaleString());
+	    });
+	});
 
 </script>
 

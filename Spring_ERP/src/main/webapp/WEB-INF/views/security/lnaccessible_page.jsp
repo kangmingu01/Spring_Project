@@ -14,6 +14,11 @@
             height: 100%;
             margin: 0;
         }
+        .bc{
+            background: #6571ff;
+            color: white;
+        }
+
         .access-denied-container {
             max-width: 600px;
             padding: 20px;
@@ -27,7 +32,7 @@
     <h1 class="display-4 fw-bold text-dark mb-4">접근 불가</h1>
     <p class="lead text-secondary mb-4">죄송합니다. 이 페이지에 접근할 수 있는 권한이 없습니다.</p>
     <!-- 메인으로 가기 버튼 -->
-    <a href="<c:url value='/main'/>" class="btn btn-primary btn-lg">메인으로 가기</a>
+    <a href="<c:url value='/main'/>" class="btn bc btn-lg">메인으로 가기</a>
 </div>
 
 <!-- Bootstrap JS (Optional) -->

@@ -30,7 +30,7 @@
 
 <nav class="navbar">
     <div class="navbar-content ">
-        <div class="logo-mini">
+        <div class="logo-mini d-sm-block d-lg-none">
             <a href="<c:url value="/main"/>" class="nav-link">
                 <img
                         src="<c:url value="/images/logo_icon.png"/>"

@@ -71,7 +71,21 @@
                 </div>
                 <div class="item_brand">
                     <label>브랜드</label>
-                    <input type="text" name="productBrand" class="productBrand"/>
+                    <select name="productBrand" class="productBrand">
+                    	<option  value="" disabled="disabled" selected>선택해주세요</option>
+                    	<option>New Balance(뉴발란스)</option>
+                    	<option>Salomon(살로몬)</option>
+                    	<option>ASICS(아식스)</option>
+                    	<option>Vans(반스)</option>
+                    	<option>Nike(나이키)</option>
+                    	<option>Adidas(아디다스)</option>
+                    	<option>Discovery(디스커버리)</option>
+                    	<option>Descente(데상트)</option>
+                    	<option>Puma(푸마)</option>
+                    	<option>Fila(휠라)</option>
+                    	<option>Lacoste(라코스테)</option>
+                    </select>
+                    <!-- <input type="text" name="productBrand" class="productBrand"/> -->
                 </div>
                 <div></div>
                 <div class="item_code_create">
@@ -84,7 +98,7 @@
                 <div>
                     <label>종류</label>
                     <select class="category_item">
-                        <option value="" disabled selected ></option>
+                        <option  value="" disabled="disabled" selected>선택해주세요</option>
                         <option>Sneakers&#40;운동화&#41;</option>
                         <option>Slippers&#40;슬리퍼&#41;</option>
                         <option>Boots&#40;부츠&#41;</option>
@@ -95,7 +109,7 @@
                 <div>
                     <label>색상</label>
                     <select class="category_color">
-                        <option value="" disabled selected ></option>
+                    	<option  value="" disabled="disabled" selected>선택해주세요</option>
                         <option>Red</option>
                         <option>Blue</option>
                         <option>Black</option>
@@ -105,7 +119,7 @@
                 <div>
                     <label>사이즈</label>
                     <select class="category_size" >
-                        <option value="" disabled selected ></option>
+                    	<option  value="" disabled="disabled" selected>선택해주세요</option>
                         <option>220</option>
                         <option>230</option>
                         <option>240</option>
@@ -119,7 +133,7 @@
                 <div>
                     <label>성별</label>
                     <select class="category_gender">
-                        <option value="" disabled selected ></option>
+                        <option  value="" disabled="disabled" selected>선택해주세요</option>
                         <option>Man&#40;남자&#41;</option>
                         <option>Woman&#40;여자&#41;</option>
                     </select>
@@ -345,6 +359,10 @@
 
         document.querySelector('.productCategory').value = result;
     }
+    
+    $(".productCategory").click(function(){
+    	alert("제품코드생성 버튼으로 등록 해주세요.");
+    });
 
     //제품코드 클릭 이벤트
     document.querySelector(".product_code_create").addEventListener("click",function(){
@@ -371,14 +389,6 @@
             alert("브랜드를 입력해 주세요.");
             return;
         }
-        if(productPrice==""){
-            alert("입고가격을 입력해 주세요.");
-            return;
-        }
-        if(deliveryPrice==""){
-            alert("출고가격을 입력해 주세요.");
-            return;
-        }
         if(item==""){
             alert("종류를 입력해 주세요.");
             return;
@@ -395,8 +405,20 @@
             alert("성별을 입력해 주세요.");
             return;
         }
-        if(productCategory==""){
+        if(productCategory=="" ){
             alert("제품코드를 확인해 주세요.");
+            return;
+        }
+        if (productCategory.length < 10) {
+            alert("제품코드는 10자 이상이어야 합니다.");
+            return;
+        }
+        if(productPrice==""){
+            alert("입고가격을 입력해 주세요.");
+            return;
+        }
+        if(deliveryPrice==""){
+            alert("출고가격을 입력해 주세요.");
             return;
         }
 

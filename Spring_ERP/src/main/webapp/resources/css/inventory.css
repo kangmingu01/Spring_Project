@@ -325,13 +325,6 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
 	margin:10px;
 	text-align: center;	
 }
-#productUpdateSty >div {
-	margin-top: 15px;
-}
-#productUpdateSty label {
-	margin-left: 5px;
-	font-weight: 500;
-}
 .product_code_create{
 	width: 100%;
 	height:30px;
@@ -342,7 +335,7 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
 }
 
 .updateName, .updateCode{
-    background-color: #e9e9e9;
+    background-color: #e9e9e9 !important;
     cursor: not-allowed;
 }
 
@@ -380,6 +373,62 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     border-color: #ff3366 !important; 
 }
 
-.modal-backdrop {
-    display: none !important; /* 모든 모달 배경 숨기기 */
+/* .modal-backdrop {
+    display: none !important; 모든 모달 배경 숨기기
+} */
+
+.backgroundmodal {
+	display:none;
+    position: fixed; /* 고정 위치로 변경 */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color:  rgba(0, 0, 0, 0.5);
+    z-index: 2; /* 다른 요소들 위에 위치 */
 }
+.backgroundmodal.on{
+	display: block;
+}
+.updatemodal_title{
+	font-size: 20px;
+    padding: 10px 20px;
+	border-bottom: 1px solid #cbd6dd;
+}
+.updatemodal {
+	width: 500px;
+	border:1px solid #fff;
+	background-color: #fff;
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 중앙 정렬을 위한 변환 */
+    border-radius: 20px;
+}
+.updateOne{
+	overflow:auto;
+	padding: 10px 20px;
+	height: 450px;
+}
+.item_code_create{
+	width: 100%;
+	height:30px;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    background-color: #6571ff;
+}
+
+.buttonSty{
+	padding: 10px 10px;
+    text-align: center;
+}
+
+.updateOne >div {
+	margin-top: 15px;
+}
+.updateOne label {
+	margin-left: 5px;
+	font-weight: 500;
+}
+

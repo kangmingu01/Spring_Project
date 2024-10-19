@@ -42,7 +42,7 @@
 }
 .total_inventory{
 	position:relative;
-	padding: 40px;
+	padding: 40px 40px 20px 40px;
 	display: flex;
 	align-items: center;
 	overflow:hidden;
@@ -84,7 +84,7 @@
     margin: 5px auto;
     width: 100%;
 	font-weight: 500;
-   	background-color: rgba(153, 102, 255, 0.5);
+   	background-color: #c0c0c0;
 }
 .item_sales_good > div:nth-child(1){
 	background-color: #6571FF;

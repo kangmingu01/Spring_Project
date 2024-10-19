@@ -171,63 +171,55 @@
     </div>
   </div>
 	
-	<!-- Modal -->
-	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	  <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h1 class="modal-title fs-5" id="staticBackdropLabel">재고수정</h1>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body" id="productUpdateSty">
-		      	<input type="hidden" class="updateinventoryId">
-		      	<input type="hidden" class="updateId">
-		        <div>
-		        	<label>제품코드</label>
-		        	<input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
-		        	<!-- <input type="text" class="updateCode"  readonly="readonly" /> -->
-		        </div>
-		        <div>
-		        	<label>상품명</label>
-		        	<input type="text" class="form-control updateName"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
-		        	<!-- <input type="text"  class="updateName" readonly="readonly" /> -->
-		        </div>
-		      	<div class="item_code_create">
-		            <button type="button" class="product_code_create" data-bs-toggle="modal" data-bs-target="#newModal">제품조회</button>
-	      		</div>
-		        <div>
-		        	<label>현재수량</label>
-		        	<input type="text" class="form-control updateQty"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
-		        	<!-- <input type="text"  class="updateQty" /> -->
-		        </div>
-		        <div>
-		        	<label>창고</label>
-		        	<select class="form-select updateWarehouse"  aria-label="Default select example">	
-	            		<option value="0" disabled selected>선택해주세요</option>
-	            		<c:forEach var="warehouseNum" items="${warehouseNum}">
-		            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
-	            		</c:forEach>
-	            	</select>
-		        </div>
-		        <div>
-		        	<label>파손수량</label>
-		        	<input type="text" class="form-control updateDamageQty"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
-		        	<!-- <input type="text"  class="updateDamageQty" disabled  /> -->
-		        </div>
-		        <div>
-		        	<label>입출고일자</label>
-		        	<input type="date" class="form-control updateDate"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
-		        	<!-- <input type="date"  class="updateDate" /> -->
-		        </div>	      	
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  id="update_btn">수정완료</button>
-	      </div>
-	    </div>
-	  </div>
+	 
+	 <div class="backgroundmodal">
+		<div class="updatemodal">
+			<div class="updatemodal_title">재고수정</div>
+			<div class="updateOne">
+				<input type="hidden" class="updateinventoryId"> <input
+					type="hidden" class="updateId">
+				<div>
+					<label>제품코드</label> 
+					<input type="text" class="form-control updateCode" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly">
+				</div>
+				<div>
+					<label>상품명</label> 
+					<input type="text" class="form-control updateName" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly">
+				</div>
+				<div class="item_code_create">
+					<button type="button" class="item_code_create">제품조회</button>
+				</div>
+				<div>
+					<label>현재수량</label> 
+					<input type="text" class="form-control updateQty" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+				</div>
+				<div>
+					<label>창고</label> 
+					<select class="form-select updateWarehouse" aria-label="Default select example">
+						<option value="0" disabled selected>선택해주세요</option>
+						<c:forEach var="warehouseNum" items="${warehouseNum}">
+							<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div>
+					<label>파손수량</label> 
+					<input type="text" class="form-control updateDamageQty" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+				</div>
+				<div>
+					<label>입출고일자</label> 
+					<input type="date" class="form-control updateDate" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+				</div>
+			</div>
+			<div class="buttonSty">
+				<button type="button" class="btn btn-secondary updateClose">닫기</button>
+				<button type="button" class="btn btn-primary" id="update_btn">수정완료</button>
+			</div>
+		</div>
 	</div>
-	
+	 
+	 
+	 
 	<div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
 	    	<div class="modal-content">
@@ -523,19 +515,19 @@
     function pageNumberDisplay(pager) {
 	    var html = "";
 	
-	    // 이전 페이지 링크
+	 // 이전 페이지 링크
 	    if (pager.startPage > pager.blockSize) {
 	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:inventoryDisplay(" + pager.prevPage + ","+pager.pageSize+");'>&laquo; 이전</a>";
 	    } else {
-	        html +="<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-right: 5px;'>&laquo; 이전</span>";
+	        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-right: 5px;'>&laquo; 이전</span>";
 	    }
 	
 	    // 페이지 번호 링크
 	    for (var i = pager.startPage; i <= pager.endPage; i++) {
 	        if (pager.pageNum != i) {
-	            html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:inventoryDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
+	            html += "<a class='btn btn-outline-primary mx-1 btn-sm' href='javascript:inventoryDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
 	        } else {
-	            html +=	"<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
+	            html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
 	        }
 	    }
 	
@@ -624,7 +616,8 @@
 							var inventoryTime=inventoryItem.lastDate.split(" ");
 							html+="<td>"+inventoryTime[0]+"</td>";
 							html+="<td>"; 
-							html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							html+='<button type="button" class="btn btn-secondary"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							/* html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; */ 
 							html+="<button type='button' class='btn btn-danger' onclick='remove("+inventoryItem.inventoryId+","+pageNum+");'>삭제</button>"
 							html+="</td>"
 							html+="</tr>";
@@ -730,7 +723,8 @@
 							var inventoryTime=inventoryItem.lastDate.split(" ");
 							html+="<td>"+inventoryTime[0]+"</td>";
 							html+="<td>"; 
-							html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							html+='<button type="button" class="btn btn-secondary"   onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							/* html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>';  */
 							html+="<button type='button' class='btn btn-danger' onclick='remove("+inventoryItem.inventoryId+","+pageNum+");'>삭제</button>"
 							html+="</td>"
 							html+="</tr>";
@@ -831,7 +825,8 @@
 							var inventoryTime=inventoryItem.lastDate.split(" ");
 							html+="<td>"+inventoryTime[0]+"</td>";
 							html+="<td>"; 
-							html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							html+='<button type="button" class="btn btn-secondary"   onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							/* html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>';  */
 							html+="<button type='button' class='btn btn-danger' onclick='remove("+inventoryItem.inventoryId+","+pageNum+");'>삭제</button>"
 							html+="</td>"
 							html+="</tr>";
@@ -870,12 +865,15 @@
     
     //inventory 정보 선택 함수 (update 전)
     function modify(inventoryId){
+    	//모달창 생성
+    	var back =document.querySelector(".backgroundmodal");
+        back.classList.add("on"); // "on" 클래스가 없으면 추가
+    	
     	$.ajax({
     		type:"get",
     		url:"<c:url value="/inventory/inventory_modify_view"/>/"+inventoryId,
     		dataType:"json",
-    		success:function(result){    			
-    			console.log(result);
+    		success:function(result){    	
     			$(".updateinventoryId").val(result.inventoryId);
     			$(".updateId").val(result.inventoryProductId);
     			$(".updateCode").val(result.product.productCategory);
@@ -892,8 +890,16 @@
     	});
     }
     
+    
+    //수정 모달창 끄기
+    $(".updateClose").click(function(){
+    	var back =document.querySelector(".backgroundmodal");
+        back.classList.remove("on"); // "on" 클래스가 없으면 추가
+    });
+    
+    
     //inventory 수정 정보에서 제품조회 클릭 이벤트
-    $(".product_code_create").click(function(){
+    $(".item_code_create").click(function(){
     	// 첫 번째 모달에서 두 번째 모달 열기
         $('#newModal').modal('show');
 	   	productDisplay();

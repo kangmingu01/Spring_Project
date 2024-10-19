@@ -259,21 +259,24 @@
 	        options: {
 	            plugins: {
 	                legend: {
-	                    display: true, 
-	                    position: 'right', 
+	                    display: true, // 라벨 표시
+	                    position: 'right', // 범례 위치를 아래로
 	                    labels: {
+	                        boxWidth: 10, // 라벨 옆 상자의 너비 조정
+	                        padding: 5,   // 라벨 간 간격 최소화
 	                        font: {
-	                            size: 16 
+	                            size: 14  // 라벨의 폰트 크기 조정
 	                        }
 	                    }
 	                },
 	                tooltip: {
+	                    enabled: true,  // 툴팁 표시
 	                    bodyFont: {
-	                        size: 14 
+	                        size: 14  // 툴팁 폰트 크기
 	                    }
 	                }
 	            },
-	            cutout: '0%', // 도넛 차트 가운데 구멍의 크기 (퍼센트로 설정)
+	            cutout: '0%', // 도넛 차트 가운데 구멍 크기
 	            responsive: true,
 	        },
 	        plugins: [{

@@ -44,7 +44,7 @@
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                 </svg>
                 </div>
-                <span>등록</span>
+                <span>상품등록</span>
             </div>
             <div class="content_header_reset_btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
@@ -114,11 +114,11 @@
 						  <option value="Blue">Blue(파랑)</option>
 						  <option value="Green">Green(초록)</option>
 						  <option value="Yellow">Yellow(노랑)</option>
-						  <option value="Black">Black(검정)</option>
+						  <option value="black">black(검정)</option>
 						  <option value="White">White(흰색)</option>
 						  <option value="Orange">Orange(주황)</option>
 						  <option value="Pink">Pink(분홍)</option>
-						  <option value="Purple">Purple(보라)</option>
+						  <option value="purple">purple(보라)</option>
 						  <option value="Gray">Gray(회색)</option>
                     </select>
                 </div>
@@ -227,86 +227,67 @@
         <div class="pageNumDiv"></div>
     </div>
 </div>
-<!-- Vertically centered scrollable modal -->
-<!-- Button trigger modal -->
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">상품수정</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body"  id="productUpdateSty">
-                <input type="hidden" class="updateId">
+
+
+	<div class="backgroundmodal">
+		<div class="updatemodal">
+			<div class="updatemodal_title">상품수정</div>
+			<div class="updateOne">
+				<input type="hidden" class="updateId">
                 <div>
                     <label>제품코드</label>
-                    <input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    <!-- <input type="text" class="updateCode" > -->
+                    <input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly">
                 </div>
                 <div>
                     <label>제품명</label>
                     <input type="text" class="form-control updateName"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    <!-- <input type="text"  class="updateName"> -->
+                 
                 </div>
                 <div>
                     <label>입고가격</label>
                     <input type="number" class="form-control updatePrice"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    <!-- <input type="text"  class="updatePrice"> -->
+           
                 </div>
                 <div>
                     <label>출고가격</label>
                     <input type="number" class="form-control updateDelivery"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    <!-- <input type="text"  class="updateDelivery"> -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary"  id="update_btn">수정완료</button>
-            </div>
-        </div>
-    </div>
-</div>
+          
+            	</div>
+			</div>
+			<div class="buttonSty">
+				<button type="button" class="btn btn-secondary updateClose">닫기</button>
+				<button type="button" class="btn btn-primary" id="update_btn">수정완료</button>
+			</div>
+		</div>
+	</div>
 
-
-<!-- Button trigger modal -->
-<!-- Modal -->
-<div class="modal fade" id="customModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="customModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="customModalLabel">창고수정</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body " id="warehouseUpdateSty">
-                <input type="hidden" class="warehouseUpdateId">
+	<div class="backgroundmodalTwo">
+		<div class="updatemodal">
+			<div class="updatemodal_title">창고수정</div>
+			<div class="updateOne">
+				<input type="hidden" class="warehouseUpdateId">
                 <div>
                     <label>창고이름</label>
                     <input type="text" class="form-control warehouseUpdateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    <!-- <input type="text" class="warehouseUpdateCode" > -->
+        
                 </div>
                 <div>
                     <label>창고위치</label>
                     <input type="text" class="form-control warehouseUpdateLocation"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    <!-- <input type="text" class="warehouseUpdateLocation" > -->
+ 
                 </div>
                 <div>
                     <label>창고용량</label>
                     <input type="text" class="form-control warehouseUpdateCapacity"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                    <!-- <input type="text" class="warehouseUpdateCapacity" > -->
+      
                 </div>
-                <div></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button type="button" class="btn btn-primary" id="warehouseUpdate_btn">수정완료</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+			</div>
+			<div class="buttonSty">
+				<button type="button" class="btn btn-secondary updateClose">닫기</button>
+				<button type="button" class="btn btn-primary" id="warehouseUpdate_btn">수정완료</button>
+			</div>
+		</div>
+	</div>
 
 <script>
     var csrfToken = $('meta[name="_csrf"]').attr('content');
@@ -539,7 +520,7 @@
                     html+="<td>"+this.warehouseLocation+"</td>";
                     html+="<td>"+this.warehouseCapacity+"</td>";
                     html+="<td>";
-                    html+='<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#customModal" onclick="modifyhouse('+this.warehouseId+');">수정</button>'
+                    html+='<button type="button" class="btn btn-secondary"  onclick="modifyhouse('+this.warehouseId+');">수정</button>'
                     html+="<button type='button' class='btn btn-danger' onclick='warehouseremove("+this.warehouseId+");'>삭제</button>"
                     html+="</td>"
                     html+="</tr>";
@@ -564,6 +545,9 @@
 
     //창고정보 선택 함수(update 전)
     function modifyhouse(warehouseId) {
+    	var back =document.querySelector(".backgroundmodalTwo");
+        back.classList.add("on"); // "on" 클래스가 없으면 추가
+    	console.log(back);
         $.ajax({
             type:"get",
             url:"<c:url value="/inventory/warehouse_modify_view"/>/"+warehouseId,
@@ -579,6 +563,12 @@
             }
         });
     }
+    
+  	//창고 수정 모달창 끄기
+    $(".updateClose").click(function(){
+    	var back =document.querySelector(".backgroundmodalTwo");
+        back.classList.remove("on"); // "on" 클래스가 없으면 추가
+    });
 
     //창고모달 변수 초기화
     function modalwarehouseinit(){
@@ -609,9 +599,8 @@
             success:function(result){
                 if(result == "success") {
                     modalwarehouseinit();
-                    var myModalEl = document.getElementById('customModal');
-                    var modal = bootstrap.Modal.getInstance(myModalEl); // 모달 인스턴스 가져오기
-                    modal.hide(); // 모달 닫기
+                    var back =document.querySelector(".backgroundmodalTwo");
+   				 	back.classList.remove("on"); // "on" 클래스가 없으면 추가
                     warehouseDisplay();
                     // 모달 창 닫기
                     alert("수정이 완료 되었습니다.");
@@ -658,80 +647,6 @@
             init();
         }
     });
-
-
-/*     // 상품리스트 함수 ajax
-    function productDisplay(pageNum=1) {
-        var pageSize=10;
-        var search = document.querySelector(".search").value;
-        var keyword = document.querySelector(".keyword").value;
-        $.ajax({
-            type:"get",
-            url: "<c:url value="/inventory/product_list"/>",
-            //data: JSON.stringify({"pageNum":pageNum, "pageSize":pageSize}),
-            data: {"pageNum":pageNum, "pageSize":pageSize, "search":search,"keyword":keyword},
-            dataType: "json",
-            success: function(result){
-                //console.log(result.productList.length);
-                if(result.productList.length == 0){
-                    var html="<table>";
-                    html+="<tr>";
-                    html+="<th>검색된 상품이 없습니다.</th>";
-                    html+="</tr>";
-                    html+="</table>";
-                    $(".content_body_list").html(html);
-                    return;
-                }
-                var html="<table>";
-                html+="<thead>";
-                html+="<tr>";
-                html+="<th>No</th>";
-                //html+="<th>상품번호</th>";
-                html+="<th>제품코드</th>";
-                html+="<th>제품명</th>";
-                html+="<th>브랜드</th>";
-                html+="<th>색상</th>";
-                html+="<th>사이즈</th>";
-                html+="<th>종류</th>";
-                html+="<th>성별</th>";
-                html+="<th>입고가격</th>";
-                html+="<th>출고가격</th>";
-                html+="<th></th>";
-                html+="</tr>";
-                html+="</thead>";
-                html+="<tbody class='sty'>";
-                $(result.productList).each(function(index){
-                    html+="<tr>";
-                    html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-                    //html+="<td>"+this.productId+"</td>";
-                    html+="<td>"+this.productCategory+"</td>";
-                    html+="<td>"+this.productName+"</td>";
-                    html+="<td>"+this.warehouseName+"</td>";
-                    html+="<td>"+this.warehouseName+"</td>";
-                    html+="<td>"+this.warehouseName+"</td>";
-                    html+="<td>"+this.warehouseName+"</td>";
-                    html+="<td>"+this.warehouseName+"</td>";
-                    html+="<td>"+this.productPrice+"</td>";
-                    html+="<td>"+this.deliveryPrice+"</td>";
-                    html+="<td>";
-                    html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.productId+');">수정</button>';
-                    html+="<button type='button' class='btn btn-danger' onclick='remove("+this.productId+","+pageNum+");'>삭제</button>";
-                    html+="</td>";
-                    html+="</tr>";
-                });
-                html+="</tbody>";
-                html+="</table>";
-                $(".content_body_list").html(html);
-
-                //페이지 번호를 출력하는 함수 호출
-                pageNumberDisplay(result.pager);
-            },
-            error:function(xhr){
-                alert("상품 리스트를 불러오지 못했습니다.");
-            }
-        });
-    } */
-
     
  	// 상품리스트 함수 ajax
 	function productDisplay(pageNum = 1) {
@@ -798,7 +713,7 @@
 	                        html += "<td>" + ProductItem.productPrice + "</td>";
 	                        html += "<td>" + ProductItem.deliveryPrice + "</td>";
 	                        html += "<td>"; 
-	                        html += '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modify(' + ProductItem.productId + ');">수정</button>'; 
+	                        html += '<button type="button" class="btn btn-primary" onclick="modify(' + ProductItem.productId + ');">수정</button>'; 
 	                        html += "<button type='button' class='btn btn-danger' onclick='remove(" + ProductItem.productId + "," + pageNum + ");'>삭제</button>";
 	                        html += "</td>";
 	                        html += "</tr>";
@@ -834,28 +749,28 @@
     function pageNumberDisplay(pager) {
         var html = "";
 
-        // 이전 페이지 링크
-        if (pager.startPage > pager.blockSize) {
-            html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>&laquo; 이전</a>";
-        } else {
-            html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-right: 5px;'>&laquo; 이전</span>";
-        }
-
-        // 페이지 번호 링크
-        for (var i = pager.startPage; i <= pager.endPage; i++) {
-            if (pager.pageNum != i) {
-                html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:productDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
-            } else {
-                html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
-            }
-        }
-
-        // 다음 페이지 링크
-        if (pager.endPage != pager.totalPage) {
-            html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:productDisplay(" + pager.nextPage + ","+pager.pageSize+");'>다음 &raquo;</a>";
-        } else {
-            html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-left: 5px;'>다음 &raquo;</span>";
-        }
+     // 이전 페이지 링크
+	    if (pager.startPage > pager.blockSize) {
+	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:productDisplay(" + pager.prevPage + ","+pager.pageSize+");'>&laquo; 이전</a>";
+	    } else {
+	        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-right: 5px;'>&laquo; 이전</span>";
+	    }
+	
+	    // 페이지 번호 링크
+	    for (var i = pager.startPage; i <= pager.endPage; i++) {
+	        if (pager.pageNum != i) {
+	            html += "<a class='btn btn-outline-primary mx-1 btn-sm' href='javascript:productDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
+	        } else {
+	            html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
+	        }
+	    }
+	
+	    // 다음 페이지 링크
+	    if (pager.endPage != pager.totalPage) {
+	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:productDisplay(" + pager.nextPage + ","+pager.pageSize+");'>다음 &raquo;</a>";
+	    } else {
+	        html += "<span class='btn btn-secondary disabled btn-sm' style='background-color: #6571FF; margin-left: 5px;'>다음 &raquo;</span>";
+	    }
 
         // 페이지 번호 HTML 업데이트
         $(".pageNumDiv").html(html);
@@ -870,6 +785,10 @@
 
     //상품정보 선택 함수(update 전)
     function modify(productId) {
+    	//모달창 생성
+    	var back =document.querySelector(".backgroundmodal");
+        back.classList.add("on"); // "on" 클래스가 없으면 추가
+    	
         $.ajax({
             type:"get",
             url:"<c:url value="/inventory/product_modify_view"/>/"+productId,
@@ -887,6 +806,12 @@
             }
         });
     }
+    
+    //수정 모달창 끄기
+    $(".updateClose").click(function(){
+    	var back =document.querySelector(".backgroundmodal");
+        back.classList.remove("on"); // "on" 클래스가 없으면 추가
+    });
 
     //모달 상품정보 초기화 함수
     function modalinit(){
@@ -921,11 +846,9 @@
             },
             success:function(result){
                 if(result == "success") {
+                    var back =document.querySelector(".backgroundmodal");
+   				 	back.classList.remove("on"); // "on" 클래스가 없으면 추가
                     modalinit();
-                    var myModalEl = document.querySelector('#staticBackdrop');
-                    var modal = bootstrap.Modal.getInstance(myModalEl); // 모달 인스턴스 가져오기
-                    modal.hide(); // 모달 닫기
-                    //alert("수정이 완료 되었습니다.");
                     productDisplay();
                     // 모달 창 닫기
                 }

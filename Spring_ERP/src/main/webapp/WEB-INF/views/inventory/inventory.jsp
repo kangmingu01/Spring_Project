@@ -362,7 +362,7 @@
 							html+="<td>"+convertedCategory.size+"</td>";
 							html+="<td>"+convertedCategory.gender+"</td>";
 							html+="<td>"; 
-							html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+this.productId+');">선택</button>'; 
+							html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+ProductItem.productId+');">선택</button>'; 
 							html+="</td>"
 							html+="</tr>";
 							

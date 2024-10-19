@@ -110,10 +110,16 @@
                     <label>색상</label>
                     <select class="category_color">
                     	<option  value="" disabled="disabled" selected>선택해주세요</option>
-                        <option>Red</option>
-                        <option>Blue</option>
-                        <option>Black</option>
-                        <option>White</option>
+                          <option value="Red">Red(빨강)</option>
+						  <option value="Blue">Blue(파랑)</option>
+						  <option value="Green">Green(초록)</option>
+						  <option value="Yellow">Yellow(노랑)</option>
+						  <option value="Black">Black(검정)</option>
+						  <option value="White">White(흰색)</option>
+						  <option value="Orange">Orange(주황)</option>
+						  <option value="Pink">Pink(분홍)</option>
+						  <option value="Purple">Purple(보라)</option>
+						  <option value="Gray">Gray(회색)</option>
                     </select>
                 </div>
                 <div>

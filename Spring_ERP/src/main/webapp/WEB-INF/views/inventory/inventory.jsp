@@ -10,6 +10,7 @@
   <meta name="_csrf_header" content="${_csrf.headerName}" />
   <link href="<c:url value="/css/reset.css"/>" type="text/css" rel="stylesheet">
   <link href="<c:url value="/css/inventory.css"/>" type="text/css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <title>Document</title>
 </head>
@@ -201,8 +202,12 @@
 		        </div>
 		        <div>
 		        	<label>창고</label>
-		        	<input type="text" class="form-control updateWarehouse"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
-		        	<!-- <input type="text"  class="updateWarehouse" /> -->
+		        	<select class="form-select updateWarehouse"  aria-label="Default select example">	
+	            		<option value="0" disabled selected>선택해주세요</option>
+	            		<c:forEach var="warehouseNum" items="${warehouseNum}">
+		            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
+	            		</c:forEach>
+	            	</select>
 		        </div>
 		        <div>
 		        	<label>파손수량</label>
@@ -246,12 +251,14 @@
 	  		</div>
 		</div>
 	</div>
-  <script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
+	<script src="<c:url value="/js/jquery-3.7.1.min.js"/>"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
   <script>
  	var csrfToken = $('meta[name="_csrf"]').attr('content');
   	var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
-  	inventoryDisplay(pageNum=1)
- 
+  	inventoryDisplay(pageNum=1);
+  	
     // 추가 정보 클릭 이벤트
     var plusBtn=document.querySelector(".content_body_search_plus");
     var plusContent=document.querySelector(".content_plus");
@@ -265,10 +272,15 @@
       }
     });
 
+    function inputinit(){
+    	$('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"],select').val('');
+        $('select').prop('selectedIndex', 0);	
+    }
+    
     //reset
     $(".content_header_reset_btn").click(function(){
     	// 모든 input 태그를 선택하고 값 초기화
-        $('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"]').val('');
+        inputinit();
     });
     
     $(".updateCode").click(function(){
@@ -287,6 +299,7 @@
     $(".content_header_search_btn").click(function(){
     	productDisplay();
     });
+    
     
     //제품조회 함수
     function productDisplay(pageNum=1) {
@@ -317,33 +330,58 @@
 				html+="<th>제품코드</th>";
 				html+="<th>제품명</th>";
 				html+="<th>브랜드</th>";
+				html+="<th>종류</th>";
 				html+="<th>색상</th>";
 				html+="<th>사이즈</th>";
-				html+="<th>종류</th>";
 				html+="<th>성별</th>";
 				html+="<th></th>"; 
 				html+="</tr>";
 				html+="</thead>";
 				html+="<tbody class='sty'>";
+				
+				var remainingRequests = result.productList.length; // 남은 요청 수
+				
 				$(result.productList).each(function(index){
-					html+="<tr>";					
-					html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productName+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+this.productId+');">선택</button>'; 
-					html+="</td>"
-					html+="</tr>";
-				});
-				html+="</tbody>";
-				html+="</table>";
-				$(".product_brand_search").html(html);
-
+					var Category = this.productCategory; // productCategory 값을 저장
+	                var ProductItem = this; // ProductItem을 참조
+	                
+	                $.ajax({
+	                    type: "get",
+	                    url: "<c:url value='/inventory/ProductconvertCategory'/>",
+	                    data: { "categoryCode": Category },
+	                    dataType: "json",
+	                    success: function(convertedCategory) {
+					
+							html+="<tr>";					
+							html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+							html+="<td>"+ProductItem.productCategory+"</td>";
+							html+="<td>"+ProductItem.productName+"</td>";
+							html+="<td>"+convertedCategory.brand+"</td>";
+							html+="<td>"+convertedCategory.item+"</td>";
+							html+="<td>"+convertedCategory.color+"</td>";
+							html+="<td>"+convertedCategory.size+"</td>";
+							html+="<td>"+convertedCategory.gender+"</td>";
+							html+="<td>"; 
+							html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+this.productId+');">선택</button>'; 
+							html+="</td>"
+							html+="</tr>";
+							
+							remainingRequests--; // 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            html += "</tbody></table>";
+	                            $(".product_brand_search").html(html);
+	                        }
+	                    },
+	                    error: function(xhr) {
+	                        alert("카테고리 적용 실패");
+	                        remainingRequests--; // 실패한 경우에도 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            html += "</tbody></table>";
+	                            $(".product_brand_search").html(html);
+	                        }
+	                    }	
+	                });
+	            });
 				//페이지 번호를 출력하는 함수 호출
 				modalpageNumberDisplay(result.pager);
 	        },
@@ -407,15 +445,28 @@
   	//재고 등록 이벤트
     $(".content_header_plus_btn").click(function(){
     	var inventoryProductId= $(".productId").val();
-    	console.log(inventoryProductId);
     	var	inventoryQty=$(".inventoryQty").val();
-    	console.log(inventoryQty);
     	var	inventoryWarehouseId=$(".inventoryWarehouseId").val();
-    	console.log(inventoryWarehouseId);
     	var inventoryDamagedQty=$(".inventoryDamagedQty").val();
-    	console.log(inventoryDamagedQty);
     	var lastDate=$(".lastDate").val();
     		
+    	if(inventoryProductId==""){
+    		alert("제품조회를 사용하여 제품정보를 등록해주세요.");
+    		return;
+    	}
+    	if(inventoryQty==""){
+    		alert("수량 정보를 등록해주세요.");
+    		return;
+    	}
+    	if(inventoryWarehouseId==""|| inventoryWarehouseId==null){
+    		alert("창고정보를 등록해주세요.");
+    		return;
+    	}
+    	if(lastDate==""){
+    		alert("날짜정보를 등록해주세요.");
+    		return;
+    	}
+    	
     	
     	if(confirm("재고를 등록 하시겠습니까?")){
 	        $.ajax({
@@ -431,17 +482,16 @@
 	    		success: function(){
 	    			$(".content_body_list").empty();
 	    			$(".pageNumDiv").empty();
-	    			productDisplay();
+	    			inventoryDisplay();
+	    			inputinit();
 	    			alert("성공적으로 등록되었습니다.");
 	    		},
 	    		error: function(xhr){
-	    			alert("등록이 실패 하였습니다.");
+	    			alert("현재 상품이 선택하신 창고에 등록되어있습니다.");
 	    		}
 	    	});
         }
     });
-    
-    
     
     
     //################################# 수정중 .. 다른 리스트 형식 함수 호출해야함
@@ -510,8 +560,7 @@
 				var html="<table>";
 				html+="<thead>";
 				html+="<tr>";
-				html+="<th>No</th>";
-				html+="<th>상품번호</th>";				
+				html+="<th>No</th>";		
 				html+="<th>제품코드</th>";
 				html+="<th>제품명</th>";
 				html+="<th>브랜드</th>";
@@ -527,32 +576,59 @@
 				html+="</tr>";
 				html+="</thead>";
 				html+="<tbody class='sty'>";
+				
+				var remainingRequests = result.invenList.length; // 남은 요청 수
+				
 				$(result.invenList).each(function(index){
-					html+="<tr>";					
-					html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-					html+="<td>"+this.inventoryProductId+"</td>";
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.product.productName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.inventoryQty+"</td>";
-					html+="<td>"+this.inventoryDamagedQty+"</td>";
-					html+="<td>"+this.warehouse.warehouseName+"</td>";
-					var inventoryTime=this.lastDate.split(" ");
-					html+="<td>"+inventoryTime[0]+"</td>";
-					html+="<td>"; 
-					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
-					html+="<button type='button' class='btn btn-danger' onclick='remove("+this.inventoryId+","+pageNum+");'>삭제</button>"
-					html+="</td>"
-					html+="</tr>";
+					var productCategory = this.product.productCategory; // productCategory 값을 저장
+	                var inventoryItem = this; // inventoryItem을 참조
+	                
+	                // 변환된 productCategory를 요청하는 AJAX 호출
+	                $.ajax({
+	                    type: "get",
+	                    url: "<c:url value='/inventory/inventoryconvertCategory'/>",
+	                    data: { "categoryCode": productCategory },
+	                    dataType: "json",
+	                    success: function(convertedCategory) {
+					
+							html+="<tr>";					
+							html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+							html+="<td>"+inventoryItem.product.productCategory+"</td>";
+							html+="<td>"+inventoryItem.product.productName+"</td>";
+							html+="<td>"+convertedCategory.brand+"</td>";
+							html+="<td>"+convertedCategory.item+"</td>";
+							html+="<td>"+convertedCategory.color+"</td>";
+							html+="<td>"+convertedCategory.size+"</td>";
+							html+="<td>"+convertedCategory.gender+"</td>";
+							html+="<td>"+inventoryItem.inventoryQty+"</td>";
+							html+="<td>"+inventoryItem.inventoryDamagedQty+"</td>";
+							html+="<td>"+inventoryItem.warehouse.warehouseName+"</td>";
+							var inventoryTime=inventoryItem.lastDate.split(" ");
+							html+="<td>"+inventoryTime[0]+"</td>";
+							html+="<td>"; 
+							html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							html+="<button type='button' class='btn btn-danger' onclick='remove("+inventoryItem.inventoryId+","+pageNum+");'>삭제</button>"
+							html+="</td>"
+							html+="</tr>";
+							
+							remainingRequests--; // 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            // 모든 요청이 완료된 후에 HTML 업데이트
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    },
+	                    error: function() {
+	                        alert("카테고리 변환에 실패했습니다.");
+	                        remainingRequests--; // 실패한 경우에도 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            // 모든 요청이 완료된 후에 HTML 업데이트
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    }
+	                });   
 				});
-				html+="</tbody>";
-				html+="</table>";
-				$(".content_body_list").html(html);
-
 				//페이지 번호를 출력하는 함수 호출
 				pageNumberDisplay(result.pager);
 	        },
@@ -590,8 +666,7 @@
 				var html="<table>";
 				html+="<thead>";
 				html+="<tr>";
-				html+="<th>No</th>";
-				html+="<th>상품번호</th>";				
+				html+="<th>No</th>";		
 				html+="<th>제품코드</th>";
 				html+="<th>제품명</th>";
 				html+="<th>브랜드</th>";
@@ -600,39 +675,66 @@
 				html+="<th>사이즈</th>";
 				html+="<th>성별</th>";
 				html+="<th>현재수량</th>";
-				html+="<th>파손수량</th>";
+				html+="<th style='color: red;'>파손수량</th>";
 				html+="<th>창고이름</th>";
 				html+="<th>출입고일자</th>";
 				html+="<th></th>"; 
 				html+="</tr>";
 				html+="</thead>";
 				html+="<tbody class='sty'>";
+				
+				var remainingRequests = result.invenList.length; // 남은 요청 수
+				
 				$(result.invenList).each(function(index){
-					html+="<tr>";					
-					html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-					html+="<td>"+this.inventoryProductId+"</td>";
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.product.productName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.inventoryQty+"</td>";
-					html+="<td>"+this.inventoryDamagedQty+"</td>";
-					html+="<td>"+this.warehouse.warehouseName+"</td>";
-					var inventoryTime=this.lastDate.split(" ");
-					html+="<td>"+inventoryTime[0]+"</td>";
-					html+="<td>"; 
-					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
-					html+="<button type='button'  class='btn btn-danger' onclick='removeDamage("+this.inventoryId+","+pageNum+");'>삭제</button>"
-					html+="</td>"
-					html+="</tr>";
+					var productCategory = this.product.productCategory; // productCategory 값을 저장
+	                var inventoryItem = this; // inventoryItem을 참조
+	                
+	                // 변환된 productCategory를 요청하는 AJAX 호출
+	                $.ajax({
+	                    type: "get",
+	                    url: "<c:url value='/inventory/inventoryconvertCategory'/>",
+	                    data: { "categoryCode": productCategory },
+	                    dataType: "json",
+	                    success: function(convertedCategory) {
+					
+							html+="<tr>";					
+							html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+							html+="<td>"+inventoryItem.product.productCategory+"</td>";
+							html+="<td>"+inventoryItem.product.productName+"</td>";
+							html+="<td>"+convertedCategory.brand+"</td>";
+							html+="<td>"+convertedCategory.item+"</td>";
+							html+="<td>"+convertedCategory.color+"</td>";
+							html+="<td>"+convertedCategory.size+"</td>";
+							html+="<td>"+convertedCategory.gender+"</td>";
+							html+="<td>"+inventoryItem.inventoryQty+"</td>";
+							html+="<td>"+inventoryItem.inventoryDamagedQty+"</td>";
+							html+="<td>"+inventoryItem.warehouse.warehouseName+"</td>";
+							var inventoryTime=inventoryItem.lastDate.split(" ");
+							html+="<td>"+inventoryTime[0]+"</td>";
+							html+="<td>"; 
+							html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							html+="<button type='button' class='btn btn-danger' onclick='remove("+inventoryItem.inventoryId+","+pageNum+");'>삭제</button>"
+							html+="</td>"
+							html+="</tr>";
+							
+							remainingRequests--; // 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            // 모든 요청이 완료된 후에 HTML 업데이트
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    },
+	                    error: function() {
+	                        alert("카테고리 변환에 실패했습니다.");
+	                        remainingRequests--; // 실패한 경우에도 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            // 모든 요청이 완료된 후에 HTML 업데이트
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    }
+	                });   
 				});
-				html+="</tbody>";
-				html+="</table>";
-				$(".content_body_list").html(html);
-
 				//페이지 번호를 출력하는 함수 호출
 				pageNumberDisplay(result.pager);
 	        },
@@ -643,7 +745,6 @@
     }
     
     //재고 수량 100미안 정보 함수
-    //파손상품 리스트 함수
     function inventoryQtyDisplay(pageNum=1) {
     	var pageSize=10;
     	var search = document.querySelector(".search").value;
@@ -666,8 +767,7 @@
 				var html="<table>";
 				html+="<thead>";
 				html+="<tr>";
-				html+="<th>No</th>";
-				html+="<th>상품번호</th>";				
+				html+="<th>No</th>";	
 				html+="<th>제품코드</th>";
 				html+="<th>제품명</th>";
 				html+="<th>브랜드</th>";
@@ -675,7 +775,7 @@
 				html+="<th>색상</th>";
 				html+="<th>사이즈</th>";
 				html+="<th>성별</th>";
-				html+="<th>현재수량</th>";
+				html+="<th style='color: red;'>현재수량</th>";
 				html+="<th>파손수량</th>";
 				html+="<th>창고이름</th>";
 				html+="<th>출입고일자</th>";
@@ -683,32 +783,59 @@
 				html+="</tr>";
 				html+="</thead>";
 				html+="<tbody class='sty'>";
-				$(result.invenList).each(function(index){
-					html+="<tr>";					
-					html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>";
-					html+="<td>"+this.inventoryProductId+"</td>";
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.product.productName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.warehouseName+"</td>";
-					html+="<td>"+this.inventoryQty+"</td>";
-					html+="<td>"+this.inventoryDamagedQty+"</td>";
-					html+="<td>"+this.warehouse.warehouseName+"</td>";
-					var inventoryTime=this.lastDate.split(" ");
-					html+="<td>"+inventoryTime[0]+"</td>";
-					html+="<td>"; 
-					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.inventoryId+');">수정</button>'; 
-					html+="<button type='button' class='btn btn-danger' onclick='removeDamage("+this.inventoryId+","+pageNum+");'>삭제</button>"
-					html+="</td>"
-					html+="</tr>";
-				});
-				html+="</tbody>";
-				html+="</table>";
-				$(".content_body_list").html(html);
 
+				var remainingRequests = result.invenList.length; // 남은 요청 수
+				
+				$(result.invenList).each(function(index){
+					var productCategory = this.product.productCategory; // productCategory 값을 저장
+	                var inventoryItem = this; // inventoryItem을 참조
+	                
+	                // 변환된 productCategory를 요청하는 AJAX 호출
+	                $.ajax({
+	                    type: "get",
+	                    url: "<c:url value='/inventory/inventoryconvertCategory'/>",
+	                    data: { "categoryCode": productCategory },
+	                    dataType: "json",
+	                    success: function(convertedCategory) {
+					
+							html+="<tr>";					
+							html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+							html+="<td>"+inventoryItem.product.productCategory+"</td>";
+							html+="<td>"+inventoryItem.product.productName+"</td>";
+							html+="<td>"+convertedCategory.brand+"</td>";
+							html+="<td>"+convertedCategory.item+"</td>";
+							html+="<td>"+convertedCategory.color+"</td>";
+							html+="<td>"+convertedCategory.size+"</td>";
+							html+="<td>"+convertedCategory.gender+"</td>";
+							html+="<td>"+inventoryItem.inventoryQty+"</td>";
+							html+="<td>"+inventoryItem.inventoryDamagedQty+"</td>";
+							html+="<td>"+inventoryItem.warehouse.warehouseName+"</td>";
+							var inventoryTime=inventoryItem.lastDate.split(" ");
+							html+="<td>"+inventoryTime[0]+"</td>";
+							html+="<td>"; 
+							html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+inventoryItem.inventoryId+');">수정</button>'; 
+							html+="<button type='button' class='btn btn-danger' onclick='remove("+inventoryItem.inventoryId+","+pageNum+");'>삭제</button>"
+							html+="</td>"
+							html+="</tr>";
+							
+							remainingRequests--; // 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            // 모든 요청이 완료된 후에 HTML 업데이트
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    },
+	                    error: function() {
+	                        alert("카테고리 변환에 실패했습니다.");
+	                        remainingRequests--; // 실패한 경우에도 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            // 모든 요청이 완료된 후에 HTML 업데이트
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    }
+	                });   
+				});
 				//페이지 번호를 출력하는 함수 호출
 				pageNumberDisplay(result.pager);
 	        },

@@ -31,7 +31,6 @@
             </div>
             <div>
 			  <input type="text" class="form-control keyword" name="keyword"  value="${ keyword}" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                <%-- <input type="text" name="keyword" class="keyword" value="${ keyword}"> --%>
             </div>
             <div class="content_header_search_btn">
                 <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -133,11 +132,11 @@
             <div>
                 <div>
                     <label>입고가격</label>
-                    <input type="text" name="productPrice" class="productPrice"/>
+                    <input type="number" name="productPrice" class="productPrice"/>
                 </div>
                 <div>
                     <label>출고가격</label>
-                    <input type="text" name=deliveryPrice class="deliveryPrice"/>
+                    <input type="number" name=deliveryPrice class="deliveryPrice"/>
                 </div>
                 <div></div>
                 <div></div>
@@ -232,12 +231,12 @@
                 </div>
                 <div>
                     <label>입고가격</label>
-                    <input type="text" class="form-control updatePrice"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <input type="number" class="form-control updatePrice"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                     <!-- <input type="text"  class="updatePrice"> -->
                 </div>
                 <div>
                     <label>출고가격</label>
-                    <input type="text" class="form-control updateDelivery"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <input type="number" class="form-control updateDelivery"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                     <!-- <input type="text"  class="updateDelivery"> -->
                 </div>
             </div>
@@ -420,7 +419,7 @@
                     alert("상품이 성공적으로 등록되었습니다.");
                 },
                 error: function(xhr){
-                    alert("상품등록이 실패 하였습니다.");
+                    alert("현재 상품은 등록 되어있습니다.");
                 }
             });
         }
@@ -465,7 +464,7 @@
                     alert("창고가 성공적으로 등록되었습니다.");
                 },
                 error: function(xhr){
-                    alert("창고 삽입이 실패 하였습니다.");
+                    alert("창고 등록이 실패 하였습니다.");
                 }
             });
         }
@@ -616,7 +615,7 @@
                     }
                 },
                 error:function(xhr){
-                    alert("삭제하지 못하였습니다.");
+                    alert("현재 창고는 사용중이기 때문에 삭제 할 수 없습니다.");
                 }
             });
         }
@@ -633,7 +632,7 @@
     });
 
 
-    // 상품리스트 함수 ajax
+/*     // 상품리스트 함수 ajax
     function productDisplay(pageNum=1) {
         var pageSize=10;
         var search = document.querySelector(".search").value;
@@ -659,7 +658,7 @@
                 html+="<thead>";
                 html+="<tr>";
                 html+="<th>No</th>";
-                html+="<th>상품번호</th>";
+                //html+="<th>상품번호</th>";
                 html+="<th>제품코드</th>";
                 html+="<th>제품명</th>";
                 html+="<th>브랜드</th>";
@@ -676,7 +675,7 @@
                 $(result.productList).each(function(index){
                     html+="<tr>";
                     html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-                    html+="<td>"+this.productId+"</td>";
+                    //html+="<td>"+this.productId+"</td>";
                     html+="<td>"+this.productCategory+"</td>";
                     html+="<td>"+this.productName+"</td>";
                     html+="<td>"+this.warehouseName+"</td>";
@@ -703,8 +702,106 @@
                 alert("상품 리스트를 불러오지 못했습니다.");
             }
         });
-    }
+    } */
 
+    
+ 	// 상품리스트 함수 ajax
+	function productDisplay(pageNum = 1) {
+	    var pageSize = 10;
+	    var search = document.querySelector(".search").value;
+	    var keyword = document.querySelector(".keyword").value;
+	
+	    $.ajax({
+	        type: "get",
+	        url: "<c:url value='/inventory/product_list'/>",
+	        data: { "pageNum": pageNum, "pageSize": pageSize, "search": search, "keyword": keyword },
+	        dataType: "json",
+	        success: function(result) {
+	            if (result.productList.length == 0) {
+	                var html = "<table>";
+	                html += "<tr>";
+	                html += "<th>검색된 상품이 없습니다.</th>";
+	                html += "</tr>";
+	                html += "</table>";
+	                $(".content_body_list").html(html);
+	                return;
+	            }
+	            var html = "<table>";
+	            html += "<thead>";
+	            html += "<tr>";
+	            html += "<th>No</th>";			
+	            html += "<th>제품코드</th>";
+	            html += "<th>제품명</th>";
+	            html += "<th>브랜드</th>";
+	            html += "<th>종류</th>";
+	            html += "<th>색상</th>";
+	            html += "<th>사이즈</th>";
+	            html += "<th>성별</th>";
+	            html += "<th>입고가격</th>";
+	            html += "<th>출고가격</th>";
+	            html += "<th></th>"; 
+	            html += "</tr>";
+	            html += "</thead>";
+	            html += "<tbody class='sty'>";
+	
+	            var remainingRequests = result.productList.length; // 남은 요청 수
+	
+	            $(result.productList).each(function(index) {
+	                var Category = this.productCategory; // productCategory 값을 저장
+	                var ProductItem = this; // ProductItem을 참조
+	
+	                // 변환된 productCategory를 요청하는 AJAX 호출
+	                $.ajax({
+	                    type: "get",
+	                    url: "<c:url value='/inventory/ProductconvertCategory'/>",
+	                    data: { "categoryCode": Category },
+	                    dataType: "json",
+	                    success: function(convertedCategory) {
+	                    	
+	                        html += "<tr>";					
+	                        html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+	                        html += "<td>" + ProductItem.productCategory + "</td>";
+	                        html += "<td>" + ProductItem.productName + "</td>";
+	                        html += "<td>" + convertedCategory.brand + "</td>";
+	                        html += "<td>" + convertedCategory.item + "</td>";
+	                        html += "<td>" + convertedCategory.color + "</td>";
+	                        html += "<td>" + convertedCategory.size + "</td>";
+	                        html += "<td>" + convertedCategory.gender + "</td>";
+	                        html += "<td>" + ProductItem.productPrice + "</td>";
+	                        html += "<td>" + ProductItem.deliveryPrice + "</td>";
+	                        html += "<td>"; 
+	                        html += '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modify(' + ProductItem.productId + ');">수정</button>'; 
+	                        html += "<button type='button' onclick='remove(" + ProductItem.productId + "," + pageNum + ");'>삭제</button>";
+	                        html += "</td>";
+	                        html += "</tr>";
+	
+	                        remainingRequests--; // 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    },
+	                    error: function(xhr) {
+	                        alert("카테고리 적용 실패");
+	                        remainingRequests--; // 실패한 경우에도 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            html += "</tbody></table>";
+	                            $(".content_body_list").html(html);
+	                        }
+	                    }
+	                });
+	            });
+	
+	            // 페이지 번호를 출력하는 함수 호출
+	            pageNumberDisplay(result.pager);
+	        },
+	        error: function(xhr) {
+	            alert("상품 리스트를 불러오지 못했습니다.");
+	        }
+	    });
+	}
+    
+    
     //페이징 처리 관련 Object 객체를 전달받아 HTML 태그로 변환해 페이지 번호를 출력하는 함수
     function pageNumberDisplay(pager) {
         var html = "";

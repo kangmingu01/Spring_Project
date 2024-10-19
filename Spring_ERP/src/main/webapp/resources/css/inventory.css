@@ -379,3 +379,7 @@ tr > td:nth-last-child(1) , tr > th:nth-last-child(1){
     background-color: #ff3366 !important; /* 원하는 색상 */
     border-color: #ff3366 !important; 
 }
+
+.modal-backdrop {
+    display: none !important; /* 모든 모달 배경 숨기기 */
+}

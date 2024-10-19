@@ -48,26 +48,26 @@
                 <div class="mb-3">
                     <label for="userid" class="form-label">사용자 ID <span class="badge bg-secondary">조회 전용</span></label>
                     <input type="text" class="form-control readonly-field" id="userid" name="userid"
-                           value="${loginUser.userid}" readonly>
+                           value="${erpUser.userid}" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="name" class="form-label">이름 <span class="badge bg-secondary">조회 전용</span></label>
                     <input type="text" class="form-control readonly-field" id="name" name="name"
-                           value="${loginUser.name}" readonly>
+                           value="${erpUser.name}" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">이메일 <span class="badge bg-info">수정 가능</span></label>
-                    <input type="email" class="form-control" id="email" name="email" value="${loginUser.email}">
+                    <input type="email" class="form-control" id="email" name="email" value="${erpUser.email}">
                     <div id="emailError" class="error-message"></div>
                 </div>
                 <div class="mb-3">
                     <label for="phone" class="form-label">전화번호 <span class="badge bg-info">수정 가능</span></label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="${loginUser.phone}">
+                    <input type="text" class="form-control" id="phone" name="phone" value="${erpUser.phone}">
                     <div id="phoneError" class="error-message"></div>
                 </div>
                 <div class="mb-3">
                     <label for="address" class="form-label">주소 <span class="badge bg-info">수정 가능</span></label>
-                    <input type="text" class="form-control" id="address" name="address" value="${loginUser.address}">
+                    <input type="text" class="form-control" id="address" name="address" value="${erpUser.address}">
                 </div>
             </div>
         </div>
@@ -146,6 +146,7 @@
             } else {
                 $('#passwordStrengthError').text('');
             }
+            checkAllFieldsFilled();
         }
 
         function validatePasswordMatch() {
@@ -160,51 +161,78 @@
                 $('#updateButton').prop('disabled', true);
             } else {
                 $('#passwordMatchError').text('새 비밀번호와 일치합니다.').css('color', 'green');
-                checkAllFieldsFilled();
             }
+            checkAllFieldsFilled();
         }
 
         function validateEmail() {
             var email = $('#email').val();
-            if (email !== "${loginUser.email}" && !emailReg.test(email)) {
+            if (!emailReg.test(email)) {
                 $('#emailError').text('유효한 이메일 주소를 입력해주세요.').css('color', 'red');
                 $('#updateButton').prop('disabled', true);
             } else {
                 $('#emailError').text('');
-                checkAllFieldsFilled();
             }
+            checkAllFieldsFilled();
         }
 
         function validatePhone() {
             var phone = $('#phone').val();
-            if (phone !== "${loginUser.phone}" && !phoneReg.test(phone)) {
+            if (!phoneReg.test(phone)) {
                 $('#phoneError').text('유효한 전화번호를 입력해주세요. 형식: 010XXXXXXXX').css('color', 'red');
                 $('#updateButton').prop('disabled', true);
             } else {
                 $('#phoneError').text('');
-                checkAllFieldsFilled();
             }
+            checkAllFieldsFilled();
         }
 
         function checkAllFieldsFilled() {
             var currentPassword = $('#currentPassword').val();
             var newPassword = $('#newPassword').val();
             var confirmPassword = $('#confirmPassword').val();
+            var email = $('#email').val();
+            var phone = $('#phone').val();
+            var address = $('#address').val();
+
             var emailError = $('#emailError').text();
             var phoneError = $('#phoneError').text();
+            var passwordStrengthError = $('#passwordStrengthError').text();
+            var passwordMatchError = $('#passwordMatchError').text();
 
-            // 모든 필드에 값이 올바르게 입력되었을 경우에만 버튼 활성화
-            if ((newPassword !== "" && confirmPassword !== "" && newPassword === confirmPassword && emailError === "" && phoneError === "") || (currentPassword === "" && newPassword === "" && confirmPassword === "" && emailError === "" && phoneError === "")) {
+            var originalEmail = "${erpUser.email}";
+            var originalPhone = "${erpUser.phone}";
+            var originalAddress = "${erpUser.address}";
+
+            // Enable if password fields are correctly filled
+            if (
+                currentPassword !== "" &&
+                newPassword !== "" &&
+                confirmPassword !== "" &&
+                passwordStrengthError === "" &&
+                passwordMatchError === ""
+            ) {
                 $('#updateButton').prop('disabled', false);
-            } else {
-                $('#updateButton').prop('disabled', true);
+                return;
             }
+
+            // Enable if email, phone, or address are modified without errors
+            if (
+                (email !== originalEmail || phone !== originalPhone || address !== originalAddress) &&
+                emailError === "" &&
+                phoneError === ""
+            ) {
+                $('#updateButton').prop('disabled', false);
+                return;
+            }
+
+            // Otherwise, disable the button
+            $('#updateButton').prop('disabled', true);
         }
 
         $('#newPassword, #confirmPassword, #currentPassword').on('keyup', function () {
             validatePasswordStrength();
             validatePasswordMatch();
-            checkAllFieldsFilled();
         });
 
         $('#email').on('keyup', function () {
@@ -215,23 +243,26 @@
             validatePhone();
         });
 
-        // 슬라이드 토글 효과를 사용하여 비밀번호 변경 섹션을 열고 닫기
+        $('#address').on('keyup', function () {
+            checkAllFieldsFilled();
+        });
+
+        // Toggle password change section and adjust button state accordingly
         $("#togglePasswordChange").on("click", function () {
-            $("#passwordChangeSection").slideToggle("slow", function() {
+            $("#passwordChangeSection").slideToggle("slow", function () {
                 if ($("#passwordChangeSection").is(":visible")) {
-                    // 비밀번호 변경 섹션이 열리면 정보 수정 버튼 비활성화
+                    // Password change section is open, disable "정보 수정" button until all password fields are valid
                     $('#updateButton').prop('disabled', true);
                 } else {
-                    // 비밀번호 변경 섹션이 닫히면 정보 수정 버튼 활성화
-                    $('#updateButton').prop('disabled', false);
+                    // Password change section is closed, check other fields to determine if "정보 수정" should be enabled
+                    checkAllFieldsFilled();
                 }
             });
         });
 
-        // 페이지가 로드될 때 기본적으로 버튼 비활성화
+        // Initially disable the button
         $('#updateButton').prop('disabled', true);
     });
-
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

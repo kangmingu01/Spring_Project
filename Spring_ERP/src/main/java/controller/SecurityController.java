@@ -84,7 +84,6 @@ public class SecurityController {
         return "/security/lnaccessible_page";
     }
 
-    /* 비상 */
     @GetMapping("/mypage")
     public String mypage(Model model) {
         /*@AuthenticationPrincipal CustomUserDetails userDetails*/
@@ -92,8 +91,11 @@ public class SecurityController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String orgName = organizationDAO.selectOrgName(userDetails.getOrgId());
+        ErpUser erpUser = erpUserDAO.selectErpUserByUserid(userDetails.getUsername());
+
 
         model.addAttribute("orgName", orgName);
+        model.addAttribute("erpUser", erpUser);
         /*
         if(error != null) {
             model.addAttribute("error", error);

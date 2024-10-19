@@ -132,11 +132,11 @@
             <div>
                 <div>
                     <label>입고가격</label>
-                    <input type="text" name="productPrice" class="productPrice"/>
+                    <input type="number" name="productPrice" class="productPrice"/>
                 </div>
                 <div>
                     <label>출고가격</label>
-                    <input type="text" name=deliveryPrice class="deliveryPrice"/>
+                    <input type="number" name=deliveryPrice class="deliveryPrice"/>
                 </div>
                 <div></div>
                 <div></div>
@@ -231,12 +231,12 @@
                 </div>
                 <div>
                     <label>입고가격</label>
-                    <input type="text" class="form-control updatePrice"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <input type="number" class="form-control updatePrice"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                     <!-- <input type="text"  class="updatePrice"> -->
                 </div>
                 <div>
                     <label>출고가격</label>
-                    <input type="text" class="form-control updateDelivery"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <input type="number" class="form-control updateDelivery"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                     <!-- <input type="text"  class="updateDelivery"> -->
                 </div>
             </div>

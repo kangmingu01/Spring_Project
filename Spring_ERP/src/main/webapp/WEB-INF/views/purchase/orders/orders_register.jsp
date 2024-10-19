@@ -373,7 +373,7 @@ function productDisplay(pageNum=1) {
 			var html="<table>";
 			html+="<thead>";
 			html+="<tr>";
-			html+="<th>제품번호</th>";		
+			html+="<th>No</th>";		
 			html+="<th>제품코드</th>";
 			html+="<th>제품명</th>";
 			html+="<th>브랜드</th>";
@@ -385,31 +385,50 @@ function productDisplay(pageNum=1) {
 			html+="</tr>";
 			html+="</thead>";
 			html+="<tbody class='sty'>";
-		  $(result.productList).each(function(index){
-                var brand = this.productCategory.substring(0, 2);  
-                var type = this.productCategory.substring(2, 4);   
-                var color = this.productCategory.substring(4, 6);  
-                var size = this.productCategory.substring(6, 9);   
-                var gender = this.productCategory.substring(9, 10); 
+			
+			var remainingRequests = result.productList.length; // 남은 요청 수
+			
+			$(result.productList).each(function(index){
+				var Category = this.productCategory; // productCategory 값을 저장
+                var ProductItem = this; // ProductItem을 참조
                 
-                html+="<tr>";					
-				html+="<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분        
-				html+="<td>"+this.productCategory+"</td>";
-				html+="<td>"+this.productName+"</td>";
-				html+="<td>"+brand+"</td>";
-				html+="<td>"+type+"</td>";
-				html+="<td>"+color+"</td>";
-				html+="<td>"+size+"</td>";
-				html+="<td>"+gender+"</td>";
-				html+="<td>"; 
-				html+='<button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="addProductTitle('+this.productId+');">선택</button>';
-				html+="</td>"
-				html+="</tr>";
-			});
-			html+="</tbody>";
-			html+="</table>";
-			$(".product_brand_search").html(html);
-
+                $.ajax({
+                    type: "get",
+                    url: "<c:url value='/inventory/ProductconvertCategory'/>",
+                    data: { "categoryCode": Category },
+                    dataType: "json",
+                    success: function(convertedCategory) {
+				
+						html+="<tr>";					
+						html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+						html+="<td>"+ProductItem.productCategory+"</td>";
+						html+="<td>"+ProductItem.productName+"</td>";
+						html+="<td>"+convertedCategory.brand+"</td>";
+						html+="<td>"+convertedCategory.item+"</td>";
+						html+="<td>"+convertedCategory.color+"</td>";
+						html+="<td>"+convertedCategory.size+"</td>";
+						html+="<td>"+convertedCategory.gender+"</td>";
+						html+="<td>"; 
+						html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+this.productId+');">선택</button>'; 
+						html+="</td>"
+						html+="</tr>";
+						
+						remainingRequests--; // 요청 수 감소
+                        if (remainingRequests === 0) {
+                            html += "</tbody></table>";
+                            $(".product_brand_search").html(html);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert("카테고리 적용 실패");
+                        remainingRequests--; // 실패한 경우에도 요청 수 감소
+                        if (remainingRequests === 0) {
+                            html += "</tbody></table>";
+                            $(".product_brand_search").html(html);
+                        }
+                    }	
+                });
+            });
 			//페이지 번호를 출력하는 함수 호출
 			modalpageNumberDisplay(result.pager);
         },

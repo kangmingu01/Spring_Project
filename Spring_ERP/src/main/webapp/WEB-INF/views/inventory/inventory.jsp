@@ -151,8 +151,8 @@
       <div class="content_body_search_sty">
       	<div>
       		<select class="form-select search" name="search"  aria-label="Default select example">
-			    <option value="product_category" <c:if test="${search }=='product_category' "> </c:if>>제품코드</option>
-                <option value="product_name" <c:if test="${search }=='product_name' "> </c:if>selected>제품명</option>
+			    <option value="product_category" <c:if test="${search }=='product_category' "> </c:if>selected>제품코드</option>
+                <option value="product_name" <c:if test="${search }=='product_name' "> </c:if>>제품명</option>
                 <option value="warehouse_name" <c:if test="${search }=='warehouse_name' "> </c:if>>창고이름</option>
 			</select>
       	</div>
@@ -498,6 +498,9 @@
 	    		},
 	    		error: function(xhr){
 	    			alert("현재 상품이 선택하신 창고에 등록되어있습니다.");
+	    			var productCategory= $(".productCategory").val();
+	    			$(".keyword").val(productCategory);
+	    			$(".content_body_search_btn").click();
 	    		}
 	    	});
         }

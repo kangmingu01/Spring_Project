@@ -476,26 +476,29 @@ function addProductTitle(productId) {
         url:"<c:url value='/inventory/product_modify_view'/>/" + productId,
         dataType:"json",
         success:function(result) {
-        	//console.log(result);
-        	
-        	// productCategory에서 각 속성을 자름
-            var productCategory = result.productCategory;
-            var brand = productCategory.substring(0, 2);   
-            var type = productCategory.substring(2, 4);   
-            var color = productCategory.substring(4, 6);   
-            var size = productCategory.substring(6, 9);  
-            var gender = productCategory.substring(9, 10); 
-
             // 선택된 제품의 정보를 폼의 필드에 채움
             document.getElementById("productId").value = result.productId;
             document.getElementById("productName").value = result.productName;
-            document.getElementById("brand").value = brand;
-            document.getElementById("type").value = type;
-            document.getElementById("color").value = color;
-            document.getElementById("size").value = size;
-            document.getElementById("gender").value = gender;
             document.getElementById("productPrice").value = result.productPrice;
-			           
+            
+            var Category = result.productCategory;
+            
+            $.ajax({
+                type: "get",
+                url: "<c:url value='/inventory/ProductconvertCategory'/>",
+                data: { "categoryCode": Category },
+                dataType: "json",
+                success: function(convertedCategory) {
+                	$("#brand").val(convertedCategory.brand);
+                	$("#type").val(convertedCategory.item);
+                	$("#color").val(convertedCategory.color);
+                	$("#size").val(convertedCategory.size);
+                	$("#gender").val(convertedCategory.gender);
+                },
+                error: function(xhr) {
+                    alert("카테고리 적용 실패");
+                }	
+            });	           
             // 모달 닫기
             var productModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('newModal'));
             productModal.hide();

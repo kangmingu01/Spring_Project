@@ -60,26 +60,26 @@
             </div>
             <div>
               <label>브랜드</label>
-              <input type="text"  readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text"  readonly="readonly" name="productBrand" class="productBrand"/>
             </div>
             <div class="item_brand">
               <label >종류</label>
-              <input type="text" readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text" readonly="readonly" name="product_Items" class="product_Items"/>
             </div>
           </div>
           <!-- 서치 2row 부분 -->
           <div class="tworow">
             <div>
               <label>색상</label>
-              <input type="text" readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text" readonly="readonly" name="productColor" class="productColor"/>
             </div>           
             <div>
               <label>사이즈</label>
-              <input type="text"  readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text"  readonly="readonly" name="productSize" class="productSize"/>
             </div>
             <div>
               <label>성별</label>
-              <input type="text" readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text" readonly="readonly" name="productGender" class="productGender"/>
             </div>
           </div>
           <!-- 서치 3row 부분 -->
@@ -435,6 +435,24 @@
     			$(".updateCode").val(result.productCategory);
 				$(".productName").val(result.productName);
 				$(".updateName").val(result.productName);
+    			
+    			var Category = result.productCategory;
+    			$.ajax({
+                    type: "get",
+                    url: "<c:url value='/inventory/ProductconvertCategory'/>",
+                    data: { "categoryCode": Category },
+                    dataType: "json",
+                    success: function(convertedCategory) {
+                    	$(".productBrand").val(convertedCategory.brand);
+                    	$(".product_Items").val(convertedCategory.item);
+                    	$(".productColor").val(convertedCategory.color);
+                    	$(".productSize").val(convertedCategory.size);
+                    	$(".productGender").val(convertedCategory.gender);
+                    },
+                    error: function(xhr) {
+                        alert("카테고리 적용 실패");
+                    }	
+                });
     		},
     		error:function(xhr){
     			alert("검색된 정보가 없습니다.")

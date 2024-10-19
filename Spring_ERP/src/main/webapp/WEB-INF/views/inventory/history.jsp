@@ -116,15 +116,7 @@
         </div>
       </div>
       <!-- 추가사항 태그 -->
-      <div class="content_body_search_plus">
-        <div>창고관리</div>
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-          </svg>
-        </div>
-      </div>
-      <div class="content_plus"></div>
+      
       <div class="file_btn">
       	<div>
   			<div class="product_btn"><span>입출고관리</span></div>
@@ -170,72 +162,12 @@
           <span>검색</span>
         </div>
       </div>
-      
       <div class="content_body_list">
       </div>
       <div class="pageNumDiv"></div>
     </div>
   </div>
 	
-	<!-- Modal -->
-	
-	<%-- 
-	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h1 class="modal-title fs-5" id="staticBackdropLabel">입출고수정</h1>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body" id="productUpdateSty">
-	      	<input type="hidden" class="updateId">
-	      	<input type="hidden" class="updateproductId">
-	        <div>
-	        	<label>제품코드</label>
-	        	<input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
-	        </div>
-	        <div>
-	        	<label>제품명</label>
-	        	<input type="text" class="form-control updateName"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
-	        </div>
-	        <div>
-	        	<label>수량</label>
-	        	<input type="text" class="form-control updateQty"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
-	        </div>
-	        <div>
-	        	<label>입출고</label>
-	        	<select class="form-select updateType"  aria-label="Default select example">
-		        	<option value="0" disabled selected>선택해주세요</option>
-	            	<option value="1">입고</option>
-	            	<option value="2">출고</option>
-	            	<option value="3">반품</option>
-	        	</select>
-	        </div>
-	        <div>
-	        	<label>창고</label>
-	        	<select class="form-select updateWarehouse"  aria-label="Default select example">	
-            		<option value="0" disabled selected>선택해주세요</option>
-            		<c:forEach var="warehouseNum" items="${warehouseNum}">
-	            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
-            		</c:forEach>
-            	</select>	        	
-	        </div>
-	        <div>
-	        	<label>입출고일자</label>
-	        	<input type="date" class="form-control updateDate"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
-	        </div>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  id="update_btn">수정완료</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-
- --%>
-
-
 	<div class="backgroundmodal">
 		<div class="updatemodal">
 			<div class="updatemodal_title">입출고수정</div>
@@ -287,9 +219,6 @@
 		</div>
 	</div>
 
-
-
-
 	<div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
 	    <div class="modal-content">
@@ -322,6 +251,7 @@
   	historyDisplay(pageNum=1);
  
     // 추가 정보 클릭 이벤트
+    /* 
     var plusBtn=document.querySelector(".content_body_search_plus");
     var plusContent=document.querySelector(".content_plus");
     plusBtn.addEventListener("click",function(){
@@ -333,7 +263,7 @@
         plusContent.classList.remove("on");
       }
     });
-    
+     */
     
   	//reset
     $(".content_header_reset_btn").click(function(){

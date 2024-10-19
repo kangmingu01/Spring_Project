@@ -178,6 +178,8 @@
   </div>
 	
 	<!-- Modal -->
+	
+	<%-- 
 	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 	    <div class="modal-content">
@@ -231,6 +233,63 @@
 	  </div>
 	</div>
 
+ --%>
+
+
+	<div class="backgroundmodal">
+		<div class="updatemodal">
+			<div class="updatemodal_title">입출고수정</div>
+			<div class="updateOne">
+				<input type="hidden" class="updateId">
+		      	<input type="hidden" class="updateproductId">
+		        <div>
+		        	<label>제품코드</label>
+		        	<input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
+		        </div>
+		        <div>
+		        	<label>제품명</label>
+		        	<input type="text" class="form-control updateName"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
+		        </div>
+		        <div class="item_code_create">
+					<button type="button" class="item_code_create">제품조회</button>
+				</div>
+		        <div>
+		        	<label>수량</label>
+		        	<input type="text" class="form-control updateQty"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+		        </div>
+		        <div>
+		        	<label>입출고</label>
+		        	<select class="form-select updateType"  aria-label="Default select example">
+			        	<option value="0" disabled selected>선택해주세요</option>
+		            	<option value="1">입고</option>
+		            	<option value="2">출고</option>
+		            	<option value="3">반품</option>
+		        	</select>
+		        </div>
+		        <div>
+		        	<label>창고</label>
+		        	<select class="form-select updateWarehouse"  aria-label="Default select example">	
+	            		<option value="0" disabled selected>선택해주세요</option>
+	            		<c:forEach var="warehouseNum" items="${warehouseNum}">
+		            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
+	            		</c:forEach>
+	            	</select>	        	
+		        </div>
+		        <div>
+		        	<label>입출고일자</label>
+		        	<input type="date" class="form-control updateDate"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+		        </div>
+			</div>
+			<div class="buttonSty">
+				<button type="button" class="btn btn-secondary updateClose">닫기</button>
+				<button type="button" class="btn btn-primary" id="update_btn">수정완료</button>
+			</div>
+		</div>
+	</div>
+
+
+
+
 	<div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
 	    <div class="modal-content">
@@ -274,6 +333,26 @@
         plusContent.classList.remove("on");
       }
     });
+    
+    
+  	//reset
+    $(".content_header_reset_btn").click(function(){
+    	// 모든 input 태그를 선택하고 값 초기화
+        inputinit();
+    });
+  	
+  	
+    $(".updateCode").click(function(){
+    	alert("제품명과 제품코드를 변경시 제품조회를 눌러주세요.");
+    });
+    $(".updateName").click(function(){
+    	alert("제품명과 제품코드를 변경시 제품조회를 눌러주세요.");
+    });
+    
+    function inputinit(){
+    	$('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"],select').val('');
+        $('select').prop('selectedIndex', 0);	
+    }
     
     //모달창 제품 검색 이벤트
     $(".modalSearch_btn").click(function(){
@@ -503,7 +582,7 @@
     function pageNumberDisplay(pager) {
 	    var html = "";
 	
-	    // 이전 페이지 링크
+	 // 이전 페이지 링크
 	    if (pager.startPage > pager.blockSize) {
 	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:historyDisplay(" + pager.prevPage + ","+pager.pageSize+");'>&laquo; 이전</a>";
 	    } else {
@@ -513,7 +592,7 @@
 	    // 페이지 번호 링크
 	    for (var i = pager.startPage; i <= pager.endPage; i++) {
 	        if (pager.pageNum != i) {
-	            html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:historyDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
+	            html += "<a class='btn btn-outline-primary mx-1 btn-sm' href='javascript:historyDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
 	        } else {
 	            html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
 	        }
@@ -611,7 +690,7 @@
                             var historyTime = historyItem.historyDate.split(" ");
                             html += "<td>" + historyTime[0] + "</td>";
                             html += "<td>";
-                            html += '<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modify(' + historyItem.historyId + ');">수정</button>';
+                            html += '<button type="button" class="btn btn-secondary"  onclick="modify(' + historyItem.historyId + ');">수정</button>';
                             html += "<button type='button' class='btn btn-danger' onclick='remove(" + historyItem.historyId + "," + pageNum + ");'>삭제</button>";
                             html += "</td>";
                             html += "</tr>";
@@ -664,6 +743,10 @@
     
     //history 정보 선택 함수 (update 전)
     function modify(historyId){
+    	//모달창 생성
+    	var back =document.querySelector(".backgroundmodal");
+        back.classList.add("on"); // "on" 클래스가 없으면 추가
+    	
     	$.ajax({
     		type:"get",
     		url:"<c:url value="/inventory/history_modify_view"/>/"+historyId,
@@ -684,6 +767,12 @@
     		}
     	});
     }
+    
+  	// 수정모달창 끄기
+    $(".updateClose").click(function(){
+    	var back =document.querySelector(".backgroundmodal");
+        back.classList.remove("on"); // "on" 클래스가 없으면 추가
+    });
     
     //수정완료 버튼 클릭 이벤트
     $("#update_btn").click(function(){
@@ -715,11 +804,21 @@
 				alert("상품정보가 수정되지 않았습니다.");
 			}
 		});
-    	
-    	
     });
     
+    
+	//inventory 수정 정보에서 제품조회 클릭 이벤트
+    $(".item_code_create").click(function(){
+    	// 첫 번째 모달에서 두 번째 모달 열기
+        $('#newModal').modal('show');
+	   	productDisplay();
 
+	    // 두 번째 모달이 닫힐 때 첫 번째 모달이 계속 열려 있도록 설정
+        $('#newModal').on('hidden.bs.modal', function () {
+            $('#staticBackdrop').modal('show');
+        });
+    });
+    
     //history 삭제 함수
     function remove(historyId, pageNum) {
     	if(confirm("삭제 하시겠습니까?")){

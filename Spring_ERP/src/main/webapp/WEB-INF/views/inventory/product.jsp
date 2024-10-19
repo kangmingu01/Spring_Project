@@ -24,7 +24,7 @@
             <div>
             	<select class="form-select search" name="search"  aria-label="Default select example">
 				    <option value="product_category" <c:if test="${search }=='product_category' "> </c:if>>제품코드</option>
-	                <option value="product_name" <c:if test="${search }=='product_name' "> </c:if>selected>제품명</option>
+	                <option value="product_name" <c:if test="${search }=='product_name' "> </c:if>>제품명</option>
 	                <option value="warehouse_name" <c:if test="${search }=='warehouse_name' "> </c:if>>창고이름</option>
 	                <option value="warehouse_location" <c:if test="${search }=='warehouse_location' "> </c:if>>창고위치</option>
 				</select>
@@ -102,7 +102,7 @@
                         <option>Sneakers&#40;운동화&#41;</option>
                         <option>Slippers&#40;슬리퍼&#41;</option>
                         <option>Boots&#40;부츠&#41;</option>
-                        <option>Sandals&#40;샌들&#41;</option>
+                        <option>sandals&#40;샌들&#41;</option>
                         <option>Dress&nbsp;shoes&#40;구두&#41;</option>
                     </select>
                 </div>
@@ -799,7 +799,7 @@
 	                        html += "<td>" + ProductItem.deliveryPrice + "</td>";
 	                        html += "<td>"; 
 	                        html += '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modify(' + ProductItem.productId + ');">수정</button>'; 
-	                        html += "<button type='button' onclick='remove(" + ProductItem.productId + "," + pageNum + ");'>삭제</button>";
+	                        html += "<button type='button' class='btn btn-danger' onclick='remove(" + ProductItem.productId + "," + pageNum + ");'>삭제</button>";
 	                        html += "</td>";
 	                        html += "</tr>";
 	

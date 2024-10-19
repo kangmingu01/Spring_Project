@@ -44,7 +44,7 @@
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                 </svg>
                 </div>
-                <span>등록</span>
+                <span>상품등록</span>
             </div>
             <div class="content_header_reset_btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
@@ -114,7 +114,7 @@
 						  <option value="Blue">Blue(파랑)</option>
 						  <option value="Green">Green(초록)</option>
 						  <option value="Yellow">Yellow(노랑)</option>
-						  <option value="Black">Black(검정)</option>
+						  <option value="black">black(검정)</option>
 						  <option value="White">White(흰색)</option>
 						  <option value="Orange">Orange(주황)</option>
 						  <option value="Pink">Pink(분홍)</option>
@@ -241,7 +241,7 @@
                 <input type="hidden" class="updateId">
                 <div>
                     <label>제품코드</label>
-                    <input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                    <input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly">
                     <!-- <input type="text" class="updateCode" > -->
                 </div>
                 <div>

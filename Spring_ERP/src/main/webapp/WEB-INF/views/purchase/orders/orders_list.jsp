@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reset.css'/>">
   <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/purchase.css'/>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title>발주 조회</title>
+  <title>발주 관리</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <meta name="_csrf" content="${_csrf.token}"/>
   <meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -21,7 +21,7 @@
   <div class="content">
     <!-- 헤더 부분 -->
     <div class="content_header">
-      <div class="content_header_title">발주 조회</div>
+      <div class="content_header_title">발주 관리</div>
       <div class="content_header_btn">
         <!-- 조회 버튼 -->
         <div class="content_header_search_btn" onclick="searchOrders()">
@@ -161,9 +161,21 @@
                 <td>${orders.productCategoryDetails.size}</td>
                 <td>${orders.productCategoryDetails.gender}</td>
                 <td>${orders.supplierName}</td>
-                <td>${orders.ordersQuantity}</td>
-                <td>${orders.productPrice}</td>
-                <td>${orders.ordersQuantity * orders.productPrice}</td>
+                <td>
+				    <span class="quantity-amount" data-quantity="${orders.ordersQuantity}">
+				        ${orders.ordersQuantity}
+				    </span>
+				</td>
+				<td>
+				    <span class="price-amount" data-price="${orders.productPrice}">
+				        ${orders.productPrice}
+				    </span>
+				</td>
+				<td>
+				    <span class="total-amount" data-total="${orders.ordersQuantity * orders.productPrice}">
+				        ${orders.ordersQuantity * orders.productPrice}
+				    </span>
+				</td>
                 <td>${fn:substring(orders.deliveryDate, 0, 10)}</td>
                 <td>
                   <c:choose>
@@ -310,11 +322,10 @@
         $('#productId').val($.trim(row.children().eq(3).text()));
         $('#productName').val($.trim(row.children().eq(4).text()));
         $('#brand').val($.trim(row.children().eq(5).text()));
-        
-        // 단가는 읽기 전용으로 표시
-        const productPrice = $.trim(row.children().eq(12).text()); // 단가 열
-        $('#productPrice').val(productPrice).prop('readonly', true); // 단가를 읽기 전용으로 설정
-
+               
+        const productPrice = row.find('.price-amount').data('price');
+        $('#productPrice').val(productPrice).prop('readonly', true);
+                
         // 공급업체와 발주 상태 설정
         const supplierName = $.trim(row.children().eq(10).text());
         $('#supplier option').each(function() {
@@ -331,7 +342,8 @@
         });
 
         // 수정 가능한 필드만 활성화
-        $('#ordersQuantity').val($.trim(row.children().eq(11).text()));
+         const ordersQuantity = row.find('.quantity-amount').data('quantity');
+        $('#ordersQuantity').val(ordersQuantity);        
         $('#deliveryDate').val($.trim(row.children().eq(14).text()));
         setAllFieldsReadOnly(true);
         $('#ordersQuantity, #deliveryDate').prop('readonly', false).prop('disabled', false).css('background-color', '#ffffff');
@@ -349,6 +361,10 @@
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
 
+        // 쉼표 제거 후 숫자 값을 저장
+        const ordersQuantity = $('#ordersQuantity').val().replace(/,/g, '');  // 쉼표 제거
+        const deliveryDate = $('#deliveryDate').val();
+        
         // 수정된 값 가져오기
         const data = {
             ordersId: ordersId,
@@ -368,7 +384,6 @@
                 xhr.setRequestHeader(header, token); 
             },
             success: function(response) {
-                // 수정 후 현재 페이지 새로고침하여 변경 사항 반영
                 //alert('수정이 완료되었습니다.');
                 location.reload();  // 페이지 새로 고침
             },
@@ -410,7 +425,24 @@
         // 필드 검증
         checkFields(); // 필드가 모두 입력되었는지 확인하는 기존 함수 호출
     });
+    
+    $(document).ready(function() {
+        // 발주수량, 단가, 총액에 쉼표 넣기
+        $('.quantity-amount').each(function() {
+            const quantity = $(this).data('quantity');
+            $(this).text(Number(quantity).toLocaleString());
+        });
 
+        $('.price-amount').each(function() {
+            const price = $(this).data('price');
+            $(this).text(Number(price).toLocaleString());
+        });
+
+        $('.total-amount').each(function() {
+            const total = $(this).data('total');
+            $(this).text(Number(total).toLocaleString());
+        });
+    });
 
   </script>
 

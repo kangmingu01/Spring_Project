@@ -253,10 +253,11 @@ function validateFields() {
     let isValid = true;
 
     // 연락처 검증: 숫자와 하이픈만 허용, 최소 10자 이상
-    const phonePattern = /^[0-9-]{10,}$/;
+    const phonePattern = /^(\d{2,3}-\d{3,4}-\d{4}|\d{4}-\d{4}|\d{2}-\d{4}-\d{4})$/;
     if (!phonePattern.test(phone)) {
         isValid = false;
     }
+
 
     // 이메일 검증: 기본 이메일 형식 체크
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

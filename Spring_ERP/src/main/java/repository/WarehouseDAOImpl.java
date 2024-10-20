@@ -45,4 +45,9 @@ public class WarehouseDAOImpl implements WarehouseDAO {
 		return sqlSession.getMapper(WarehouseMapper.class).selectWarehouseKeyList(map);
 	}
 
+	@Override
+	public Warehouse selectWarehouseUpdate(int warehouseId) {
+		return sqlSession.getMapper(WarehouseMapper.class).selectWarehouseUpdate(warehouseId);
+	}
+
 }

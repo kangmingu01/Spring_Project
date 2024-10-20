@@ -59,26 +59,26 @@
             </div>
             <div>
               <label>브랜드</label>
-              <input type="text"  readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text"  readonly="readonly" name="productBrand" class="productBrand"/>
             </div>
             <div class="item_brand">
               <label >종류</label>
-              <input type="text" readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text" readonly="readonly" name="product_Items" class="product_Items"/>
             </div>
           </div>
           <!-- 서치 2row 부분 -->
           <div class="tworow">
             <div>
               <label>색상</label>
-              <input type="text" readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text" readonly="readonly" name="productColor" class="productColor"/>
             </div>           
             <div>
               <label>사이즈</label>
-              <input type="text"  readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text"  readonly="readonly" name="productSize" class="productSize"/>
             </div>
             <div>
               <label>성별</label>
-              <input type="text" readonly="readonly" name="productCategory" class="productCategory"/>
+              <input type="text" readonly="readonly" name="productGender" class="productGender"/>
             </div>
           </div>
           <!-- 서치 3row 부분 -->
@@ -91,7 +91,6 @@
             <div>
             	<label>입출고</label>
             	<select name="historyType" class="historyType">
-            		
             		<option value="0" disabled selected>선택해주세요</option>
             		<option value="1">입고</option>
             		<option value="2">출고</option>
@@ -117,15 +116,7 @@
         </div>
       </div>
       <!-- 추가사항 태그 -->
-      <div class="content_body_search_plus">
-        <div>창고관리</div>
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-          </svg>
-        </div>
-      </div>
-      <div class="content_plus"></div>
+      
       <div class="file_btn">
       	<div>
   			<div class="product_btn"><span>입출고관리</span></div>
@@ -154,14 +145,15 @@
       <!-- 테이블 부분 -->
       <div class="content_body_search_sty">
       	<div>
-      		<select class="search" name="search">
-      			<option value="product_category" <c:if test="${search }=='product_category' "> selected </c:if>>제품코드</option>
-      			<option value="product_name" <c:if test="${search }=='product_name' "> selected </c:if>>제품명</option>
-      			<option value="warehouse_name" <c:if test="${search }=='warehouse.warehouse_name' "> selected </c:if>>창고이름</option>
-      		</select>
+      		<select class="form-select search" name="search"  aria-label="Default select example">
+			    <option value="product_category" <c:if test="${search }=='product_category' "> </c:if>>제품코드</option>
+                <option value="product_name" <c:if test="${search }=='product_name' "> </c:if>selected>제품명</option>
+                <option value="warehouse_name" <c:if test="${search }=='warehouse_name' "> </c:if>>창고이름</option>
+                <option value="history_type" <c:if test="${search }=='history_type' "> </c:if>>입출고</option>
+			</select>
       	</div>
       	<div>
-      		<input type="text" name="keyword" class="keyword" value="${ keyword}">
+      		<input type="text" class="form-control keyword" name="keyword"  value="${ keyword}" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
       	</div>
       	<div class="content_body_search_btn" >
           <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -170,55 +162,61 @@
           <span>검색</span>
         </div>
       </div>
-      
       <div class="content_body_list">
       </div>
       <div class="pageNumDiv"></div>
     </div>
   </div>
 	
-	<!-- Modal -->
-	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h1 class="modal-title fs-5" id="staticBackdropLabel">입출고수정</h1>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body">
-	      	<input type="hidden" class="updateId">
-	      	<input type="hidden" class="updateproductId">
-	        <div>
-	        	<label>제품명</label>
-	        	<input type="text" class="updateName" >
-	        </div>
-	        <div>
-	        	<label>제품코드</label>
-	        	<input type="text"  class="updateCode">
-	        </div>
-	        <div>
-	        	<label>수량</label>
-	        	<input type="text"  class="updateQty">
-	        </div>
-	        <div>
-	        	<label>입출고</label>
-	        	<input type="text"  class="updateType">
-	        </div>
-	        <div>
-	        	<label>창고</label>
-	        	<input type="text"  class="updateWarehouse">
-	        </div>
-	        <div>
-	        	<label>입출고일자</label>
-	        	<input type="text"  class="updateDate">
-	        </div>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-primary"  id="update_btn">수정완료</button>
-	      </div>
-	    </div>
-	  </div>
+	<div class="backgroundmodal">
+		<div class="updatemodal">
+			<div class="updatemodal_title">입출고수정</div>
+			<div class="updateOne">
+				<input type="hidden" class="updateId">
+		      	<input type="hidden" class="updateproductId">
+		        <div>
+		        	<label>제품코드</label>
+		        	<input type="text" class="form-control updateCode"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
+		        </div>
+		        <div>
+		        	<label>제품명</label>
+		        	<input type="text" class="form-control updateName"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" readonly="readonly" >
+		        </div>
+		        <div class="item_code_create">
+					<button type="button" class="item_code_create">제품조회</button>
+				</div>
+		        <div>
+		        	<label>수량</label>
+		        	<input type="text" class="form-control updateQty"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+		        </div>
+		        <div>
+		        	<label>입출고</label>
+		        	<select class="form-select updateType"  aria-label="Default select example">
+			        	<option value="0" disabled selected>선택해주세요</option>
+		            	<option value="1">입고</option>
+		            	<option value="2">출고</option>
+		            	<option value="3">반품</option>
+		        	</select>
+		        </div>
+		        <div>
+		        	<label>창고</label>
+		        	<select class="form-select updateWarehouse"  aria-label="Default select example">	
+	            		<option value="0" disabled selected>선택해주세요</option>
+	            		<c:forEach var="warehouseNum" items="${warehouseNum}">
+		            		<option value="${warehouseNum.warehouseId}">${warehouseNum.warehouseName }</option>            		
+	            		</c:forEach>
+	            	</select>	        	
+		        </div>
+		        <div>
+		        	<label>입출고일자</label>
+		        	<input type="date" class="form-control updateDate"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+		        </div>
+			</div>
+			<div class="buttonSty">
+				<button type="button" class="btn btn-secondary updateClose">닫기</button>
+				<button type="button" class="btn btn-primary" id="update_btn">수정완료</button>
+			</div>
+		</div>
 	</div>
 
 	<div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
@@ -253,6 +251,7 @@
   	historyDisplay(pageNum=1);
  
     // 추가 정보 클릭 이벤트
+    /* 
     var plusBtn=document.querySelector(".content_body_search_plus");
     var plusContent=document.querySelector(".content_plus");
     plusBtn.addEventListener("click",function(){
@@ -264,6 +263,26 @@
         plusContent.classList.remove("on");
       }
     });
+     */
+    
+  	//reset
+    $(".content_header_reset_btn").click(function(){
+    	// 모든 input 태그를 선택하고 값 초기화
+        inputinit();
+    });
+  	
+  	
+    $(".updateCode").click(function(){
+    	alert("제품명과 제품코드를 변경시 제품조회를 눌러주세요.");
+    });
+    $(".updateName").click(function(){
+    	alert("제품명과 제품코드를 변경시 제품조회를 눌러주세요.");
+    });
+    
+    function inputinit(){
+    	$('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"],select').val('');
+        $('select').prop('selectedIndex', 0);	
+    }
     
     //모달창 제품 검색 이벤트
     $(".modalSearch_btn").click(function(){
@@ -304,33 +323,58 @@
 				html+="<th>제품코드</th>";
 				html+="<th>제품명</th>";
 				html+="<th>브랜드</th>";
+				html+="<th>종류</th>";
 				html+="<th>색상</th>";
 				html+="<th>사이즈</th>";
-				html+="<th>종류</th>";
 				html+="<th>성별</th>";
 				html+="<th></th>"; 
 				html+="</tr>";
 				html+="</thead>";
 				html+="<tbody class='sty'>";
+				
+				var remainingRequests = result.productList.length; // 남은 요청 수
+				
 				$(result.productList).each(function(index){
-					html+="<tr>";					
-					html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productName+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"+this.productCategory+"</td>";
-					html+="<td>"; 
-					html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+this.productId+');">선택</button>'; 
-					html+="</td>"
-					html+="</tr>";
-				});
-				html+="</tbody>";
-				html+="</table>";
-				$(".product_brand_search").html(html);
-
+					var Category = this.productCategory; // productCategory 값을 저장
+	                var ProductItem = this; // ProductItem을 참조
+	                
+	                $.ajax({
+	                    type: "get",
+	                    url: "<c:url value='/inventory/ProductconvertCategory'/>",
+	                    data: { "categoryCode": Category },
+	                    dataType: "json",
+	                    success: function(convertedCategory) {
+					
+							html+="<tr>";					
+							html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+							html+="<td>"+ProductItem.productCategory+"</td>";
+							html+="<td>"+ProductItem.productName+"</td>";
+							html+="<td>"+convertedCategory.brand+"</td>";
+							html+="<td>"+convertedCategory.item+"</td>";
+							html+="<td>"+convertedCategory.color+"</td>";
+							html+="<td>"+convertedCategory.size+"</td>";
+							html+="<td>"+convertedCategory.gender+"</td>";
+							html+="<td>"; 
+							html+='<button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="addProductTitle('+ProductItem.productId+');">선택</button>'; 
+							html+="</td>"
+							html+="</tr>";
+							
+							remainingRequests--; // 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            html += "</tbody></table>";
+	                            $(".product_brand_search").html(html);
+	                        }
+	                    },
+	                    error: function(xhr) {
+	                        alert("카테고리 적용 실패");
+	                        remainingRequests--; // 실패한 경우에도 요청 수 감소
+	                        if (remainingRequests === 0) {
+	                            html += "</tbody></table>";
+	                            $(".product_brand_search").html(html);
+	                        }
+	                    }	
+	                });
+	            });
 				//페이지 번호를 출력하는 함수 호출
 				modalpageNumberDisplay(result.pager);
 	        },
@@ -348,8 +392,29 @@
     		dataType:"json",
     		success:function(result){    			
     			$(".productId").val(result.productId);
+    			$(".updateId").val(result.productId);
     			$(".productCategory").val(result.productCategory);
+    			$(".updateCode").val(result.productCategory);
 				$(".productName").val(result.productName);
+				$(".updateName").val(result.productName);
+    			
+    			var Category = result.productCategory;
+    			$.ajax({
+                    type: "get",
+                    url: "<c:url value='/inventory/ProductconvertCategory'/>",
+                    data: { "categoryCode": Category },
+                    dataType: "json",
+                    success: function(convertedCategory) {
+                    	$(".productBrand").val(convertedCategory.brand);
+                    	$(".product_Items").val(convertedCategory.item);
+                    	$(".productColor").val(convertedCategory.color);
+                    	$(".productSize").val(convertedCategory.size);
+                    	$(".productGender").val(convertedCategory.gender);
+                    },
+                    error: function(xhr) {
+                        alert("카테고리 적용 실패");
+                    }	
+                });
     		},
     		error:function(xhr){
     			alert("검색된 정보가 없습니다.")
@@ -364,7 +429,7 @@
     	var historyType =$(".historyType").val();
     	var historyWarehouseId =$(".inventoryWarehouseId").val();
     	var historyDate =$(".historyDate").val();
-    	
+
     	if(historyProductId==""){
     		alert("제품정보가 없습니다.");
     		return;
@@ -373,11 +438,11 @@
     		alert("수량정보를 입력해주세요.");
     		return;
     	}
-    	if(historyType==""){
+    	if(historyType=="" || historyType== null ){
     		alert("입출고 정보를 입력해주세요.");
     		return;
     	}
-    	if(historyWarehouseId==""){
+    	if(historyWarehouseId=="" || historyWarehouseId==null){
     		alert("창고정보를 입력해주세요.");
     		return;
     	}
@@ -447,7 +512,7 @@
     function pageNumberDisplay(pager) {
 	    var html = "";
 	
-	    // 이전 페이지 링크
+	 // 이전 페이지 링크
 	    if (pager.startPage > pager.blockSize) {
 	        html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-right: 5px;' href='javascript:historyDisplay(" + pager.prevPage + ","+pager.pageSize+");'>&laquo; 이전</a>";
 	    } else {
@@ -457,7 +522,7 @@
 	    // 페이지 번호 링크
 	    for (var i = pager.startPage; i <= pager.endPage; i++) {
 	        if (pager.pageNum != i) {
-	            html += "<a class='btn btn-primary btn-sm' style='background-color: #6571FF; margin-left: 5px;' href='javascript:historyDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
+	            html += "<a class='btn btn-outline-primary mx-1 btn-sm' href='javascript:historyDisplay(" + i + ","+pager.pageSize+");'>" + i + "</a>";
 	        } else {
 	            html += "<span class='btn btn-primary mx-1 active btn-sm' style='background-color: #6571FF;'>" + i + "</span>";
 	        }
@@ -474,99 +539,149 @@
 	    $(".pageNumDiv").html(html);
 	}
 
-    //history기록 리스트 함수
-    function historyDisplay(pageNum=1) {
-    	var pageSize=10;
-    	var search = document.querySelector(".search").value;
-    	var keyword = document.querySelector(".keyword").value;
-    	$.ajax({
-    		type:"get",
-    		url: "<c:url value="/inventory/history_list"/>", 
-    		data: {"pageNum":pageNum, "pageSize":pageSize, "search":search,"keyword":keyword},
-			dataType: "json",  		
-			success: function(result){
-				console.log(result);
-				if(result.historyList.length == 0){
-					var html="<table>";
-					html+="<tr>";
-					html+="<th>검색된 상품이 없습니다.</th>";
-					html+="</tr>";
-					html+="</table>";
-					$(".content_body_list").html(html);
-					return;
-				}
-				var html="<table>";
-				html+="<thead>";
-				html+="<tr>";
-				html+="<th>No</th>";
-				html+="<th>제품코드</th>";
-				html+="<th>상품명</th>";				
-				html+="<th>브랜드</th>";
-				html+="<th>종류</th>";
-				html+="<th>색갈</th>";
-				html+="<th>사이즈</th>";
-				html+="<th>성별</th>";
-				html+="<th>수량</th>";
-				html+="<th>입출고</th>";
-				html+="<th>창고</th>";
-				html+="<th>출입고일자</th>";
-				html+="<th></th>"; 
-				html+="</tr>";
-				html+="</thead>";
-				html+="<tbody class='sty'>";
-				$(result.historyList).each(function(index){
-					html+="<tr>";					
-					html+="<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.product.productName+"</td>";
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.product.productCategory+"</td>";
-					html+="<td>"+this.historyQty+"</td>";
-					if(this.historyType==1){
-						html+="<td>입고</td>";					
-					}else if (this.historyType==2){
-						html+="<td>출고</td>";					
-					}else{
-						html+="<td>반품</td>";											
-					}
-					html+="<td>"+this.warehouse.warehouseName+"</td>";
-					var historyTime=this.historyDate.split(" ");
-					html+="<td>"+historyTime[0]+"</td>";
-					html+="<td>"; 
-					html+='<button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  onclick="modify('+this.historyId+');">수정</button>'; 
-					html+="<button type='button' class='btn btn-danger' onclick='remove("+this.historyId+","+pageNum+");'>삭제</button>"
-					html+="</td>";
-					html+="</tr>";
-				});
-				html+="</tbody>";
-				html+="</table>";
-				$(".content_body_list").html(html);
+ // history 기록 리스트 함수
+    function historyDisplay(pageNum = 1) {
+        var pageSize = 10;
+        var search = document.querySelector(".search").value;
+        var keyword = document.querySelector(".keyword").value;
 
-				//페이지 번호를 출력하는 함수 호출
-				pageNumberDisplay(result.pager);
-	        },
-			error:function(xhr){
-				alert("상품 리스트를 불러오지 못했습니다.");
-			}
-    	});
+        $.ajax({
+            type: "get",
+            url: "<c:url value='/inventory/history_list'/>", 
+            data: { "pageNum": pageNum, "pageSize": pageSize, "search": search, "keyword": keyword },
+            dataType: "json",
+            success: function(result) {
+                console.log(result);
+
+                if (result.historyList.length == 0) {
+                    var html = "<table>";
+                    html += "<tr>";
+                    html += "<th>검색된 상품이 없습니다.</th>";
+                    html += "</tr>";
+                    html += "</table>";
+                    $(".content_body_list").html(html);
+                    return;
+                }
+
+                var html = "<table>";
+                html += "<thead>";
+                html += "<tr>";
+                html += "<th>No</th>";
+                html += "<th>제품코드</th>";
+                html += "<th>상품명</th>";
+                html += "<th>브랜드</th>";
+                html += "<th>종류</th>";
+                html += "<th>색상</th>";
+                html += "<th>사이즈</th>";
+                html += "<th>성별</th>";
+                html += "<th>수량</th>";
+                html += "<th>입출고</th>";
+                html += "<th>창고</th>";
+                html += "<th>출입고일자</th>";
+                html += "<th></th>";
+                html += "</tr>";
+                html += "</thead>";
+                html += "<tbody class='sty'>";
+
+                var remainingRequests = result.historyList.length; // 남은 요청 수
+
+                $(result.historyList).each(function(index) {
+                    var productCategory = this.product.productCategory; // productCategory 값을 저장
+                    var historyItem = this; // historyItem을 참조
+
+                    // 변환된 productCategory를 요청하는 AJAX 호출
+                    $.ajax({
+                        type: "get",
+                        url: "<c:url value='/inventory/historyconvertCategory'/>",
+                        data: { "categoryCode": productCategory },
+                        dataType: "json",
+                        success: function(convertedCategory) {
+                            html += "<tr>";
+                            html += "<td>" + (index + 1 + (pageNum - 1) * pageSize) + "</td>"; // 수정된 부분
+                            html += "<td>" + historyItem.product.productCategory + "</td>";
+                            html += "<td>" + historyItem.product.productName + "</td>";
+                            html += "<td>" + convertedCategory.brand + "</td>";
+                            html += "<td>" + convertedCategory.item + "</td>";
+                            html += "<td>" + convertedCategory.color + "</td>";
+                            html += "<td>" + convertedCategory.size + "</td>";
+                            html += "<td>" + convertedCategory.gender + "</td>";
+                            html += "<td>" + historyItem.historyQty + "</td>";
+
+                            // 입출고 유형에 따른 표시
+                            if (historyItem.historyType == 1) {
+                                html += "<td>입고</td>";
+                            } else if (historyItem.historyType == 2) {
+                                html += "<td>출고</td>";
+                            } else {
+                                html += "<td>반품</td>";
+                            }
+
+                            html += "<td>" + historyItem.warehouse.warehouseName + "</td>";
+                            var historyTime = historyItem.historyDate.split(" ");
+                            html += "<td>" + historyTime[0] + "</td>";
+                            html += "<td>";
+                            html += '<button type="button" class="btn btn-secondary"  onclick="modify(' + historyItem.historyId + ');">수정</button>';
+                            html += "<button type='button' class='btn btn-danger' onclick='remove(" + historyItem.historyId + "," + pageNum + ");'>삭제</button>";
+                            html += "</td>";
+                            html += "</tr>";
+
+                            remainingRequests--; // 요청 수 감소
+                            if (remainingRequests === 0) {
+                                // 모든 요청이 완료된 후에 HTML 업데이트
+                                html += "</tbody></table>";
+                                $(".content_body_list").html(html);
+                            }
+                        },
+                        error: function() {
+                            alert("카테고리 변환에 실패했습니다.");
+                            remainingRequests--; // 실패한 경우에도 요청 수 감소
+                            if (remainingRequests === 0) {
+                                // 모든 요청이 완료된 후에 HTML 업데이트
+                                html += "</tbody></table>";
+                                $(".content_body_list").html(html);
+                            }
+                        }
+                    });
+                });
+                // 페이지 번호를 출력하는 함수 호출
+                pageNumberDisplay(result.pager);
+            },
+            error: function(xhr) {
+                alert("상품 리스트를 불러오지 못했습니다.");
+            }
+        });
     }
     
    	//history 검색 창 조회
     document.querySelector(".content_body_search_btn").addEventListener("click",function(){
-	    historyDisplay();    		   	
+    	var keyword=$(".keyword").val();
+    	if(keyword=="입고" || keyword=="입" ){
+    		$(".keyword").val("1");
+    	}
+    	if(keyword=="출고" || keyword=="출" ){
+    		$(".keyword").val("2");
+    	}
+    	if(keyword=="반품"){
+    		$(".keyword").val("3");
+    	}
+    	if(keyword=="고"){
+		    $(".keyword").val("");
+    	}
+	    historyDisplay();
+
     });
     
     //history 정보 선택 함수 (update 전)
     function modify(historyId){
+    	//모달창 생성
+    	var back =document.querySelector(".backgroundmodal");
+        back.classList.add("on"); // "on" 클래스가 없으면 추가
+    	
     	$.ajax({
     		type:"get",
     		url:"<c:url value="/inventory/history_modify_view"/>/"+historyId,
     		dataType:"json",
     		success:function(result){    		
-    			console.log(result);
     			$(".updateId").val(result.historyId);    			
     			$(".updateproductId").val(result.product.productId);
     			$(".updateName").val(result.product.productName);
@@ -583,20 +698,20 @@
     	});
     }
     
+  	// 수정모달창 끄기
+    $(".updateClose").click(function(){
+    	var back =document.querySelector(".backgroundmodal");
+        back.classList.remove("on"); // "on" 클래스가 없으면 추가
+    });
+    
     //수정완료 버튼 클릭 이벤트
     $("#update_btn").click(function(){
     	var historyId=$(".updateId").val();
-    	console.log(historyId);
     	var historyProductId=$(".updateproductId").val();
-    	console.log(historyProductId);
     	var historyType=$(".updateType").val();
-    	console.log(historyType);
     	var historyWarehouseId=$(".updateWarehouse").val();
-    	console.log(historyWarehouseId);
     	var historyQty=$(".updateQty").val();
-    	console.log(historyQty);
     	var historyDate=$(".updateDate").val();
-    	console.log(historyDate);
     	
     	$.ajax({
 			type:"put",
@@ -619,11 +734,21 @@
 				alert("상품정보가 수정되지 않았습니다.");
 			}
 		});
-    	
-    	
     });
     
+    
+	//inventory 수정 정보에서 제품조회 클릭 이벤트
+    $(".item_code_create").click(function(){
+    	// 첫 번째 모달에서 두 번째 모달 열기
+        $('#newModal').modal('show');
+	   	productDisplay();
 
+	    // 두 번째 모달이 닫힐 때 첫 번째 모달이 계속 열려 있도록 설정
+        $('#newModal').on('hidden.bs.modal', function () {
+            $('#staticBackdrop').modal('show');
+        });
+    });
+    
     //history 삭제 함수
     function remove(historyId, pageNum) {
     	if(confirm("삭제 하시겠습니까?")){

@@ -118,8 +118,8 @@
 	            and o.supplier_id = #{supplierId}
 	        </if>
 	        <if test="deliveryDate != null and deliveryDate != ''">
-	            and o.delivery_date = #{deliveryDate}
-	        </if>
+			    and to_char(o.delivery_date, 'YYYY-MM-DD') = #{deliveryDate}
+			</if>
 	        <if test="warehouseId != null and warehouseId != ''">
 	            and r.warehouse_id = #{warehouseId}
 	        </if> 

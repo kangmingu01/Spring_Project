@@ -122,24 +122,7 @@
   			<div class="product_btn"><span>입출고관리</span></div>
       	</div>
       	<div>
-	        <div class="upload_btn">
-	          <div>
-	            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
-	              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-	              <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
-	            </svg>
-	            <span>UPLOAD</span>
-	          </div>
-	        </div>
-	        <div class="excel_btn">
-	          <div>
-	            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-	              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-	              <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
-	            </svg>
-	            <span>EXCEL</span>
-	          </div>
-	        </div>      	
+	        	
       	</div>
       </div>
       <!-- 테이블 부분 -->
@@ -249,21 +232,7 @@
   	var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
   	
   	historyDisplay(pageNum=1);
- 
-    // 추가 정보 클릭 이벤트
-    /* 
-    var plusBtn=document.querySelector(".content_body_search_plus");
-    var plusContent=document.querySelector(".content_plus");
-    plusBtn.addEventListener("click",function(){
-      if(plusBtn.className=="content_body_search_plus"){
-        plusBtn.classList.add("on");
-        plusContent.classList.add("on");
-      }else{
-        plusBtn.classList.remove("on");
-        plusContent.classList.remove("on");
-      }
-    });
-     */
+
     
   	//reset
     $(".content_header_reset_btn").click(function(){
@@ -541,10 +510,21 @@
 
  // history 기록 리스트 함수
     function historyDisplay(pageNum = 1) {
-        var pageSize = 10;
+        var pageSize = 10; 
         var search = document.querySelector(".search").value;
         var keyword = document.querySelector(".keyword").value;
-
+        
+        if(search=="history_type"){
+	        if (keyword == "입고" || keyword == "입") {
+	            keyword = 1;
+	        }else if (keyword == "출고" || keyword == "출") {
+	            keyword = 2;
+	        }else if(keyword == "반품" || keyword == "반"){
+	            keyword = 3;	        	
+	        }else {
+	            keyword = "";
+	        }        	
+        }
         $.ajax({
             type: "get",
             url: "<c:url value='/inventory/history_list'/>", 
@@ -654,21 +634,7 @@
     
    	//history 검색 창 조회
     document.querySelector(".content_body_search_btn").addEventListener("click",function(){
-    	var keyword=$(".keyword").val();
-    	if(keyword=="입고" || keyword=="입" ){
-    		$(".keyword").val("1");
-    	}
-    	if(keyword=="출고" || keyword=="출" ){
-    		$(".keyword").val("2");
-    	}
-    	if(keyword=="반품"){
-    		$(".keyword").val("3");
-    	}
-    	if(keyword=="고"){
-		    $(".keyword").val("");
-    	}
 	    historyDisplay();
-
     });
     
     //history 정보 선택 함수 (update 전)

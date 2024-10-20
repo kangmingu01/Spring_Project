@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import dto.SalesRequest;
 import dto.SalesRequestWrapper;
 import lombok.RequiredArgsConstructor;
+import service.ErpUserService;
 import service.SalesRequestService;
 import service.SalesRequestStatusService;
 
@@ -25,13 +26,15 @@ import service.SalesRequestStatusService;
 public class SalesRequestController {
 	private final SalesRequestService requestService;
 	private final SalesRequestStatusService requestStatusService;
-
+	private final ErpUserService erpUserService;
 	// 점주들의 요청 페이
-	 @PreAuthorize("hasRole('ROLE_SUPER_ADMINISTRATOR')")
+	 @PreAuthorize("hasRole('ROLE_STORE_TEAM')")
 	@RequestMapping(value = "/requestList", method = RequestMethod.GET)
 	public String request(@RequestParam Map<String, Object> map, Model model,Principal principal) {
 		String userId=principal.getName();
 		 model.addAttribute("userId", userId);
+		 String orgId=erpUserService.getOrgIdByUserId(userId);
+		    map.put("orgId", orgId);
 		   if (!map.containsKey("pageNum")) {
 	            map.put("pageNum", "1");
 	        }
@@ -56,7 +59,7 @@ public class SalesRequestController {
 	}
 	
 	// 본사의 판매 관리 직원 페이지 
-	 @PreAuthorize("hasRole('ROLE_SUPER_ADMINISTRATOR')")
+	 @PreAuthorize("hasRole('ROLE_SALES_TEAM')")
 	@RequestMapping(value = "/saleRequestList", method = RequestMethod.GET)
 	public String salesRequest(@RequestParam Map<String, Object> map, Model model,Principal principal) {
 		String userId=principal.getName();
@@ -93,6 +96,8 @@ public class SalesRequestController {
 		requestStatusService.modifySalesRequestStatus(salesRequests);
 		return "redirect:/request/saleRequestList";  // 수정 후 리다이렉트
 	}
+	
+// 본사에서 request 를 sales 에 넣을때 쓰는 메소드 
 	@PostMapping("/addSalesRequestToSales")
 	public String addSalesRequestToSales(@ModelAttribute SalesRequestWrapper salesRequestWrapper) {
 		List<SalesRequest> salesRequests = salesRequestWrapper.getSalesRequests();
@@ -100,6 +105,18 @@ public class SalesRequestController {
 		requestStatusService.addSalesRequestToSales(salesRequests);
 		return "redirect:/sales/saleList";  
 	}
-	 
+//	@PostMapping("/addSalesRequestToSales")
+//	public String addSalesRequestToSales(@RequestParam("salesRequestId") List<Integer> salesRequestIds) {
+//		for(Integer requestId:salesRequestIds) {
+//		SalesRequest salesRequest = new SalesRequest();
+//		salesRequest.setRequestId(requestId);
+//		salesRequest.setUserId(userId);
+//	
+//		requestStatusService.addSalesRequestToSales(salesRequest);
+//		}
+//		
+//		return "redirect:/sales/saleList";
+//	}
+		
 
 }

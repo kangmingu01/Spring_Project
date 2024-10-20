@@ -20,6 +20,16 @@ public class SalesServiceImpl implements SalesService {
 	
 	@Transactional
 	@Override
+	public void addSalesHistory(List<Sales> salesHistory) {
+		for (Sales sales : salesHistory) {
+			 System.out.println("SalesHistory= "+sales);
+			salesDAO.insertSalesHistory(sales);
+		}
+		
+	}
+
+	@Transactional
+	@Override
 	public void addSalesList(Sales sales) {
 		// TODO Auto-generated method stub
 		

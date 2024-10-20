@@ -21,15 +21,9 @@
   <div class="content">
     <!-- 헤더 부분 -->
     <div class="content_header">
-      <div class="content_header_title">발주 목록</div>
+      <div class="content_header_title">점주주문 </div>
       <div class="content_header_btn">
-        <!-- 조회 버튼 -->
-        <div class="content_header_search_btn" onclick="searchOrders()">
-          <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg></div>
-          <span>조회</span>
-        </div>
+
         <!-- 초기화 버튼 -->
         <div class="content_header_reset_btn" onclick="resetForm()">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
@@ -38,33 +32,39 @@
           </svg>
           <span>초기화</span>
         </div>
+           <!-- 검색  버튼 -->
+        <div class="content_header_search_btn" onclick="searchOrders()">
+          <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+          </svg></div>
+          <span>검색</span>
+        </div>
       </div>
     </div>
 
     <!-- 바디 부분 -->
     <div class="content_body">
-      <!-- 발주 조회 폼 -->
-      <form id="ordersForm" action="<c:url value='/request/requestproduct' />" method="get">
+ 
+	<form id="ordersForm" action="<c:url value='/request/requestproduct' />" method="get">
         <div class="content_body_search">
         
           <div>
             <div>
               <label>제품명</label>
-              <input type="text" name="productName" id="productName"/>
+              <input type="text" name="productName" id="productName" onkeypress="return handleEnter(event)"/>
             </div>
-            <div>
+     <!--        <div>
               <label>브랜드</label>
-              <input type="text" name="brand" id="brand"/>
-            </div>
-    
-   
+              <input type="text" name="brand" id="brand" onkeypress="return handleEnter(event)"/>
+            </div> -->
+           
           </div>
         </div>
+
         <!-- 페이지 번호와 페이지 크기를 히든 필드로 추가 -->
         <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
         <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
       </form>
-
   
  
  
@@ -74,37 +74,33 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>Select</th>
+      
                     <th>Product ID</th>
                     <th>Product Category</th>
                     <th>Product Name</th>
-                    <th>Product Price</th>
+					
                     <th>Delivery Price</th>
+                       <th>Select</th>
                 </tr>
             </thead>
             <tbody  id="ordersTable" class="sty">
                 <c:forEach var="product" items="${productList}">
                     <tr>
-                        <td>  
-                        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                         <input type="checkbox" name="productIds" value="${product.productId}">
-                        </td>
+                       
                         <td>${product.productId}</td>
                         <td>${product.productCategory}</td>
                         <td>${product.productName}</td>
-                        <td>${product.productPrice}</td>
+            
                         <td>${product.deliveryPrice}</td>
-                         <td>
-               
-                  
-                      <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                      <input type="hidden" name="ordersId" value="${orders.ordersId}"/>
-                      <input type="hidden" name="pageNum" value="${pager.pageNum}"/>
-                      <input type="hidden" name="pageSize" value="${pager.pageSize}"/>
-                      <button type="submit">확정</button>
-                  
-          
-                </td>
+		                 <td>
+			                  <input type="hidden" name="ordersId" value="${orders.ordersId}"/>
+			                  <input type="hidden" name="pageNum" value="${pager.pageNum}"/>
+			                  <input type="hidden" name="pageSize" value="${pager.pageSize}"/>
+			            </td>
+                		 <td>  
+                         <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                         <input type="checkbox" name="productIds" value="${product.productId}">
+                        </td>
                     </tr>
                 </c:forEach>
             </tbody>
@@ -299,6 +295,20 @@
           alert('수정 중 오류가 발생했습니다.');
         }
       });
+    }
+
+ // 엔터키 입력 시 검색 기능 호출
+    function handleEnter(event) {
+      if (event.keyCode === 13) {
+        searchOrders();
+        return false; // 엔터키 입력 후 폼 제출 방지
+      }
+      return true;
+    }
+
+    // 검색 버튼 클릭 시 발주 조회 폼 제출
+    function searchOrders() {
+      $('#ordersForm').submit();
     }
 
     // 폼을 초기화하고 전체 목록 조회

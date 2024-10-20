@@ -6,6 +6,7 @@ import java.util.Map;
 import dto.Sales;
 
 public interface SalesService {
+	void addSalesHistory(List<Sales> salesHistory);
 	void addSalesList(Sales sales);
 
 	void modifySales(List<Sales> salesList);

@@ -2,6 +2,47 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.SalesMapper">
   <!-- Sales Request 단일 데이터 삽입 -->
+  
+  
+  
+  
+  <insert id="insertSalesHistory">
+
+    INSERT INTO history (
+       history_id,
+       history_product_id,
+       history_type,
+       history_date,
+       history_warehouse_id,
+       history_quantity
+        )
+        VALUES (
+         history_seq.NEXTVAL,  
+          <choose>
+       <when test="productId != null and productId != 0">
+         ${productId}
+       </when>
+       <otherwise>
+           NULL
+       </otherwise>
+   </choose>,   
+   
+         2,
+         SYSDATE, 
+  <choose>
+       <when test="invWarehouseId != null and invWarehouseId != 0">
+           #{invWarehouseId}
+       </when>
+       <otherwise>
+           NULL
+       </otherwise>
+   </choose>,
+        ${salesQuantity}
+		)
+</insert>
+    
+  
+
     <insert id="insertSales" >
     <selectKey resultType="int" keyProperty="requestId" order="BEFORE">
 			select SALES_REQUEST_SEQ.NEXTVAL from dual
@@ -45,6 +86,16 @@
             SET sales_Quantity = #{salesQuantity}
             </if>
             WHERE sales_Id = #{salesId}
+            
+                   <!--  UPDATE sales s
+    SET sales_quantity = #{salesQuantity}
+    WHERE s.sales_id = #{salesId} 
+    AND EXISTS (
+        SELECT 1 
+        FROM inventory i
+        WHERE i.inv_warehouse_id = #{invWarehouseId} 
+        AND i.inv_product_id = s.product_id
+    ) -->
     </update>
     
 
@@ -89,17 +140,18 @@
        JOIN product p ON p.product_id = s.product_id  
      JOIN erp_user eu ON eu.userId= s.sales_charge 
      JOIN inventory i ON i.inv_product_id = p.product_id 
+     JOIN  organization ON organization.org_id = s.org_id 
   
      <where>
 	        
 	        <if test="salesDate != null and salesDate != ''">
 	            and to_char(s.sales_date, 'YYYY-MM-DD') = #{salesDate}
 	        </if>
-	        <if test="userId != null and userId != ''">
-			    and eu.userId = #{userId} 
+	        <if test="orgName != null and orgName != ''">
+			   and organization.org_name like '%' || #{orgName} || '%'
 			</if>
 	        <if test="productId != null and productId != ''">
-	            and p.product_id = #{productId}
+	            and p.product_id like '%' || #{productId} || '%' 
 	        </if>
 	        <if test="productName != null and productName != ''">
 	            and p.product_name like '%' || #{productName} || '%'
@@ -108,7 +160,7 @@
 	            and SUBSTR(p.product_category, 1, 2) = #{brand}
 	        </if>
 	        <if test="invWarehouseId != null and invWarehouseId != ''">
-	            and i.inv_warehouse_id   = #{invWarehouseId}
+	            and i.inv_warehouse_id  like '%' || #{invWarehouseId} || '%'  
 	        </if>
 	        
 	    </where>
@@ -135,8 +187,8 @@
             organization.org_name,
             p.product_category,  
             p.product_name, 
-            i.inv_current_qty,  
-            i.inv_warehouse_id  
+            s.inv_current_qty,  
+            s.inv_warehouse_id  
         FROM 
             sales s 
         JOIN 
@@ -147,18 +199,17 @@
             salesRequest sr ON sr.request_id = s.request_id  
         JOIN 
             erp_user eu ON eu.userId = s.sales_charge  
-         JOIN 
-            inventory i ON i.inv_product_id = p.product_id  
+   
             <where>
 	        
 	        <if test="salesDate != null and salesDate != ''">
 	            and to_char(s.sales_date, 'YYYY-MM-DD') = #{salesDate}
 	        </if>
-	        <if test="userId != null and userId != ''">
-			    and eu.userId = #{userId} 
+	        <if test="orgName != null and orgName != ''">
+			   and organization.org_name like '%' || #{orgName} || '%'
 			</if>
 	        <if test="productId != null and productId != ''">
-	            and p.product_id = #{productId}
+	            and p.product_id like '%' || #{productId} || '%' 
 	        </if>
 	        <if test="productName != null and productName != ''">
 	            and p.product_name like '%' || #{productName} || '%'
@@ -167,7 +218,10 @@
 	            and SUBSTR(p.product_category, 1, 2) = #{brand}
 	        </if>
 	        <if test="invWarehouseId != null and invWarehouseId != ''">
-	            and i.inv_warehouse_id   = #{invWarehouseId}
+	            and inv_warehouse_id like '%' || #{invWarehouseId} || '%'  
+	        </if>
+	    	<if test="auth != null and auth != ''">
+	            and s.auth = #{auth}
 	        </if>
 	        
 	    </where>

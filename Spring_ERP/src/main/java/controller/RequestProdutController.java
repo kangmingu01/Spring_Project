@@ -1,8 +1,10 @@
 package controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,13 +27,18 @@ import service.RequestProdutService;
 public class RequestProdutController {
 	
 	private final RequestProdutService requestProductService;
-//	private final ErpUserService erpUserService;
-//	private final ErpUser erpUser;
+	private final ErpUserService erpUserService;
 	
 	
+	
+	 @PreAuthorize("hasRole('ROLE_STORE_TEAM')")
 	@RequestMapping(value = "/requestproduct", method = RequestMethod.GET)
-	public String list( @RequestParam Map<String, Object> map, Model model) {
-	     if (!map.containsKey("pageNum")) {
+	public String list( @RequestParam Map<String, Object> map, Model model,Principal principal ) {
+		 String userId=principal.getName();
+		 model.addAttribute("userId", userId);
+		 String orgId=erpUserService.getOrgIdByUserId(userId);
+		    map.put("orgId", orgId);
+		if (!map.containsKey("pageNum")) {
 	            map.put("pageNum", "1");
 	        }
 	        if (!map.containsKey("pageSize")) {
@@ -54,8 +61,8 @@ public class RequestProdutController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
       
-       String orgId = authentication.getName(); // Assuming the orgId is mapped to the user's username
-      
+       String userId = authentication.getName(); // Assuming the orgId is mapped to the user's username
+      String orgId=erpUserService.getOrgIdByUserId(userId);
         // Loop through the selected productIds and create salesRequest entries
         for (Integer productId : productIds) {
             RequestProdut salesRequestDTO = new RequestProdut();

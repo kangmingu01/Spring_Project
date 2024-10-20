@@ -4,7 +4,7 @@
 
   
 <insert id="insertSalesRequestToSales">
-    INSERT INTO sales (
+   INSERT INTO sales (
         sales_id,
         sales_date,
         sales_charge,
@@ -14,20 +14,27 @@
         request_quantity,
         sales_quantity,
         product_delivery_price,
-        auth
+        auth,
+        inv_warehouse_id,
+        INV_CURRENT_QTY 
     )
-    VALUES (
-        sales_seq.NEXTVAL,                   -- sales_id는 selectKey에서 설정
-        SYSDATE,                             -- 판매 날짜
-        #{userId},          -- userId 파라미터 사용
-        #{orgId},                            -- organization ID
-        #{productId},                        -- product ID
-        #{requestId},                        -- salesRequest ID
-        #{requestQuantity},                  -- 요청 수량
-        0,                                   -- 출고 수량 (초기값 0)
-        #{salesPrice},                       -- 판매 가격
-        #{requestStatus}                     -- auth에 requestStatus 저장
-    )
+    SELECT 
+        sales_seq.NEXTVAL,             -- Generate new sales_id
+        SYSDATE,                       -- Current date for sales_date
+        #{userId},                     -- User who is making the request
+        #{orgId},                      -- Organization ID
+        #{productId},                  -- Product ID
+        #{requestId},                  -- SalesRequest ID
+        #{requestQuantity},            -- Request quantity
+        0,                             -- Initial sales quantity set to 0
+        #{salesPrice},                 -- Sales price from the request
+        #{requestStatus},              -- Auth field value
+        inv.inv_warehouse_id,          -- Inv_warehouse_id from inventory
+        inv.INV_CURRENT_QTY 
+    FROM 
+        inventory inv
+    WHERE 
+        inv.inv_product_id = #{productId}  -- Matching the product_id
 </insert>
     
 
@@ -76,14 +83,14 @@
      JOIN product p ON p.product_id = sr.product_id
      <where>
 	        
-	        <if test="requestDate != null and requestDate != ''">
+	         <if test="requestDate != null and requestDate != ''">
 	            and to_char(sr.request_date, 'YYYY-MM-DD') = #{requestDate}
 	        </if>
 	        <if test="orgName != null and orgName != ''">
-			    and o.org_name = #{orgName} 
+			    and o.org_name like '%' || #{orgName} || '%'
 			</if>
 	        <if test="productId != null and productId != ''">
-	            and o.product_id = #{productId}
+	            and sr.product_id like '%' || #{productId} || '%' 
 	        </if>
 	        <if test="productName != null and productName != ''">
 	            and p.product_name like '%' || #{productName} || '%'
@@ -116,7 +123,7 @@
                 organization.org_name,
                 p.product_category,  <!-- product_category 추가 -->
                 p.product_name, 
-                eu.userId     <!-- product_name 추가 -->
+                eu.userId    
             FROM 
                 SALESREQUEST sr 
             JOIN 
@@ -131,10 +138,10 @@
 	            and to_char(sr.request_date, 'YYYY-MM-DD') = #{requestDate}
 	        </if>
 	        <if test="orgName != null and orgName != ''">
-			    and organization.org_name = #{orgName} 
+			    and organization.org_name like '%' || #{orgName} || '%'
 			</if>
 	        <if test="productId != null and productId != ''">
-	            and sr.product_id = #{productId}
+	            and sr.product_id like '%' || #{productId} || '%' 
 	        </if>
 	        <if test="productName != null and productName != ''">
 	            and p.product_name like '%' || #{productName} || '%'

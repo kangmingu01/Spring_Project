@@ -27,7 +27,7 @@ public class SalesController {
 	private final SalesService salesService;
 	
 	// 본사 직원이 실 주문 관리 하는 페이
-	 @PreAuthorize("hasRole('ROLE_SUPER_ADMINISTRATOR')")
+	 @PreAuthorize("hasRole('ROLE_SALES_TEAM')")
 	@RequestMapping(value = "/saleList", method = RequestMethod.GET)
 	public String sales(@RequestParam Map<String, Object> map, Model model,Principal principal) {
 		 String userId=principal.getName();
@@ -49,6 +49,7 @@ public class SalesController {
 	public String modifySales(@ModelAttribute SalesWrapper salesList) {
 		List<Sales> sales = salesList.getSalesList();
 	System.out.println("Received salesList: " + sales);
+	salesService.modifySalesStatus(sales);
 		salesService.modifySales(sales);
 		return "redirect:/sales/saleList";  // 수정 후 리다이렉트
 	}
@@ -59,5 +60,15 @@ public class SalesController {
 		salesService.modifySalesStatus(sales);
 		return "redirect:/sales/saleList";  // 수정 후 리다이렉트
 	}
+	
+	@PostMapping("/addSalesToHistory")
+	public String addSalesToHistory(@ModelAttribute SalesWrapper salesList) {
+		List<Sales> sales = salesList.getSalesList();
+		System.out.println(" salesHistory: " + sales);
+		salesService.addSalesHistory(sales);
+		salesService.modifySalesStatus(sales);
+		return "redirect:/sales/saleList";  // 수정 후 리다이렉트
+	}
+	
 
 }

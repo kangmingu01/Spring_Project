@@ -10,7 +10,8 @@ public interface ErpUserService {
     void updateErpUser(ErpUser erpUser);
     void deleteErpUser(String userid);
     ErpUser getErpUserByUserid(String userid);
-    void addErpAuth(ErpAuth erpAuth);
+    /*void addErpAuth(ErpAuth erpAuth);*/
     
     Map<String, Object> getErpUserList(Map<String, Object> map);
+    String getOrgIdByUserId(String userId);
 }

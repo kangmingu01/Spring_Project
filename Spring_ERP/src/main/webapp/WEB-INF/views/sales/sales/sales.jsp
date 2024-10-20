@@ -23,13 +23,7 @@
     <div class="content_header">
       <div class="content_header_title">발주 목록</div>
       <div class="content_header_btn">
-        <!-- 조회 버튼 -->
-        <div class="content_header_search_btn" onclick="searchOrders()">
-          <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg></div>
-          <span>조회</span>
-        </div>
+   
         <!-- 초기화 버튼 -->
         <div class="content_header_reset_btn" onclick="resetForm()">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
@@ -38,6 +32,13 @@
           </svg>
           <span>초기화</span>
         </div>
+         <div class="content_header_search_btn" onclick="searchOrders()">
+       <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+       </svg></div>
+       <span>검색</span>
+     </div>
+        
       </div>
     </div>
 
@@ -50,30 +51,42 @@
             <!-- 발주 검색 필드 -->
             <div>
               <label>주문 일자 </label>
-              <input type="date" name="salesDate" id="salesDate"/>
+              <input type="date" name="salesDate" id="salesDate" onkeypress="return handleEnter(event)"/>
             </div>
+            <div>
+		     <label for="auth">은행 상태</label>
+		     <select name="auth" id="auth">
+		       <option value="">-- 은행 상태 선택 --</option>
+		       <option value="1">국민 </option>
+		       <option value="2">우리 </option>
+		       <option value="3">타은행 </option>
+		       <option value="101">입력대기  </option>
+		    
+		     </select>
+		   </div>
             <div>
               <label>주문자 </label>
-              <input type="text" name="userId" id="userId"/>
+              <input type="text" name="orgName" id="orgName" onkeypress="return handleEnter(event)"/>
             </div>
           
-            <div>
-              <label>제품번호</label>
-              <input type="text" name="productId" id="productId"/>
-            </div>
           </div>
           <div>
             <div>
-              <label>제품명</label>
-              <input type="text" name="productName" id="productName"/>
+              <label>제품번호</label>
+              <input type="text" name="productId" id="productId" onkeypress="return handleEnter(event)"/>
             </div>
             <div>
+              <label>제품명</label>
+              <input type="text" name="productName" id="productName" onkeypress="return handleEnter(event)"/>
+            </div>
+            
+            <div>
               <label>브랜드</label>
-              <input type="text" name="brand" id="brand"/>
+              <input type="text" name="brand" id="brand" onkeypress="return handleEnter(event)"/>
             </div>
             <div>
               <label>창고번호 </label>
-              <input type="text" name="invWarehouseId" id="invWarehouseId"/>
+              <input type="text" name="invWarehouseId" id="invWarehouseId" onkeypress="return handleEnter(event)"/>
             </div>
     
    
@@ -92,16 +105,21 @@
   <table>
     <thead>
       <tr>
+     <!--  <th>salesId</th> -->
+      	<th>제품번호</th>
         <th>Category</th>
-        <th>Product Name</th>
+        <th>제품명 </th>
         <th>주문자이름</th>
         <th>제고수량 </th>
         <th>요청 수량 </th>
         <th>주문 수량</th>
-        <th>가격</th>
+        <th>단가 </th>
+        <th>세금/10%</th>
+        <th>총금액</th>
         <th>창고 </th>
-        <th>판매 날짜</th>
         <th>은행 </th>
+        <th>선택</th>
+        <th>판매 날짜</th>
       
       </tr>
     </thead>
@@ -115,9 +133,12 @@
         <c:otherwise>
           <c:forEach var="sales" items="${resultMap.salesList}" varStatus="status">
             <tr>
+            
+           <%--  <td>${sales.salesId }</td> --%>
+              <td>${sales.productId} </td>
               <td>${sales.productCategory}</td>
               <td>${sales.productName}</td>
-              <td>${sales.salesCharge}</td>
+              <td>${sales.orgName}</td>
               <td>${sales.invCurrentQty}</td>
               <td>${sales.requestQuantity}</td>
              <td>
@@ -133,7 +154,6 @@
                   <input type="hidden" name="salesList[${status.index}].productDeliveryPrice" value="${sales.productDeliveryPrice}" />
                   <input type="hidden" name="salesList[${status.index}].tax" value="${sales.tax}" />
                   <input type="hidden" name="salesList[${status.index}].totalAmount" value="${sales.totalAmount}" />
-                  <input type="hidden" name="salesList[${status.index}].auth" value="${sales.auth}" />
                  
                
          
@@ -147,42 +167,46 @@
                 </td>
            
               <td>${sales.productDeliveryPrice}</td>
+              <td>${sales.tax}</td>
+              <td>${sales.totalAmount}</td>
               <td>${sales.invWarehouseId}</td>
-              <td>${sales.salesDate}</td>
-				  <tr class="bankColumn" style="display:none;">
+				 
                 <td>
                 <c:choose>
                   <c:when test="${sales.auth == 1}">
-                    국민은
+                    국민은행 
                   </c:when>
                   <c:when test="${sales.auth == 2}">
-                    우리은
+                    우리은행 
                   </c:when>
                   <c:when test="${sales.auth == 3}">
                     타은행
                   </c:when>
                   <c:otherwise>
-                    
+                  입력대기 
                   </c:otherwise>
                 </c:choose>
        			</td>
-              
-	             <td class="bankSelect" style="display:none;">
-	                <select name="salesList[${status.index}].auth">
-	                  <option value="1" <c:if test="${sales.auth == 1}">selected</c:if>>국민</option>
-	                  <option value="2" <c:if test="${sales.auth == 2}">selected</c:if>>우리 </option>
-	                  <option value="3" <c:if test="${sales.auth == 3}">selected</c:if>>타은행 </option>
-	                </select>
-	              </td>
+       			
+              	  <td>
+	                <select name="salesList[${status.index}].auth" id="authSelect">
+					 <option value="101" <c:if test="${sales.auth == 101}">selected</c:if>>입렵 됨</option>
+					 <option value="1" <c:if test="${sales.auth == 1}">selected</c:if>>국민</option>
+					 <option value="2" <c:if test="${sales.auth == 2}">selected</c:if>>우리</option>
+					 <option value="3" <c:if test="${sales.auth == 3}">selected</c:if>>타은행</option>
+					</select>
+	       			</td>
+	       			
+              <td>${sales.salesDate}</td>
 	                </tr>
-            </tr>
+       
           </c:forEach>
         </c:otherwise>
       </c:choose>
     </tbody>
   </table>
-  <button type="submit" formaction="<c:url value='/sales/modifySales' />">수정</button>
- <button id="orderButton" type="button" style="display:none;" onclick="submitOrder()">주문</button>
+  <button type="submit" formaction="<c:url value='/sales/modifySales' />">(은행/수량)수정 </button>
+ <button type="button" onclick="submitOrder()">실제 주문</button>
 </form>
    
    <div style="text-align: center;">
@@ -225,46 +249,35 @@
   </div>
 
   <script>
-//수정 버튼 클릭 시 '주문' 버튼과 '은행' 열 표시
-  function showBankColumns() {
-      // 주문 버튼 표시
-      document.getElementById('orderButton').style.display = 'inline-block';
-
-      // 은행 열 표시
-      var bankColumns = document.querySelectorAll('.bankColumn, .bankSelect');
-      bankColumns.forEach(function(column) {
-          column.style.display = 'table-cell';
-      });
-  }
-//주문 버튼을 누르면 status 
-  function submitOrder() {
-     // Get the form and all rows in the table
-     var form = document.getElementById('salesForm');
-     var rows = form.querySelectorAll('tbody tr');
-     var validRows = 0; // 카운터 변수 추가
-
-     // Loop through each row and check the hidden requestStatus value
-     rows.forEach(function(row) {
-         var status = row.querySelector('select[name*="auth"]').value;
-
-         // If the status is not 101 (처리 완료), remove the row from the form
-         if (status != 1 && status != 2 && status != 3 && status != 4 && status != 5 && status != 6 && status != 7 && status != 8) {
-             row.remove();
-         } else {
-             validRows++;
-         }
-     });
 
 
-     // If there are valid rows left, submit the form
-     if (validRows > 0) {
-         form.action =  '<c:url value="/sales/modifySalesStatus" />';
-         form.submit();
-     } else {
-         alert('No orders with status "처리 완료" to submit.');
-     }
- }
-  
+    function submitOrder() {
+        // Get the form and all rows in the table
+        var form = document.getElementById('salesForm');
+        var rows = form.querySelectorAll('tbody tr');
+        var validRows = 0; // Counter to track valid rows
+
+        // Loop through each row and check the selected `auth` value
+        rows.forEach(function(row) {
+            var authSelect = row.querySelector('select[name*="auth"]');
+            var authValue = authSelect.value;
+
+            // If the auth value is not valid (101, 1, 2, 3, etc.), remove the row
+            if (authValue != 1 && authValue != 2 && authValue != 3 && authValue != 101) {
+                row.remove();
+            } else {
+                validRows++;  // Count rows with valid auth values
+            }
+        });
+
+        // If there are valid rows left, submit the form
+        if (validRows > 0) {
+            form.action = '<c:url value="/sales/addSalesToHistory" />';
+            form.submit();
+        } else {
+            alert('No valid orders to submit.');
+        }
+    }
   
     $(document).ready(function() {
       // 모든 수정 버튼에 클릭 이벤트 추가
@@ -411,7 +424,18 @@
         }
       });
     }
+    function handleEnter(event) {
+        if (event.keyCode === 13) {
+          searchOrders();
+          return false; // 엔터키 입력 후 폼 제출 방지
+        }
+        return true;
+      }
 
+      // 검색 버튼 클릭 시 발주 조회 폼 제출
+      function searchOrders() {
+        $('#ordersForm').submit();
+      }
     // 폼을 초기화하고 전체 목록 조회
     function resetForm() {
       $('#ordersForm')[0].reset();

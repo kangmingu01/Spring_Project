@@ -7,10 +7,12 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dto.ProductCategory;
 import dto.SalesRequest;
 import lombok.RequiredArgsConstructor;
 import repository.SalesRequestStatusDAO;
 import util.Pager;
+import util.ProductCategoryParser;
 @Service
 @RequiredArgsConstructor
 public class SalesRequestStatusServiceImpl implements SalesRequestStatusService {
@@ -22,11 +24,17 @@ public class SalesRequestStatusServiceImpl implements SalesRequestStatusService 
 	public void addSalesRequestToSales(List<SalesRequest> salesRequests) {
 		for (SalesRequest salesRequest : salesRequests) {
 	        // 각 salesRequest 객체에 대해 처리
-	        System.out.println(salesRequest);
+	        System.out.println("sales add to sales"+salesRequest);
 	        salesRequestStatusDAO.insertSalesRequestToSales(salesRequest);
 	    }
 		
 	}
+//	@Transactional
+//	@Override
+//	public void addSalesRequestToSales(SalesRequest salesRequest) {
+//		salesRequestStatusDAO.insertSalesRequestToSales(salesRequest);
+//		
+//	}
 	
 	@Transactional
 	@Override
@@ -86,12 +94,22 @@ public class SalesRequestStatusServiceImpl implements SalesRequestStatusService 
 		map.put("endRow", pager.getEndRow());
 		List<SalesRequest> boardList=salesRequestStatusDAO.selectSalesRequestListStatus(map);
 		
+		for (SalesRequest salesRequest : boardList) {
+			  String productCategoryCode = salesRequest.getProductCategory();
+			  if (productCategoryCode != null) {
+	            ProductCategory category = ProductCategoryParser.parseCategoryCode(salesRequest.getProductCategory());
+	            salesRequest.setProductCategoryDetails(category);
+	        }
+		}
+		
 		Map<String, Object> result=new HashMap<String, Object>();
 		result.put("pager", pager);
 		result.put("salesRequestList", boardList);
 		
 		return result;
 	}
+
+	
 
 	
 

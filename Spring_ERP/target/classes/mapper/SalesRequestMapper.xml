@@ -102,11 +102,11 @@
 	        <if test="requestDate != null and requestDate != ''">
 	            and to_char(sr.request_date, 'YYYY-MM-DD') = #{requestDate}
 	        </if>
-	        <if test="orgName != null and orgName != ''">
-			    and o.org_name = #{orgName} 
-			</if>
+	    <!--     <if test="orgName != null and orgName != ''">
+			    and o.org_name like '%' || #{orgName} || '%'
+			</if> -->
 	        <if test="productId != null and productId != ''">
-	            and o.product_id = #{productId}
+	            and p.product_id like '%' || #{productId} || '%' 
 	        </if>
 	        <if test="productName != null and productName != ''">
 	            and p.product_name like '%' || #{productName} || '%'
@@ -115,7 +115,7 @@
 	            and SUBSTR(p.product_category, 1, 2) = #{brand}
 	        </if>
 	        <if test="requestStatus != null and requestStatus != ''">
-	            and sr.request_status = #{requestStatus}
+	            and sr.request_status like '%' ||#{requestStatus}|| '%'
 	        </if>
 	        
 	    </where>
@@ -144,17 +144,19 @@
                 organization ON organization.org_id = sr.org_id 
             JOIN 
                 product p ON p.product_id = sr.product_id  <!-- product 테이블과 조인 -->
-         WHERE sr.request_status = 100  <!-- sr.request_status가 1인 조건 추가 -->
+      
+           <!-- 요청 상태가 100 또는 102인 경우 --> 
            <where>
-	        
-	        <if test="requestDate != null and requestDate != ''">
+	          sr.request_status IN (100, 102,103) 
+             AND sr.org_id = #{orgId}
+	             <if test="requestDate != null and requestDate != ''">
 	            and to_char(sr.request_date, 'YYYY-MM-DD') = #{requestDate}
 	        </if>
-	        <if test="orgName != null and orgName != ''">
-			    and organization.org_name = #{orgName} 
-			</if>
+	   <!--      <if test="orgName != null and orgName != ''">
+			    and o.org_name like '%' || #{orgName} || '%'
+			</if> -->
 	        <if test="productId != null and productId != ''">
-	            and sr.product_id = #{productId}
+	            and p.product_id like '%' || #{productId} || '%' 
 	        </if>
 	        <if test="productName != null and productName != ''">
 	            and p.product_name like '%' || #{productName} || '%'
@@ -163,48 +165,16 @@
 	            and SUBSTR(p.product_category, 1, 2) = #{brand}
 	        </if>
 	        <if test="requestStatus != null and requestStatus != ''">
-	            and sr.request_status = #{requestStatus}
+	            and sr.request_status like '%' ||#{requestStatus}|| '%'
 	        </if>
+	        
 	        
 	    </where>
             ORDER BY sr.request_id DESC
         ) board
     ) WHERE rn BETWEEN #{startRow} AND #{endRow}
 </select>
-<!-- <select id="selectSalesRequestList" resultType="salesRequest">
-    SELECT * FROM (
-        SELECT ROWNUM AS rn, board.* 
-        FROM (
-            SELECT 
-                sr.request_id, 
-                sr.request_date, 
-                sr.org_id, 
-                sr.product_id, 
-                sr.request_quantity, 
-                sr.sales_price, 
-                sr.tax, 
-                sr.total_amount, 
-                sr.request_status, 
-                organization.org_name,
-                p.product_category,  product_category 추가
-                p.product_name       product_name 추가
-            FROM 
-                SALESREQUEST sr 
-            JOIN 
-                organization ON organization.org_id = sr.org_id 
-            JOIN 
-                product p ON p.product_id = sr.product_id  product 테이블과 조인
-         WHERE sr.request_status = 100  sr.request_status가 1인 조건 추가
-            <if test="keyword != null and keyword != ''">
-                <bind name="word" value="'%'+keyword+'%'"/>
-                WHERE ${column} LIKE #{word}
-            </if>
-            ORDER BY sr.request_id DESC
-        ) board
-    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
-</select> -->
 
-	
 	
      
     

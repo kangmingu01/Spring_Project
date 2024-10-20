@@ -6,6 +6,7 @@ import java.util.Map;
 import dto.Sales;
 
 public interface SalesDAO {
+	int insertSalesHistory(Sales sales);
 	int insertSalesList(Sales sales);
 
 	int updateSales(Sales sales);

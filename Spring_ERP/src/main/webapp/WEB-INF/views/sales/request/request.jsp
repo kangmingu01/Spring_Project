@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/reset.css'/>">
   <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/purchase.css'/>">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <title>발주 목록</title>
+  <title>주문 목록 </title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <meta name="_csrf" content="${_csrf.token}"/>
   <meta name="_csrf_header" content="${_csrf.headerName}"/>
@@ -21,15 +21,9 @@
   <div class="content">
     <!-- 헤더 부분 -->
     <div class="content_header">
-      <div class="content_header_title">발주 목록</div>
+      <div class="content_header_title">주문목록 </div>
       <div class="content_header_btn">
-        <!-- 조회 버튼 -->
-        <div class="content_header_search_btn" onclick="searchOrders()">
-          <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg></div>
-          <span>조회</span>
-        </div>
+       
         <!-- 초기화 버튼 -->
         <div class="content_header_reset_btn" onclick="resetForm()">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
@@ -38,8 +32,15 @@
           </svg>
           <span>초기화</span>
         </div>
-      </div>
-    </div>
+        <!-- 검색  버튼 -->
+        <div class="content_header_search_btn" onclick="searchOrders()">
+          <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+          </svg></div>
+          <span>검색</span>
+        </div>
+</div>
+</div>
 
     <!-- 바디 부분 -->
     <div class="content_body">
@@ -48,43 +49,47 @@
         <div class="content_body_search">
           <div>
             <!-- 발주 검색 필드 -->
-         
             <div>
-              <label>발주일자</label>
-              <input type="date" name="requestDate" id="requestDate"/>
+              <label>주문 일자 </label>
+              <input type="date" name="requestDate" id="requestDate" onkeypress="return handleEnter(event)" />
             </div>
-            <div>
-              <label>요청자</label>
-              <input type="text" name="orgName" id="orgName"/>
-            </div>
-            <div>
+   			 <div>
+		     <label for="requestStatus">요청 상태</label>
+		     <select name="requestStatus" id="requestStatus">
+		       <option value="">-- 요청 상태 선택 --</option>
+		       <option value="100">처리 중</option>
+		       <option value="102">일부 배속</option>
+		       <option value="103">다시 요청</option>
+		     </select>
+		   </div>
+       <!--      <div>
               <label>요청상태</label>
-              <input type="text" name="requestStatus" id="requestStatus"/>
-            </div>
-           
+              <input type="text" name="requestStatus" id="requestStatus" onkeypress="return handleEnter(event)" />
+            </div> -->
           </div>
           <div>
             <div>
               <label>제품명</label>
-              <input type="text" name="productName" id="productName"/>
-            </div>
-             <div>
-              <label>제품번호</label>
-              <input type="text" name="productId" id="productId"/>
+              <input type="text" name="productName" id="productName"  onkeypress="return handleEnter(event)" />
             </div>
             <div>
-              <label>브랜드</label>
-              <input type="text" name="brand" id="brand"/>
+              <label>제품번호</label>
+              <input type="text" name="productId" id="productId" onkeypress="return handleEnter(event)" />
             </div>
-         
+       <!--      <div>
+              <label>브랜드</label>
+              <input type="text" name="brand" id="brand" onkeypress="return handleEnter(event)" />
+            </div> -->
+                       <!-- 이동한 요청 상태 필드 (Select Dropdown) -->
             
           </div>
         </div>
+
+
         <!-- 페이지 번호와 페이지 크기를 히든 필드로 추가 -->
         <input type="hidden" id="pageNum" name="pageNum" value="${pager.pageNum}">
         <input type="hidden" id="pageSize" name="pageSize" value="${pager.pageSize}">
       </form>
-
 
       <!-- 발주 목록 테이블 -->
       <div class="content_body_list">
@@ -94,10 +99,12 @@
       <tr>
         <th>Category</th>
         <th>Product Name</th>
+        <th>STOREID</th>
         <th>주문자이름</th>
-        <th>수량</th>
         <th>가격</th>
-        <th>입고날짜</th>
+        <th>수량</th>
+        <th>요청상태 </th>
+        <th>주문날짜</th>
       </tr>
     </thead>
           <tbody id="ordersTable" class="sty">
@@ -114,7 +121,9 @@
               <tr>
                 <td>${salesRequest.productCategory}</td>
                 <td>${salesRequest.productName}</td>
+                <td>${salesRequest.orgId }</td>
                 <td>${salesRequest.orgName}</td>
+                <td>${salesRequest.salesPrice}</td>
                 <td>
                   <input type="hidden" name="salesRequests[${status.index}].requestId" value="${salesRequest.requestId}" />
                   <input type="number" name="salesRequests[${status.index}].requestQuantity" value="${salesRequest.requestQuantity}" />
@@ -130,9 +139,24 @@
                   <input type="hidden" name="salesRequests[${status.index}].productName" value="${salesRequest.productName}" />
                   <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 </td>
-                <td>${salesRequest.salesPrice}</td>
-                <td>${salesRequest.requestDate}</td>
                 
+              <td>
+               <c:choose>
+				    <c:when test="${salesRequest.requestStatus == 100}">
+				        처리 중
+				    </c:when>
+				    <c:when test="${salesRequest.requestStatus == 102}">
+				        일부배송 
+				    </c:when>
+				    <c:when test="${salesRequest.requestStatus == 103}">
+				        다시요청
+				    </c:when>
+				    <c:otherwise>
+				      처리 완료
+				    </c:otherwise>
+				</c:choose>
+              </td>
+                <td>${salesRequest.requestDate}</td>
                 
               </tr>
               
@@ -142,7 +166,7 @@
       </c:choose>
           </tbody>
         </table>
-  <button type="submit">수정</button>
+  <button type="submit">주문요청</button>
 </form>
         <!-- 페이징 부분 -->
         <div style="text-align: center;">
@@ -330,7 +354,18 @@
         }
       });
     }
+    function handleEnter(event) {
+        if (event.keyCode === 13) {
+          searchOrders();
+          return false; // 엔터키 입력 후 폼 제출 방지
+        }
+        return true;
+      }
 
+      // 검색 버튼 클릭 시 발주 조회 폼 제출
+      function searchOrders() {
+        $('#ordersForm').submit();
+      }
     // 폼을 초기화하고 전체 목록 조회
     function resetForm() {
       $('#ordersForm')[0].reset();

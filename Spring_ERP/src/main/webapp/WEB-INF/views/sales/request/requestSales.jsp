@@ -33,6 +33,14 @@
           </svg>
           <span>초기화</span>
         </div>
+         <div class="content_header_search_btn" onclick="searchOrders()">
+       <div><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+       </svg></div>
+       <span>검색</span>
+     </div>
+     
+     
       </div>
     </div>
 
@@ -45,32 +53,39 @@
             <!-- 발주 검색 필드 -->
          
             <div>
-              <label>발주일자</label>
-              <input type="date" name="requestDate" id="requestDate"/>
+              <label>요청일자</label>
+              <input type="date" name="requestDate" id="requestDate" onkeypress="return handleEnter(event)"/>
             </div>
+           	<div>
+		     <label for="requestStatus">요청 상태</label>
+		     <select name="requestStatus" id="requestStatus">
+		       <option value="">-- 요청 상태 선택 --</option>
+		       <option value="100">처리 중</option>
+		       <option value="101"> 수량요청->요청완료 </option>
+		       <option value="102">일부 배송</option>
+		       <option value="103">요청취소 </option>
+		       <option value="105">요청완료 </option>
+		     </select>
+		   </div>
             <div>
-              <label>요청자</label>
-              <input type="text" name="orgName" id="orgName"/>
-            </div>
-            <div>
-              <label>요청상태</label>
-              <input type="text" name="requestStatus" id="requestStatus"/>
+              <label>주문자</label>
+              <input type="text" name="orgName" id="orgName" onkeypress="return handleEnter(event)"/>
             </div>
            
           </div>
           <div>
             <div>
               <label>제품명</label>
-              <input type="text" name="productName" id="productName"/>
+              <input type="text" name="productName" id="productName" onkeypress="return handleEnter(event)"/>
             </div>
              <div>
               <label>제품번호</label>
-              <input type="text" name="productId" id="productId"/>
+              <input type="text" name="productId" id="productId" onkeypress="return handleEnter(event)"/>
             </div>
-            <div>
+<!--             <div>
               <label>브랜드</label>
               <input type="text" name="brand" id="brand"/>
-            </div>
+            </div> -->
          
             
           </div>
@@ -89,13 +104,15 @@
   <table>
     <thead>
       <tr>
+      	 	<th>제품번호</th>
         <th>Category</th>
-        <th>Product Name</th>
+        <th>제품명</th>
         <th>주문자 이름</th>
         <th>수량</th>
-        <th>가격</th>
+        <th>단가</th>
+        <th>요청상태</th> <!-- New Status Column -->
+        <th>선택</th>
         <th>입고 날짜</th>
-        <th>Status</th> <!-- New Status Column -->
       </tr>
     </thead>
     <tbody class="sty">
@@ -108,14 +125,50 @@
         <c:otherwise>
           <c:forEach var="salesRequest" items="${resultMap.salesRequestList}" varStatus="status">
             <tr>
+             <td>${salesRequest.productId} </td>
               <td>${salesRequest.productCategory}</td>
               <td>${salesRequest.productName}</td>
               <td>${salesRequest.orgName}</td>
               <td>${salesRequest.requestQuantity}</td>
               <td>${salesRequest.salesPrice}</td>
-              <td>${salesRequest.requestDate}</td>
+             
+    
               <td>
-                <input type="hidden" name="salesRequests[${status.index}].requestId" value="${salesRequest.requestId}" />
+               <c:choose>
+				    <c:when test="${salesRequest.requestStatus == 100}">
+				        처리 중
+				    </c:when>
+				    <c:when test="${salesRequest.requestStatus == 101}">
+				        수량요청->요청완료 
+				    </c:when>
+				    <c:when test="${salesRequest.requestStatus == 102}">
+				        일부배송 
+				    </c:when>
+				    <c:when test="${salesRequest.requestStatus == 103}">
+				       요청취소 
+				    </c:when>
+				    <c:otherwise>
+				      처리 완료
+				    </c:otherwise>
+				</c:choose>
+              </td>
+				     <td>
+				  <select name="salesRequests[${status.index}].requestStatus">
+				    <option value="">-- 요청 상태 선택 --</option>
+				    <option value="100" <c:if test="${salesRequest.requestStatus == 100}">selected</c:if>>요청</option>
+				    <option value="101" <c:if test="${salesRequest.requestStatus == 101}">selected</c:if>>수량요청</option>
+				    <option value="105" 
+				      <c:if test="${salesRequest.requestStatus != 101}">disabled</c:if>
+				      <c:if test="${salesRequest.requestStatus == 105}">selected</c:if>
+				    >요청완료</option>
+				    <option value="102" <c:if test="${salesRequest.requestStatus == 102}">selected</c:if>>일부배송</option>
+				    <option value="103" <c:if test="${salesRequest.requestStatus == 103}">selected</c:if>>요청취소</option>
+				  </select>
+				</td>
+              <td>${salesRequest.requestDate}</td>
+             <%--  <td>  <input type="checkbox" name="salesRequestId" value="${salesRequest.requestId}"></td> --%>
+            <td>
+      			<input type="hidden" name="salesRequests[${status.index}].requestId" value="${salesRequest.requestId}" /> 
                 <input type="hidden" name="salesRequests[${status.index}].requestQuantity" value="${salesRequest.requestQuantity}" />
                 <input type="hidden" name="salesRequests[${status.index}].salesPrice" value="${salesRequest.salesPrice}" />
                 <input type="hidden" name="salesRequests[${status.index}].requestDate" value="${salesRequest.requestDate}" />
@@ -129,30 +182,8 @@
                 <input type="hidden" name="salesRequests[${status.index}].productName" value="${salesRequest.productName}" />
              	 <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 </td>
-              </td>
-              <td>
-               <c:choose>
-				    <c:when test="${salesRequest.requestStatus == 100}">
-				        처리 중
-				    </c:when>
-				    <c:when test="${salesRequest.requestStatus == 101}">
-				        처리 완료
-				    </c:when>
-				    <c:when test="${salesRequest.requestStatus == 102}">
-				        일부배송 
-				    </c:when>
-				    <c:otherwise>
-				      처리 완료
-				    </c:otherwise>
-				</c:choose>
-              </td>
-              <td>
-                <select name="salesRequests[${status.index}].requestStatus">
-                  <option value="100" <c:if test="${salesRequest.requestStatus == 100}">selected</c:if>>요청</option>
-                  <option value="101" <c:if test="${salesRequest.requestStatus == 101}">selected</c:if>>처리 완료</option>
-                  <option value="102" <c:if test="${salesRequest.requestStatus == 102}">selected</c:if>>잘못된 처리</option>
-                </select>
-              </td>
+           
+           
             </tr>
           </c:forEach>
         </c:otherwise>
@@ -162,10 +193,10 @@
   
   <!-- 수정 버튼 -->
   <!-- <button type="submit" formaction="${pageContext.request.contextPath}/request/modifySalesRequestsStatus">수정</button> -->
-  <button type="submit" formaction="<c:url value='/request/modifySalesRequestsStatus' />">수정</button>
+  <button type="submit" formaction="<c:url value='/request/modifySalesRequestsStatus' />">(요청처리)상태변경 </button>
   
   <!-- 주문 버튼 -->
-  <button type="button" onclick="submitOrder()">주문</button>
+  <button type="button" onclick="submitOrder()">수량 요청 </button>
 </form>
  
         <!-- 페이징 부분 -->
@@ -381,7 +412,18 @@
         }
       });
     }
+    function handleEnter(event) {
+        if (event.keyCode === 13) {
+          searchOrders();
+          return false; // 엔터키 입력 후 폼 제출 방지
+        }
+        return true;
+      }
 
+      // 검색 버튼 클릭 시 발주 조회 폼 제출
+      function searchOrders() {
+        $('#ordersForm').submit();
+      }
     // 폼을 초기화하고 전체 목록 조회
     function resetForm() {
       $('#ordersForm')[0].reset();

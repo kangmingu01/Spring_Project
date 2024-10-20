@@ -16,7 +16,11 @@ public class SalesDAOImpl  implements SalesDAO{
 	private final SqlSession sqlSession;
 	
 	
-	
+	@Override
+	public int insertSalesHistory(Sales sales) {
+		// TODO Auto-generated method stub
+		return sqlSession.getMapper(SalesMapper.class).insertSalesHistory(sales);
+	}
 	
 	@Override
 	public int insertSalesList(Sales sales) {
@@ -65,5 +69,7 @@ public class SalesDAOImpl  implements SalesDAO{
 		// TODO Auto-generated method stub
 		return sqlSession.getMapper(SalesMapper.class).selectSalesList(map);
 	}
+
+
 
 }

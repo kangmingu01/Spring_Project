@@ -117,7 +117,7 @@ public class ReceivingController {
         // ProductCategory 코드를 파싱하여 상세 정보를 설정
         if (newReceiving != null) {
             String productCategoryCode = newReceiving.getProductCategory();
-            System.out.println("Product Category Code: " + productCategoryCode); // 로그 추가
+            //System.out.println("Product Category Code: " + productCategoryCode); // 로그 추가
 
             if (productCategoryCode != null) {
                 ProductCategory productCategoryDetails = ProductCategoryParser.parseCategoryCode(productCategoryCode);

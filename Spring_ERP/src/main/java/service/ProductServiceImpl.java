@@ -69,8 +69,7 @@ public class ProductServiceImpl  implements ProductService{
 		map.put("startRow", pager.getStartRow());
 		map.put("endRow", pager.getEndRow());
 		List<Product> productList=productDAO.selectProductKeyList(map);
-		System.out.println("Map Contents: " + map);
-		System.out.println("Map Contents: " + productList);
+		
 		Map<String, Object> result=new HashMap<String, Object>();
 		result.put("pager", pager);
 		result.put("productList", productList);

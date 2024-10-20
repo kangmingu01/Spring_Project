@@ -110,16 +110,7 @@
         <div class="content_search_two">
         </div>
       </div>
-      <!-- 추가사항 태그 -->
-      <div class="content_body_search_plus">
-        <div>재고 입출고 수동관리</div>
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-          </svg>
-        </div>
-      </div>
-      <div class="content_plus"></div>
+
       <div class="file_btn">
       	<div>
   			<div class="product_btn"><span>재고관리</span></div>
@@ -127,24 +118,7 @@
 	  		<div class="inventory_qty_btn"><span>재고수량관리</span></div>
       	</div>
       	<div>
-	        <div class="upload_btn">
-	          <div>
-	            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
-	              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-	              <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
-	            </svg>
-	            <span>UPLOAD</span>
-	          </div>
-	        </div>
-	        <div class="excel_btn">
-	          <div>
-	            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-	              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-	              <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
-	            </svg>
-	            <span>EXCEL</span>
-	          </div>
-	        </div>      	
+  	
       	</div>
       </div>
       <!-- 테이블 부분 -->
@@ -171,7 +145,6 @@
     </div>
   </div>
 	
-	 
 	 <div class="backgroundmodal">
 		<div class="updatemodal">
 			<div class="updatemodal_title">재고수정</div>
@@ -218,8 +191,6 @@
 		</div>
 	</div>
 	 
-	 
-	 
 	<div class="modal fade" id="newModal" tabindex="-1" aria-labelledby="newModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-dialog modal-lg">
 	    	<div class="modal-content">
@@ -251,18 +222,6 @@
   	var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
   	inventoryDisplay(pageNum=1);
   	
-    // 추가 정보 클릭 이벤트
-    var plusBtn=document.querySelector(".content_body_search_plus");
-    var plusContent=document.querySelector(".content_plus");
-    plusBtn.addEventListener("click",function(){
-      if(plusBtn.className=="content_body_search_plus"){
-        plusBtn.classList.add("on");
-        plusContent.classList.add("on");
-      }else{
-        plusBtn.classList.remove("on");
-        plusContent.classList.remove("on");
-      }
-    });
 
     function inputinit(){
     	$('input[type="text"], input[type="hidden"], input[type="number"], input[type="date"],select').val('');
@@ -291,7 +250,6 @@
     $(".content_header_search_btn").click(function(){
     	productDisplay();
     });
-    
     
     //제품조회 함수
     function productDisplay(pageNum=1) {
@@ -477,7 +435,6 @@
     		return;
     	}
     	
-    	
     	if(confirm("재고를 등록 하시겠습니까?")){
 	        $.ajax({
 	    		type:"post",
@@ -505,7 +462,6 @@
 	    	});
         }
     });
-    
     
     //################################# 수정중 .. 다른 리스트 형식 함수 호출해야함
     // 조회 버튼 클릭시  
@@ -893,13 +849,11 @@
     	});
     }
     
-    
     //수정 모달창 끄기
     $(".updateClose").click(function(){
     	var back =document.querySelector(".backgroundmodal");
         back.classList.remove("on"); // "on" 클래스가 없으면 추가
-    });
-    
+    }); 
     
     //inventory 수정 정보에서 제품조회 클릭 이벤트
     $(".item_code_create").click(function(){
@@ -944,8 +898,6 @@
 			}
 		});
     });
-    
-    
     
     //inventory 삭제 함수
     function remove(inventoryId, pageNum) {
@@ -999,7 +951,6 @@
     	}
     }
      
-    
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

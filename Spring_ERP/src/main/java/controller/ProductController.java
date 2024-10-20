@@ -35,26 +35,6 @@ public class ProductController {
 	@Autowired
     private ResourceLoader resourceLoader; // ResourceLoader 주입
 	 
-//	@GetMapping("/product_list")
-//	public List<Product> productListAll() {
-//		return productService.getProductListAll();
-//	}
-	/*
-	@GetMapping("/product_list")
-	public Map<String, Object> getproductKeyList(@RequestParam(defaultValue = "1") int pageNum
-			, @RequestParam(defaultValue = "10") int pageSize
-			, @RequestParam(defaultValue = "") String search
-			, @RequestParam(defaultValue = "") String keyword
-			, @RequestParam Map<String, Object> map) {
-		
-		map.put("pageNum", String.valueOf(pageNum));  
-	    map.put("pageSize", String.valueOf(pageSize));
-	    map.put("search", search);
-	    map.put("keyword", keyword);
-		
-	    return productService.getselectProductKeyList(map);
-	}
-	*/
 	@GetMapping("/product_list")
 	public Map<String, Object> getproductKeyList(@RequestParam Map<String, Object> map) {
 		return productService.getselectProductKeyList(map);
@@ -95,12 +75,7 @@ public class ProductController {
 	        }
 	    }
 	}
-	/*
-	 * @DeleteMapping("/product_remove/{idx}") public String
-	 * productRemvoe(@PathVariable int idx) { productService.removeProduct(idx);
-	 * return "success"; }
-	 */
-	
+
 	@GetMapping("/ProductconvertCategory")
 	public Map<String, String> convertCategory(@RequestParam String categoryCode) throws IOException {
 	    Properties properties = new Properties();

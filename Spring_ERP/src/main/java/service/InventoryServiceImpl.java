@@ -61,8 +61,7 @@ public class InventoryServiceImpl implements  InventoryService{
 		map.put("startRow", pager.getStartRow());
 		map.put("endRow", pager.getEndRow());
 		List<Inventory> invenList=inventoryDAO.selectProductInventoryPageList(map);
-		System.out.println("Map Contents: " + map);
-		System.out.println("Map Contents: " + invenList);
+		
 		Map<String, Object> result=new HashMap<String, Object>();
 		result.put("pager", pager);
 		result.put("invenList", invenList);
@@ -90,8 +89,7 @@ public class InventoryServiceImpl implements  InventoryService{
 		map.put("startRow", pager.getStartRow());
 		map.put("endRow", pager.getEndRow());
 		List<Inventory> invenList=inventoryDAO.selectProductInventoryDamagePageList(map);
-		System.out.println("Map Contents: " + map);
-		System.out.println("Map Contents: " + invenList);
+		
 		Map<String, Object> result=new HashMap<String, Object>();
 		result.put("pager", pager);
 		result.put("invenList", invenList);
@@ -124,8 +122,7 @@ public class InventoryServiceImpl implements  InventoryService{
 		map.put("startRow", pager.getStartRow());
 		map.put("endRow", pager.getEndRow());
 		List<Inventory> invenList=inventoryDAO.selectProductInventoryQtyPageList(map);
-		System.out.println("Map Contents: " + map);
-		System.out.println("Map Contents: " + invenList);
+		
 		Map<String, Object> result=new HashMap<String, Object>();
 		result.put("pager", pager);
 		result.put("invenList", invenList);

@@ -53,8 +53,7 @@ public class HistoryServiceImpl implements HistoryService{
 		map.put("startRow", pager.getStartRow());
 		map.put("endRow", pager.getEndRow());
 		List<History> historyList=historyDAO.selectHistoryProductWarehouseList(map);
-		System.out.println("Map Contents: " + map);
-		System.out.println("Map Contents: " + historyList);
+	
 		Map<String, Object> result=new HashMap<String, Object>();
 		result.put("pager", pager);
 		result.put("historyList", historyList);

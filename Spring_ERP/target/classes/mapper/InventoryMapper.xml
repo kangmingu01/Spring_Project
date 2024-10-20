@@ -17,10 +17,7 @@
 		delete from inventory where inv_id=#{inventoryId}
 	</delete>
 
-	<!-- <select id="selectProductInventoryUpdate" resultMap="inventoryResultMap">
-		select product_id ,product_category,product_name,product_price,delivery_price , inv_id,inv_product_id,inv_current_qty,inv_warehouse_id,inv_damaged_qty,inv_last_date
-		FROM inventory JOIN product ON product.product_id = inventory.inv_product_id where inv_id=#{inventoryId}
-	</select> -->
+
 	<select id="selectProductInventoryUpdate" resultMap="inventoryResultMap">
 		SELECT 
 	        inv.inv_id,
@@ -70,34 +67,6 @@
 	    </association>
 	</resultMap>
 	
-	<!-- 전체 리스트 -->
-	<!-- <select id="selectProductInventoryCount" resultType="int">
-		select count(*)from product join inventory on product_id=inv_product_id
-		<if test="keyword != null and keyword != ''">
-			<bind name="word" value="'%'+keyword+'%'"/>
-			where ${search} like #{word}
-		</if>
-	</select> -->
-	
-	<!-- <select id="selectProductInventoryPageList" resultMap="inventoryResultMap">
-	    SELECT * FROM (
-	        SELECT rownum rn, inventory.* FROM (
-	            SELECT inv.inv_id, 
-	                   inv.inv_product_id, 
-	                   inv.inv_current_qty, 
-	                   inv.inv_warehouse_id, 
-	                   inv.inv_damaged_qty, 
-	                   inv.inv_last_date,
-	                   p.product_name, 
-	                   p.product_category 
-	            FROM inventory inv 
-	            JOIN product p ON p.product_id = inv.inv_product_id 
-	            <if test="keyword != null and keyword != ''">
-	                <bind name="word" value="'%' + keyword + '%'"/>
-	                WHERE ${search} LIKE #{word}
-	            </if>
-	            ORDER BY inv.inv_id DESC ) inventory ) WHERE rn BETWEEN #{startRow} and #{endRow}   
-	</select> -->
 	<select id="selectProductInventoryCount" resultType="int">
 		SELECT count(*)
 	    FROM inventory i
@@ -135,42 +104,7 @@
 	    ) WHERE rn BETWEEN #{startRow} AND #{endRow}
 	</select>
 	
-	<!-- 파손상품 제어 -->
-	<!-- <select id="selectProductInventoryDamageCount" resultType="int">
-	    select count(*) 
-	    from product 
-	    join inventory on product.product_id = inventory.inv_product_id 
-	    where inventory.inv_damaged_qty > 0  손상된 수량이 0이 아닌 것만 필터링
-	    <if test="keyword != null and keyword != ''">
-	        <bind name="word" value="'%' + keyword + '%'"/>
-	        and ${search} like #{word}  검색 조건 추가
-	    </if>
-	</select>
-	
-	<select id="selectProductInventoryDamagePageList" resultMap="inventoryResultMap">
-	    SELECT * FROM (
-	        SELECT rownum rn, inventory.* FROM (
-	            SELECT inv.inv_id, 
-	                   inv.inv_product_id, 
-	                   inv.inv_current_qty, 
-	                   inv.inv_warehouse_id, 
-	                   inv.inv_damaged_qty, 
-	                   inv.inv_last_date,
-	                   p.product_name, 
-	                   p.product_category 
-	            FROM inventory inv 
-	            JOIN product p ON p.product_id = inv.inv_product_id 
-	            WHERE inv.inv_damaged_qty > 0  여기에 필터 추가
-	            <if test="keyword != null and keyword != ''">
-	                <bind name="word" value="'%' + keyword + '%'"/>
-	                AND ${search} LIKE #{word}  AND로 연결
-	            </if>
-	            ORDER BY inv.inv_id DESC 
-	        ) inventory 
-	    ) 
-	    WHERE rn BETWEEN #{startRow} and #{endRow}  
-    </select> -->
-     
+
 	<!-- 파손상품 제어 -->
 	<select id="selectProductInventoryDamageCount" resultType="int">
 	    SELECT count(*)
@@ -213,42 +147,6 @@
     </select>
      
      
-	<!-- 수량제어 -->
-	<!-- <select id="selectProductInventoryQtyCount" resultType="int">
-	    select count(*) 
-	    from product 
-	    join inventory on product.product_id = inventory.inv_product_id 
-	    where inventory.inv_current_qty &lt; 100  현재 수량이 100이 아닌 것만 필터링
-	    <if test="keyword != null and keyword != ''">
-	        <bind name="word" value="'%' + keyword + '%'"/>
-	        and ${search} like #{word}  검색 조건 추가
-	    </if>
-	</select>
-	
-	<select id="selectProductInventoryQtyPageList" resultMap="inventoryResultMap">
-	    SELECT * FROM (
-	        SELECT rownum rn, inventory.* FROM (
-	            SELECT inv.inv_id, 
-	                   inv.inv_product_id, 
-	                   inv.inv_current_qty, 
-	                   inv.inv_warehouse_id, 
-	                   inv.inv_damaged_qty, 
-	                   inv.inv_last_date,
-	                   p.product_name, 
-	                   p.product_category 
-	            FROM inventory inv 
-	            JOIN product p ON p.product_id = inv.inv_product_id 
-	            WHERE inv.inv_current_qty &lt; 100  여기에 필터 추가
-	            <if test="keyword != null and keyword != ''">
-	                <bind name="word" value="'%' + keyword + '%'"/>
-	                AND ${search} LIKE #{word}  AND로 연결
-	            </if>
-	            ORDER BY inv.inv_id DESC 
-	        ) inventory 
-	    ) 
-	    WHERE rn BETWEEN #{startRow} and #{endRow}   
-	</select> -->
-	
 	<!-- 수량제어 -->
 	<select id="selectProductInventoryQtyCount" resultType="int">
 	    SELECT count(*)
